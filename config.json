@@ -1,0 +1,17 @@
+{
+"folderName":"/home/shelterMon",
+"logfileName":"sensor1.log",
+"statusFileName":"status.txt",
+"shelterName":"ShelterNameHere",
+"maxTemp":"95",
+"minTemp":"50",
+"tempUnit":"F",
+"maxDuration":"20",
+"emailDestination":"dest.email@gmail.com",
+"SMTPuser":"SMTPuserNameHere",
+"SMTPpass":"SMTPpasswordHere",
+"SMTPserver":"smtp.gmail.com",
+"SMTPport":"465",
+"SMS":"5551114444",
+"SMScarrier":"0"
+}
