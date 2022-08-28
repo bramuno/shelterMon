@@ -84,7 +84,7 @@ I've connected the <b>ESP32 and both sensors</b> to a power meter and the most p
   <li>Nano will open to a blank page, go to the repo and find the file named "syslog.conf", open it and copy the data.  Then paste the data into the nano window. hit CTRL-O and ENTER to save, then CTRL-X to exit. </li>
   <li>Use the provided examples and duplicate as needed to have one line for each sensor you have.  The first section defines the log file location, and the second section ties the log file to the IP address of the sensors.   Update the IP addresses to match the IPs you got earlier for each ESP32 device.    Each line has to be unique so change the 1's and 2's as needed.  If you dont have that many devices, don't worry about the extra lines.    hit CTRL-O and ENTER to save, then CTRL-X to exit. </li>
   <li>now run this command to edit the rsyslog.conf file<br>
-  <b>nano /etc/rsyslog.conf</b><br>
+  <b>sudo nano /etc/rsyslog.conf</b><br>
   locate "module(load="imudp")" and remove the # before it. Do the same for next line.  Then change 'port="514"' to 'port="3333"' and use CTRL-O to save and CTRL-X to exit.</li>
   <li>now run this command to restart rsyslog and check your conf file is correct<br>
   <b>sudo systemctl restart rsyslog</b><br>If the command returns nothing, especially no errors, then you are fine.  Otherwise, go back into the file and try to find where the problem is.  syslog won't run if that file isn't perfect.</li>
