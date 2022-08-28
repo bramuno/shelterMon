@@ -35,9 +35,6 @@ ELEGOO Electronic Fun Kit for Arduino, Respberry Pi https://a.co/d/bWZt9zZ <br>
 TBD<br>
 <br>
 
-Total Power Consumption:<br>
-I've connected the <b>ESP32 and both sensors</b> to a power meter and the most power it has used is 80ma, but the average appears to be 30ma.   This does not include the raspberry pi. 
-
 <h1>Build & Installation Instructions</h1>
 
 <h2>ESP32 & sensors</h2>
