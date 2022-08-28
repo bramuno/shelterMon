@@ -77,7 +77,7 @@ I've connected the <b>ESP32 and both sensors</b> to a power meter and the most p
   <li>Now you will need to locate the DHCP area and find where you can reserve the DHCP address for your rpi. Check <a href="https://kb.netgear.com/25722/How-do-I-reserve-an-IP-address-on-my-NETGEAR-router">this link</a> for an example using a netgead router but you may have to google "dhcp reservation" and your router name to find the right guide.</li>
   <li>Once your router has the IP reserved, you are done with the router.</li>
   <li>Now that you have the IP address, you can SSH into the rpi.<br>
-  <li>if you dont know how to SSH to a device, you can <a href="https://www.putty.org/">download putty</a>Click <a href="https://www.ssh.com/academy/ssh/putty/windows">here</a> for a guide on how to use putty for SSH. </li>
+  <li>if you dont know how to SSH to a device, you can <a href="https://www.putty.org/">download putty</a>.  Click <a href="https://www.ssh.com/academy/ssh/putty/windows">here</a> for a guide on how to use putty for SSH. </li>
   <li>After logging in run these commands: (you can paste copied text into the putty window using the right mouse button)<br>:
   <b>sudo apt-get -y install rsyslog && sudo nano /etc/rsyslog.d/shelter.conf</b>
   </li>
