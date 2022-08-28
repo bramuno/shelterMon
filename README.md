@@ -13,7 +13,7 @@ Ultimately it is YOUR RESPONSIBILITY to do all the proper research of all the su
 
 <h2>Hardware:</h2>
 links provided here are only examples as you can swap out brands as needed to save money as long as the part does what it required, any by all means if you can find it somewhere else then you don't need amazon :)<br>
-1 - Raspberry Pi/Odroid (make sure it comes with a power supply)<br>
+1 - Raspberry Pi/Odroid, see below for alternatives (make sure it comes with a power supply)<br>
 ?? - <a href="https://www.amazon.com/dp/B013GB27HS?ref_=cm_sw_r_cp_ud_dp_G5QE4ZMDYW0S37ADKY5F">DS18B20 Temperature Sensor</a> (one for each area you need to monitor)<br>
 ?? - <a href="https://a.co/d/4bGYlUr">ESP-32 WiFi Development Board</a> (one for each area you need to monitor)<br>
 ?? - <a href="https://a.co/d/buQ9nun">Breakout board</a> for ESP32 (one for each area you need to monitor)<br>
@@ -33,9 +33,13 @@ You may need a <a href="https://a.co/d/4wtLp9Z">USB-SD card adapter</a> so you c
 <u>Optional alternative hardware</u>: <br>
 If you've never done a project like this and don't have any of the items listed above, here is a starter kit that has the M-F cables, low-voltage wires, a temporary breadbaoard, LEDs and resistors.  <br>
 ELEGOO Electronic Fun Kit for Arduino, Respberry Pi https://a.co/d/bWZt9zZ <br>
-TBD<br>
 <br>
-
+Respberry Pi alternatives:<br>
+Right now, rPi's are more expensive than they used to be.  so there are some alternatives you can try to use instead of an actual Pi.  I recommend googling "Raspberry Pi Alternatives" but here are a few that look like they may wor.  Overall, you must find somethign that has the same set of GPIO pins that the rPi has.:<br>
+<li><a href="https://a.co/d/6iG05cZ">Libre Computer Board AML-S905X-CC </a></li>
+<li><a href="https://a.co/d/2Vu5FYG">Banana Pi</a></li>
+<li><a href="https://a.co/d/5vRDpWE">Odroid</a></li>
+<br><br>
 <h1>Build & Installation Instructions</h1>
 
 <h2>ESP32 & sensors</h2>
