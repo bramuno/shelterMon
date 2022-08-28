@@ -6,7 +6,6 @@
 "maxTemp":"95",
 "minTemp":"50",
 "tempUnit":"F",
-"maxDuration":"20",
 "emailDestination":"dest.email@gmail.com",
 "SMTPuser":"SMTPuserNameHere",
 "SMTPpass":"SMTPpasswordHere",
