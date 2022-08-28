@@ -14,36 +14,26 @@ Ultimately it is YOUR RESPONSIBILITY to do all the proper research of all the su
 <h2>Hardware:</h2>
 links provided here are only examples as you can swap out brands as needed to save money as long as the part does what it required, any by all means if you can find it somewhere else then you don't need amazon :)<br>
 1 - Raspberry Pi/Odroid (make sure it comes with a power supply)<br>
-?? - DS18B20 Temperature Sensor (one for each area you need to monitor)<br>
+?? - <a href="https://www.amazon.com/dp/B013GB27HS?ref_=cm_sw_r_cp_ud_dp_G5QE4ZMDYW0S37ADKY5F">DS18B20 Temperature Sensor</a> (one for each area you need to monitor)<br>
 ?? - <a href="https://a.co/d/4bGYlUr">ESP-32 WiFi Development Board</a> (one for each area you need to monitor)<br>
 ?? - <a href="https://a.co/d/buQ9nun">Breakout board</a> for ESP32 (one for each area you need to monitor)<br>
 ??- Low voltage wires (cat5 cable works great)<br>
 1 - <a href="https://a.co/d/dl4wDO9">lighted toggle switch 3-pole</a> any style is ok as long as its an 3-pole<br>
 1 - <a href="https://a.co/d/bAP9Ayc">solderable breadboard hat</a><br>
-1 - 200ohm resistor (have to buy a pack)<br>
+1 - 200ohm resistor (have to buy a pack, but you may be able to locate a someone that has a few to spare)<br>
 1 - basic LED (not needed if the toggle switch is lighted)<br>
 1 - tiny flat head screwdriver <br>
 1 - <a href="https://a.co/d/0wVyD20">micro SD card</a> (16gb or larger).  Don't go cheap here.  Recommend you buy SanDisk brand.  16gb is plenty of space, you don't need space for this project. The card should come with an micro to standard size adapter.  If it doesn't you will need to get one. <br>
-1 - <a href="https://a.co/d/brV2cMs">SD card to USB adapter</a><br>
-1 - Soldering Iron kit (an iron and an iron stand, something <a href="https://a.co/d/caBHZSg">like this</a><br>
-1 - helping hands see <a href="https://www.amazon.com/s?k=helping+hands&i=tools&crid=38J2ATXAPQ9XL&sprefix=helping+hands%2Ctools%2C137&ref=nb_sb_noss_1">this search</a> for examples.  You will need something to hold your items for soldering.<br>
+1 - Soldering Iron kit (an iron with an iron stand and some solder, something <a href="https://a.co/d/caBHZSg">like this</a>)<br>
+1 - helping hands see <a href="https://www.amazon.com/s?k=helping+hands&i=tools&crid=38J2ATXAPQ9XL&sprefix=helping+hands%2Ctools%2C137&ref=nb_sb_noss_1">this search</a> for examples.  You will need something to hold your items while soldering.<br>
 <br> <br>
 Optional hardware:<br>
 You may need a <a href="https://a.co/d/4wtLp9Z">USB-SD card adapter</a> so you can read/write to the card.  Some laptops have this already so check before ordering. <br>
-I do recommend a fan hat for the raspberry pi to keep it cool.  something <a href="https://a.co/d/cjng3cB">like this</a> that raises the GPIO pins so they can still be used. <br>
 Optional replacement hardware: <br>
 If you've never done a project like this and don't have any of the items listed above, here is a starter kit that has the M-F cables, low-voltage wires, a temporary breadbaoard, LEDs and resistors.  <br>
 ELEGOO Electronic Fun Kit for Arduino, Respberry Pi https://a.co/d/bWZt9zZ <br>
 TBD<br>
 <br>
-
-<h3>SMS carriers codes</h3>
-0 - Verizon<br>
-1 - AT&T<br>
-2 - Boost<br>
-3 - T-Mobile<br>
-4 - Cricket<br>
-5 - Sprint<br><br>
 
 Total Power Consumption:<br>
 I've connected the <b>ESP32 and both sensors</b> to a power meter and the most power it has used is 80ma, but the average appears to be 30ma.   This does not include the raspberry pi. 
@@ -111,14 +101,40 @@ I've connected the <b>ESP32 and both sensors</b> to a power meter and the most p
   <li>Run this command:<br><b>nano /home/shelterMon/shelterMon.py</b></li>
   <li>When nano opens the blank document, go to the repo and look for the "shelterMon.py" file. Open the file and copy the data, then paste it into the nano window.  hit CTRL-O and ENTER to save, then CTRL-X to exit.</li>
   <li>Now run this command:<br><b>nano /home/shelterMon/config.json</b></li>
-  <li>When nano opens the blank document, go to the repo and look for the "config.json" file. Open the file and copy the data, then paste it into the nano window. Now update the information to suit your preferences.  Make sure the <b>logfileName</b> matches the file name as mentioned in the syslog.conf file you created earlier.  Enter the SMTP/email information per the steps performed earlier. hit CTRL-O and ENTER to save, then CTRL-X to exit.</li>
-  <li>Repeat the previous step for all the sensors you have, and be sure to name the file with a unique name each time (eg, change config1.json to config2,json)</li>
+  <li>When nano opens the blank document, go to the repo and look for the "config.json" file. Open the file and copy the data, then paste it into the nano window. Now update the information to suit your preferences.<br>
+  
+"folderName":"/home/shelterMon",  <-- leave this as is unless you know what you are doing <br>
+"logfileName":"sensor1.log",      <-- Make sure the <b>logfileName</b> matches the file name as mentioned in the syslog.conf file you created earlier <br>
+"statusFileName":"status.txt",    <-- leave this as is unless you know what you are doing <br>
+"shelterName":"ShelterNameHere",  <-- Change this value to the name of the Shelter or the location name where the sensor has been placed <br>
+"maxTemp":"95",                   <-- Change this to your maximum allowed temperature <br>
+"minTemp":"50",                   <-- Change this to your minimum required temperature  <br>
+"tempUnit":"F",                   <-- Change this to either C for Celcius or F for Farenheit <br>
+"emailDestination":"dest.email@gmail.com",  <-- Change this to your desired email destination where alerts should be sent <br>
+"SMTPuser":"SMTPuserNameHere",    <-- Change this to your SMTP username from the previous section <br>
+"SMTPpass":"SMTPpasswordHere",    <-- Change this to your SMTP password from the previous section <br>
+"SMTPserver":"smtp.gmail.com",    <-- Chnage this to your SMTP server address from the previous section  <br>
+"SMTPport":"465",                 <-- Change this to your SMTP server's destination port from the previous section  <br>
+"SMS":"5551114444",               <-- Change this to your SMS phone number including area code, no hyphens and no country code <br>
+"SMScarrier":"0"                  <-- Change this to your SMS carrier code as defined fom the list below  <br>  
+ <br> 
+ </li>    
+<h3>SMS carriers codes</h3>
+0 - Verizon<br>
+1 - AT&T<br>
+2 - Boost<br>
+3 - T-Mobile<br>
+4 - Cricket<br>
+5 - Sprint<br><br>
+
+  <li>hit CTRL-O and ENTER to save, then CTRL-X to exit.</li>
+  <li>Repeat the previous step for all the sensors you have, and be sure to name the file with a unique name each time (eg, change config1.json to config.json)</li>
   <li>Now test each config by running the command:<b>python /home/shelterMon/shelterMon.py -C CONFIGFILE</b> where CONFIGFILE is the full path of the config files you created a couple steps back<br>
   Example:<br><b>python /home/shelterMon/shelterMon.py -C /home/shelterMon/config.json -d yes </b></li>
   OR <br><b>python /home/shelterMon/shelterMon.py /home/shelterMon/myConfigFileName.json -d yes </b></li>
     <li>If the test is successful you will not get any errors.  If the breadboard hat is working correctly, you should get a message that states the switch is OFF and the script will quit.  When in the ON position, the script should finish without errors.  Refer to the video for a demonstration.</li>
 
-  <li></li>
+<li></li>
   <li></li>
   <li></li>
   <li></li>
