@@ -103,19 +103,19 @@ I've connected the <b>ESP32 and both sensors</b> to a power meter and the most p
   <h2>Breadboard Hat</h2>
   The breadboard hat provides a physical switch to enable/disable the monitor and also an LED that indicates the position of the switch.  <br>
   <img src="https://raw.githubusercontent.com/bramuno/shelterMonitor/main/breadboardHatDone.jpg" width="200"><br>
-  Please refer to the images for the <a href="https://raw.githubusercontent.com/bramuno/shelterMonitor/main/breadboardHat.jpg">soldering connections</a> and the video for help with the soldering details.  Otherwise, I suggest you locate someone that knows how to solder or you can reach our to your local hackerspace/makerspace.<br><br>
+  Please refer to the images for the <a href="https://raw.githubusercontent.com/bramuno/shelterMonitor/main/breadboardHat.jpg">soldering connections</a> and the video for help with the soldering details.  Otherwise, I suggest you locate someone that knows how to solder or you can reach our to your local hackerspace/makerspace.  If this is your only project you plan to make, then it would be better to lean on some help instead of buying a soldering station.<br><br>
   
 <h2>Python Script</h2>
   The python script depends on the breadboard hat, so make sure that's working as expected before proceeding or you will likely get lots of email/SMS alerts.<br>
   <li>Run this command:<br><b>nano /home/shelterMon/shelterMon.py</b></li>
   <li>When nano opens the blank document, go to the repo and look for the "shelterMon.py" file. Open the file and copy the data, then paste it into the nano window.  hit CTRL-O and ENTER to save, then CTRL-X to exit.</li>
-  <li>Now run this command:<br><b>nano /home/shelterMon/config1.json</b></li>
+  <li>Now run this command:<br><b>nano /home/shelterMon/config.json</b></li>
   <li>When nano opens the blank document, go to the repo and look for the "config.json" file. Open the file and copy the data, then paste it into the nano window. Now update the information to suit your preferences.  Make sure the <b>logfileName</b> matches the file name as mentioned in the syslog.conf file you created earlier.  Enter the SMTP/email information per the steps performed earlier. hit CTRL-O and ENTER to save, then CTRL-X to exit.</li>
   <li>Repeat the previous step for all the sensors you have, and be sure to name the file with a unique name each time (eg, change config1.json to config2,json)</li>
   <li>Now test each config by running the command:<b>python /home/shelterMon/shelterMon.py -C CONFIGFILE</b> where CONFIGFILE is the full path of the config files you created a couple steps back<br>
   Example:<br><b>python /home/shelterMon/shelterMon.py -C /home/shelterMon/config.json -d yes </b></li>
-  OR <br><b>python /home/shelterMon/shelterMon.py /home/shelterMon/kennel.json -d yes </b></li>
-    <li>If the test is successful you will not get any errors.</li>
+  OR <br><b>python /home/shelterMon/shelterMon.py /home/shelterMon/myConfigFileName.json -d yes </b></li>
+    <li>If the test is successful you will not get any errors.  If the breadboard hat is working correctly, you should get a message that states the switch is OFF and the script will quit.  When in the ON position, the script should finish without errors.  Refer to the video for a demonstration.</li>
 
   <li></li>
   <li></li>
