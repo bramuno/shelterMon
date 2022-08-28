@@ -108,6 +108,10 @@ I've connected the <b>ESP32 and both sensors</b> to a power meter and the most p
   <li>Now test each config by running the command:<b>python /home/shelterMon/shelterMon.py -C CONFIGFILE</b> where CONFIGFILE is the full path of the config files you created a couple steps back<br>
   Example:<br><b>python /home/shelterMon/shelterMon.py -C /home/shelterMon/config.json -d yes </b></li>
   OR <br><b>python /home/shelterMon/shelterMon.py /home/shelterMon/kennel.json -d yes </b></li>
+  
+  <h2>Breadboard Hat</h2>
+  The breadboard hat provides a physical switch to enable/disable the monitor and also an LED that indicates the position of the switch.  <br>
+  <img src="https://raw.githubusercontent.com/bramuno/shelterMonitor/main/breadboardHatDone.jpg">
   <li></li>
   <li></li>
   <li></li>
