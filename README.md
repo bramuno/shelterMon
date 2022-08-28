@@ -125,6 +125,8 @@ TBD<br>
 5 - Sprint<br><br>
 
   <li>hit CTRL-O and ENTER to save, then CTRL-X to exit.</li>
+  <li>Restart rsyslog just incase with this command:<br>
+<b>sudo systemctl restart rsyslog</b></li>
   <li>Repeat the previous step for all the sensors you have, and be sure to name the file with a unique name each time (eg, change config1.json to config.json)</li>
   <li>Now test each config by running the command:<b>python /home/shelterMon/shelterMon.py -C CONFIGFILE</b> where CONFIGFILE is the full path of the config files you created a couple steps back<br>
   Example:<br><b>python /home/shelterMon/shelterMon.py -C /home/shelterMon/config.json -d yes </b></li>
