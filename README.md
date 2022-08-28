@@ -106,9 +106,9 @@ I've connected the <b>ESP32 and both sensors</b> to a power meter and the most p
   <li>When nano opens the blank document, go to the repo and look for the "config.json" file. Open the file and copy the data, then paste it into the nano window. Now update the information to suit your preferences.  Make sure the <b>logfileName</b> matches the file name as mentioned in the syslog.conf file you created earlier.  Enter the SMTP/email information per the steps performed earlier. hit CTRL-O and ENTER to save, then CTRL-X to exit.</li>
   <li>Repeat the previous step for all the sensors you have, and be sure to name the file with a unique name each time (eg, change config1.json to config2,json)</li>
   <li>Now test each config by running the command:<b>python /home/shelterMon/shelterMon.py -C CONFIGFILE</b> where CONFIGFILE is the full path of the config files you created a couple steps back<br>
-  Example:<br><b>python /home/shelterMon/shelterMon.py -C /home/shelterMon/config1.json -d yes </b></li>
-  OR <br><b>python /home/shelterMon/shelterMon.py /home/shelterMon/config2.json -d yes </b></li>
-  <li>You should get some debug data and a message that states "Detected OFF switch position on syslog server. Quitting."</li>
+  Example:<br><b>python /home/shelterMon/shelterMon.py -C /home/shelterMon/config.json -d yes </b></li>
+  OR <br><b>python /home/shelterMon/shelterMon.py /home/shelterMon/kennel.json -d yes </b></li>
+  <li></li>
   <li></li>
   <li></li>
   <li></li>
