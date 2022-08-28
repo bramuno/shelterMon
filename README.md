@@ -42,16 +42,6 @@ Right now, rPi's are more expensive than they used to be.  so there are some alt
 <br><br>
 <h1>Build & Installation Instructions</h1>
 
-<h2>ESP32 & sensors</h2>
-  <li>Pop the ESP32 boards into the breakout boards. Make sure the pins line up.  </li>
-  <li>The sensors should have come with 3 cables with a header that conects to the sensor board.  Connect the cables to the boards. </li>
-  <li>Now the other end of the cables go to the breakout baord.   The red cable goes to the 3V3 pin, the black cable goes to the GND pin, and the yellow cable goes to P14.</li>
-  <li>To power on, connect a micro-usb cable to the ESP32 and connect the other end to a usb charger port (like a cell phone charger) or for now you can use the USB port on your computer. </li>
-  <li>read <a href="https://dronebotworkshop.com/esp32-intro/">this guide</a> on getting to know the basics on the ESP32, follow the instructions to setup arduino IDE and pay attention on how to upload code to the board.  It requires you hold the reset button until the board begins uploading, so it may take some practice. </li>
-  <li>Now that you are familiar with the ES32, you can upload the code to the board.  See the project repo and look for the file "shelter.ino".  Open that file and copy the code into the arduino IDE.  Now look for the areas you need to edit.  Look for the comments "user changes here".  Update the SSIDname and SSIDpassword to your wifi SSID name and password, and update the udpAddress to the IP address of the rpi.  Leave the rest unless you know what you are doing. </li>
-  <li>Make sure your IDE settings are as instructed by the ESP32 guide, then click the UPLOAD button.  remember uploading is not that simple for ESP32 so refer back to the previous ESP32 guide and remember you need to hold the reset button on the ESP32 then wait for the arduino output to say "uploading..." and then release the button.  it may take a few tries to get it right.</li>
-  <li>Repeat the upload process as needed if you have more sensors.</li>
-
 <h2>Raspberry Pi</h2>
 <ul>
 <li>go to https://www.raspberrypi.com/software/ and download the latest Raspbery Pi system imager tool. </li>
@@ -87,6 +77,17 @@ Right now, rPi's are more expensive than they used to be.  so there are some alt
   <li>Now that syslog is listening make sure your sensors are powered on.  </li>
   <li>The sensors should start sending data to the rpi.  Now we can finish with the rpi.</li>
 
+  
+  <h2>ESP32 & sensors</h2>
+  <li>Pop the ESP32 boards into the breakout boards. Make sure the pins line up.  </li>
+  <li>The sensors should have come with 3 cables with a header that conects to the sensor board.  Connect the cables to the boards. </li>
+  <li>Now the other end of the cables go to the breakout baord.   The red cable goes to the 3V3 pin, the black cable goes to the GND pin, and the yellow cable goes to P14.</li>
+  <li>To power on, connect a micro-usb cable to the ESP32 and connect the other end to a usb charger port (like a cell phone charger) or for now you can use the USB port on your computer. </li>
+  <li>read <a href="https://dronebotworkshop.com/esp32-intro/">this guide</a> on getting to know the basics on the ESP32, follow the instructions to setup arduino IDE and pay attention on how to upload code to the board.  It requires you hold the reset button until the board begins uploading, so it may take some practice. </li>
+  <li>Now that you are familiar with the ES32, you can upload the code to the board.  See the project repo and look for the file "shelter.ino".  Open that file and copy the code into the arduino IDE.  Now look for the areas you need to edit.  Look for the comments "user changes here".  Update the SSIDname and SSIDpassword to your wifi SSID name and password, and update the udpAddress to the IP address of the rpi.  Leave the rest unless you know what you are doing. </li>
+  <li>Make sure your IDE settings are as instructed by the ESP32 guide, then click the UPLOAD button.  remember uploading is not that simple for ESP32 so refer back to the previous ESP32 guide and remember you need to hold the reset button on the ESP32 then wait for the arduino output to say "uploading..." and then release the button.  it may take a few tries to get it right.</li>
+  <li>Repeat the upload process as needed if you have more sensors.</li>
+  
 <h2>Email user account</h2>
   <li>If you are using your gmail/google account, you can follow <a href="https://support.google.com/accounts/answer/185833?hl=en">this guide</a> to setup your google account information. Don't use your normal gmail password. </li>
   <li>If you are using something else, then you will need to locate your mail server inforamtion.  You can ask your IT person if you have one, or you can google "smtp server" and the name of your mail provider (eg "smtp server yahoo).  But you will have to check their documentation if it doesnt work as you may need to create an app password similar to the gmail procedure. </li>
