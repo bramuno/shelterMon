@@ -17,6 +17,7 @@ links provided here are only examples as you can swap out brands as needed to sa
 ?? - <a href="https://www.amazon.com/dp/B013GB27HS?ref_=cm_sw_r_cp_ud_dp_G5QE4ZMDYW0S37ADKY5F">DS18B20 Temperature Sensor</a> (one for each area you need to monitor)<br>
 ?? - <a href="https://a.co/d/4bGYlUr">ESP-32 WiFi Development Board</a> (one for each area you need to monitor)<br>
 ?? - <a href="https://a.co/d/buQ9nun">Breakout board</a> for ESP32 (one for each area you need to monitor)<br>
+?? - <a href="https://a.co/d/6vf3yfr">USB chargers</a> (one for each area you need to monitor) <br>
 ??- Low voltage wires (cat5 cable works great)<br>
 1 - <a href="https://a.co/d/dl4wDO9">lighted toggle switch 3-pole</a> any style is ok as long as its an 3-pole<br>
 1 - <a href="https://a.co/d/bAP9Ayc">solderable breadboard hat</a><br>
@@ -128,15 +129,19 @@ TBD<br>
   <li>Restart rsyslog just incase with this command:<br>
 <b>sudo systemctl restart rsyslog</b></li>
   <li>Repeat the previous step for all the sensors you have, and be sure to name the file with a unique name each time (eg, change config1.json to config.json)</li>
-  <li>Now test each config by running the command:<b>python /home/shelterMon/shelterMon.py -C CONFIGFILE</b> where CONFIGFILE is the full path of the config files you created a couple steps back<br>
+  <li>Now test each config by running the command:<br>
+  <b>python /home/shelterMon/shelterMon.py -C CONFIGFILE</b>
+  <br>where CONFIGFILE is the full path of the config files you created a couple steps back<br>
   Example:<br><b>python /home/shelterMon/shelterMon.py -C /home/shelterMon/config.json -d yes </b></li>
   OR <br><b>python /home/shelterMon/shelterMon.py /home/shelterMon/myConfigFileName.json -d yes </b></li>
     <li>If the test is successful you will not get any errors.  If the breadboard hat is working correctly, you should get a message that states the switch is OFF and the script will quit.  When in the ON position, the script should finish without errors.  Refer to the video for a demonstration.</li>
-
-<li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
+<li>Now we need to tell the server to run that command by itself every minute.<br>
+Run this command: (if it prompts for an editor, choose NANO) <br>
+<b>crontab -e</b></li>
+  <li>Now paste the following line into the nano editor just like you did for the previous files:<br>
+  <b>* * * * * sudo python /home/shelterMon/shelterMon.py -C /home/shelterMon/config.json > /dev/null 2>&1</b></li>
+  <li>Use CTRL-O & ENTER to save then CTRL-X to quit</li>
+  <li>Now you are ready to start testing the system is doing what it should be doing.  Use whatever you can to test the sensor's temperature readings (hairdryer, etc).  <br>Turn off the sensor's power supply but leave the Raspberry Pi running.  It should notify you the sensor is offline.<br>Keep the ESP32 powered on but disconenct the sensor from the ESP32, you should get a notification the sensor is not reading correctly within 10 minutes. <br> </li>
+  <li>Now you just need to place the sensor(s) where they need to go and use a USB charge adapter to power the sensor unit.  the unit needs to be in a place where it can communicate with the WiFi. </li>
+  <li>Thanks for reading this. </li>
 </ul>
