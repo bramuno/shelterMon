@@ -13,7 +13,6 @@ ALSO, this project involves some soldering which is recommended to install a phy
 <h2>Hardware:</h2>
 links provided here are only examples as you can swap out brands as needed to save money as long as the part does what it required, any by all means if you can find it somewhere else then you don't need amazon :)<br>
 1 - Raspberry Pi/Odroid (make sure it comes with a power supply)<br>
-1 - 16GB (or larger) Micro SD card<br>
 ?? - DS18B20 Temperature Sensor (one for each area you need to monitor)<br>
 ?? - <a href="https://a.co/d/4bGYlUr">ESP-32 WiFi Development Board</a> (one for each area you need to monitor)<br>
 ?? - <a href="https://a.co/d/buQ9nun">Breakout board</a> for ESP32 (one for each area you need to monitor)<br>
