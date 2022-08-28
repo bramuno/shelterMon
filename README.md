@@ -102,7 +102,7 @@ I've connected the <b>ESP32 and both sensors</b> to a power meter and the most p
 
   <h2>Breadboard Hat</h2>
   The breadboard hat provides a physical switch to enable/disable the monitor and also an LED that indicates the position of the switch.  <br>
-  <img src="https://raw.githubusercontent.com/bramuno/shelterMonitor/main/breadboardHatDone.jpg"><br>
+  <img src="https://raw.githubusercontent.com/bramuno/shelterMonitor/main/breadboardHatDone.jpg" cols="200"><br>
   Please refer to the images for the <a href="https://raw.githubusercontent.com/bramuno/shelterMonitor/main/breadboardHat.jpg">soldering connections</a> and the video for help with the soldering details.  Otherwise, I suggest you locate someone that knows how to solder or you can reach our to your local hackerspace/makerspace.<br><br>
   
 <h2>Python Script</h2>
