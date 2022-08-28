@@ -95,7 +95,7 @@ TBD<br>
   
 <h2>Python Script</h2>
   The python script depends on the breadboard hat, so make sure that's working as expected before proceeding or you will likely get lots of email/SMS alerts.<br>
-  <li>Run this command:<br><b>sudo nano /home/shelterMon/shelterMon.py</b></li>
+  <li>Run this command:<br><b>sudo mkdir -p  /home/shelterMon && sudo nano /home/shelterMon/shelterMon.py</b></li>
   <li>When nano opens the blank document, go to the repo and look for the "shelterMon.py" file. Open the file and copy the data, then paste it into the nano window.  hit CTRL-O and ENTER to save, then CTRL-X to exit.</li>
   <li>Now run this command:<br><b>sudo nano /home/shelterMon/config.json</b></li>
   <li>When nano opens the blank document, go to the repo and look for the "config.json" file. Open the file and copy the data, then paste it into the nano window. Now update the information to suit your preferences.<br>
