@@ -38,7 +38,6 @@ statusFileName =  logfileName+"-status.txt"
 maxTemp =  float(get['maxTemp'])
 minTemp =  float(get['minTemp'])
 tempUnit =  str(get['tempUnit'])
-maxDuration =  int(get['maxDuration'])
 emailDestination =  get['emailDestination']
 SMTPuser =  get['SMTPuser']
 SMTPpass =  get['SMTPpass']
@@ -152,7 +151,6 @@ if debug == 1:
     print("maxTemp = ",str(maxTemp))
     print("minTemp = ",str(minTemp))
     print("temp[0] = ",str(temp[0]))
-    print("maxDuration = ",str(maxDuration))
     print("newfile = ",str(newfile))
 
 GPIO.setmode(GPIO.BCM)     
@@ -179,7 +177,7 @@ if round(minsSinceLastLog,0) > 5 and int(minute)%5 == 0:
         print(">>>>> email alert sent")  
 
 ########## critical temperature alert begin
-if ( state != 1 and int(oldState) == 0 and float(oldDur) > float(maxDuration) ) :
+if state != 1 and int(oldState) == 0  :
     alert = 1
     msgCritical = EmailMessage()
     msgCritical.set_content("\nSensor temperature outside desired threshold for at least "+str(oldDur)+" minutes.\n\n")
