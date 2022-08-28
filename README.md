@@ -27,9 +27,9 @@ links provided here are only examples as you can swap out brands as needed to sa
 1 - Soldering Iron kit (an iron with an iron stand and some solder, something <a href="https://a.co/d/caBHZSg">like this</a>)<br>
 1 - helping hands see <a href="https://www.amazon.com/s?k=helping+hands&i=tools&crid=38J2ATXAPQ9XL&sprefix=helping+hands%2Ctools%2C137&ref=nb_sb_noss_1">this search</a> for examples.  You will need something to hold your items while soldering.<br>
 <br> <br>
-Optional hardware:<br>
-You may need a <a href="https://a.co/d/4wtLp9Z">USB-SD card adapter</a> so you can read/write to the card.  Some laptops have this already so check before ordering. <br>
-Optional replacement hardware: <br>
+<u>Optional hardware</u>:<br>
+You may need a <a href="https://a.co/d/4wtLp9Z">USB-SD card adapter</a> so you can read/write to the card.  Some laptops have this already so check before ordering. <br><br>
+<u>Optional alternative hardware</u>: <br>
 If you've never done a project like this and don't have any of the items listed above, here is a starter kit that has the M-F cables, low-voltage wires, a temporary breadbaoard, LEDs and resistors.  <br>
 ELEGOO Electronic Fun Kit for Arduino, Respberry Pi https://a.co/d/bWZt9zZ <br>
 TBD<br>
