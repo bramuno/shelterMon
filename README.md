@@ -13,7 +13,7 @@ Ultimately it is YOUR RESPONSIBILITY to do all the proper research of all the su
 
 <h2>Hardware:</h2>
 links provided here are only examples as you can swap out brands as needed to save money as long as the part does what it required, any by all means if you can find it somewhere else then you don't need amazon :)<br>
-1 - Raspberry Pi or alternative, see below for some alternatives (make sure it comes with a PROPER power supply or buy one with it)<br>
+1 - <a href="https://a.co/d/iUwvwW4">Raspberry Pi</a> or alternative, see below for some cheaper alternatives<br>(make sure it comes with a PROPER power supply or buy one with it)<br>
 ?? - <a href="https://www.amazon.com/dp/B013GB27HS?ref_=cm_sw_r_cp_ud_dp_G5QE4ZMDYW0S37ADKY5F">DS18B20 Temperature Sensor</a> (one for each area you need to monitor)<br>
 ?? - <a href="https://a.co/d/4bGYlUr">ESP-32 WiFi Development Board</a> (one for each area you need to monitor)<br>
 ?? - <a href="https://a.co/d/buQ9nun">Breakout board</a> for ESP32 (one for each area you need to monitor)<br>
