@@ -99,7 +99,14 @@ I've connected the <b>ESP32 and both sensors</b> to a power meter and the most p
   <li>If you are using something else, then you will need to locate your mail server inforamtion.  You can ask your IT person if you have one, or you can google "smtp server" and the name of your mail provider (eg "smtp server yahoo).  But you will have to check their documentation if it doesnt work as you may need to create an app password similar to the gmail procedure. </li>
   <li>save the username, password and server info as you will need it later. </li>
 
+
+  <h2>Breadboard Hat</h2>
+  The breadboard hat provides a physical switch to enable/disable the monitor and also an LED that indicates the position of the switch.  <br>
+  <img src="https://raw.githubusercontent.com/bramuno/shelterMonitor/main/breadboardHatDone.jpg"><br>
+  Please refer to the images for the <a href="https://raw.githubusercontent.com/bramuno/shelterMonitor/main/breadboardHat.jpg">soldering connections</a> and the video for help with the soldering details.  Otherwise, I suggest you locate someone that knows how to solder or you can reach our to your local hackerspace/makerspace.<br><br>
+  
 <h2>Python Script</h2>
+  The python script depends on the breadboard hat, so make sure that's working as expected before proceeding or you will likely get lots of email/SMS alerts.<br>
   <li>Run this command:<br><b>nano /home/shelterMon/shelterMon.py</b></li>
   <li>When nano opens the blank document, go to the repo and look for the "shelterMon.py" file. Open the file and copy the data, then paste it into the nano window.  hit CTRL-O and ENTER to save, then CTRL-X to exit.</li>
   <li>Now run this command:<br><b>nano /home/shelterMon/config1.json</b></li>
@@ -110,10 +117,6 @@ I've connected the <b>ESP32 and both sensors</b> to a power meter and the most p
   OR <br><b>python /home/shelterMon/shelterMon.py /home/shelterMon/kennel.json -d yes </b></li>
     <li>If the test is successful you will not get any errors.</li>
 
-  
-  <h2>Breadboard Hat</h2>
-  The breadboard hat provides a physical switch to enable/disable the monitor and also an LED that indicates the position of the switch.  <br>
-  <img src="https://raw.githubusercontent.com/bramuno/shelterMonitor/main/breadboardHatDone.jpg">
   <li></li>
   <li></li>
   <li></li>
