@@ -22,10 +22,10 @@ links provided here are only examples as you can swap out brands as needed to sa
 1 - <a href="https://a.co/d/dl4wDO9">lighted toggle switch 3-pole</a> any style is ok as long as its an 3-pole<br>
 1 - <a href="https://a.co/d/bAP9Ayc">solderable breadboard hat</a><br>
 1 - 200ohm resistor (have to buy a pack, but you may be able to locate a someone that has a few to spare)<br>
-1 - basic LED (not needed if the toggle switch is lighted)<br>
+1 - basic LED <br>
 1 - tiny flat head screwdriver <br>
 1 - <a href="https://a.co/d/0wVyD20">micro SD card</a> (16gb or larger).  Don't go cheap here.  Recommend you buy SanDisk brand.  16gb is plenty of space, you don't need space for this project. The card should come with an micro to standard size adapter.  If it doesn't you will need to get one. <br>
-1 - Soldering Iron kit (an iron with an iron stand and some solder, something <a href="https://a.co/d/caBHZSg">like this</a>)<br>
+1 - Soldering Iron kit (an iron with an iron stand and some solder, <a href="https://a.co/d/d0QlyU0">micro cutters</a>, maybe something <a href="https://a.co/d/caBHZSg">like this</a>)<br>
 1 - helping hands see <a href="https://www.amazon.com/s?k=helping+hands&i=tools&crid=38J2ATXAPQ9XL&sprefix=helping+hands%2Ctools%2C137&ref=nb_sb_noss_1">this search</a> for examples.  You will need something to hold your items while soldering.<br>
 <br> <br>
 <u>Optional hardware</u>:<br>
