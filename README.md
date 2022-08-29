@@ -166,7 +166,7 @@ then run the service in the foreground with:<br>
 These two above lines typically indicate a problem loading the log file created by the syslog service.  Check the config.json file(s) to make sure the file name matches the file created by the syslog service.  Also make sure the file exists and the syslog service is writing to the file.<br>
 </li>
 <li><b>Config.json load failed.</b><br>
-this message typically means there is a parsing error on the config.json file.  This will happen if there is an extra comma, or unbalanced quotes, etc.  the JSON format must be perfect , so if you can't figure it out just go back to the default config.json file provided in the github repo and paste it into your file again.</li>
+this message typically means there is a parsing error on the config.json file, or the json files does not exist.  This will happen if there is an extra comma, or unbalanced quotes, etc.  the JSON format must be perfect , so if you can't figure it out just go back to the default config.json file provided in the github repo and paste it into your file again.</li>
 <li></li>
 <li></li>
 <li></li>
