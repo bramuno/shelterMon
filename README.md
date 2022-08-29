@@ -42,6 +42,8 @@ Right now, rPi's are more expensive than they used to be.  so there are some alt
 <br><br>
 <h1>Build & Installation Instructions</h1>
 
+<br><a href="https://youtu.be/r8hItY2fCbU">video guide here</a><br>
+
 <h2>Raspberry Pi</h2>
 <ul>
 <li>go to https://www.raspberrypi.com/software/ and download the latest Raspbery Pi system imager tool. </li>
