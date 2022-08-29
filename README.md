@@ -74,7 +74,9 @@ Right now, rPi's are more expensive than they used to be.  so there are some alt
   <li>now run this command to edit the rsyslog.conf file<br>
   <b>sudo nano /etc/rsyslog.conf</b><br>
   locate "module(load="imudp")" and remove the # before it. Do the same for next line.  Then change 'port="514"' to 'port="3333"' and use CTRL-O to save and CTRL-X to exit.</li>
-  <li>now run this command to restart rsyslog and check your conf file is correct<br>
+  <li>now run this command to check your conf file is correct:<br>
+  <br>rsyslogd -f /etc/rsyslog.conf -N1</b><br>
+  <li>now run this command to restart rsyslog:<br>
   <b>sudo systemctl restart rsyslog</b><br>If the command returns nothing, especially no errors, then you are fine.  Otherwise, go back into the file and try to find where the problem is.  syslog won't run if that file isn't perfect.</li>
   <li>Now that syslog is listening make sure your sensors are powered on.  </li>
   <li>The sensors should start sending data to the rpi.  Now we can finish with the rpi.</li>
