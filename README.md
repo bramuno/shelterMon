@@ -154,3 +154,20 @@ Run this command: (if it prompts for an editor, choose NANO) <br>
   <li>Now you just need to place the sensor(s) where they need to go and use a USB charge adapter to power the sensor unit.  the unit needs to be in a place where it can communicate with the WiFi. </li>
   <li>Thanks for reading this. </li>
 </ul>
+
+<h1>Troubleshooting</h1>
+<li><b>Syslog problems</b><br>
+to run rsyslog in debug mode, stop the syslog service with:<br>
+<b>systemctl stop rsyslog.socket</b><br>
+then run the service in the foreground with:<br>
+<b>/sbin/rsyslogd -dn</b></li>
+<li><b>readTime = chk[0]+" "+chk[1]+" "+chk[2]<br>
+IndexError: list index out of range<br>
+These two above lines typically indicate a problem loading the log file created by the syslog service.  Check the config.json file(s) to make sure the file name matches the file created by the syslog service.  Also make sure the file exists and the syslog service is writing to the file.<br>
+</li>
+<li><b>Config.json load failed.</b><br>
+this message typically means there is a parsing error on the config.json file.  This will happen if there is an extra comma, or unbalanced quotes, etc.  the JSON format must be perfect , so if you can't figure it out just go back to the default config.json file provided in the github repo and paste it into your file again.</li>
+<li></li>
+<li></li>
+<li></li>
+<li></li>
