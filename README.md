@@ -13,36 +13,36 @@ Ultimately it is YOUR RESPONSIBILITY to do all the proper research of all the su
 
 <h2>Hardware:</h2>
 links provided here are only examples as you can swap out brands as needed to save money as long as the part does what it required, any by all means if you can find it somewhere else then you don't need amazon :)<br>
-1 - <a href="https://a.co/d/iUwvwW4">Raspberry Pi</a> or alternative, see below for some cheaper alternatives<br>(make sure it comes with a PROPER power supply or buy one with it)<br>
-?? - <a href="https://www.amazon.com/dp/B013GB27HS?ref_=cm_sw_r_cp_ud_dp_G5QE4ZMDYW0S37ADKY5F">DS18B20 Temperature Sensor</a> (one for each area you need to monitor)<br>
-?? - <a href="https://a.co/d/4bGYlUr">ESP-32 WiFi Development Board</a> (one for each area you need to monitor)<br>
-?? - <a href="https://a.co/d/buQ9nun">Breakout board</a> for ESP32 (one for each area you need to monitor)<br>
-?? - <a href="https://a.co/d/6vf3yfr">USB chargers</a> (one for each area you need to monitor) <br>
+1 - <a href="https://a.co/d/iUwvwW4" target="_blank">Raspberry Pi</a> or alternative, see below for some cheaper alternatives<br>(make sure it comes with a PROPER power supply or buy one with it)<br>
+?? - <a href="https://www.amazon.com/dp/B013GB27HS?ref_=cm_sw_r_cp_ud_dp_G5QE4ZMDYW0S37ADKY5F" target="_blank">DS18B20 Temperature Sensor</a> (one for each area you need to monitor)<br>
+?? - <a href="https://a.co/d/4bGYlUr" target="_blank">ESP-32 WiFi Development Board</a> (one for each area you need to monitor)<br>
+?? - <a href="https://a.co/d/buQ9nun" target="_blank">Breakout board</a> for ESP32 (one for each area you need to monitor)<br>
+?? - <a href="https://a.co/d/6vf3yfr" target="_blank">USB chargers</a> (one for each area you need to monitor) <br>
 ??- Low voltage wires (cat5 cable works great)<br>
-1 - <a href="https://a.co/d/dl4wDO9">lighted toggle switch 3-pole</a> any style is ok as long as its an 3-pole<br>
-1 - <a href="https://a.co/d/bAP9Ayc">solderable breadboard hat</a><br>
+1 - <a href="https://a.co/d/dl4wDO9" target="_blank">lighted toggle switch 3-pole</a> any style is ok as long as its an 3-pole<br>
+1 - <a href="https://a.co/d/bAP9Ayc" target="_blank">solderable breadboard hat</a><br>
 1 - 200ohm resistor (have to buy a pack, but you may be able to locate a someone that has a few to spare)<br>
 1 - basic LED <br>
 1 - tiny flat head screwdriver <br>
-1 - <a href="https://a.co/d/0wVyD20">micro SD card</a> (16gb or larger).  Don't go cheap here.  Recommend you buy SanDisk brand.  16gb is plenty of space, you don't need space for this project. The card should come with an micro to standard size adapter.  If it doesn't you will need to get one. <br>
-1 - Soldering Iron kit (an iron with an iron stand and some solder, <a href="https://a.co/d/d0QlyU0">micro cutters</a>, maybe something <a href="https://a.co/d/caBHZSg">like this</a>)<br>
-1 - helping hands see <a href="https://www.amazon.com/s?k=helping+hands&i=tools&crid=38J2ATXAPQ9XL&sprefix=helping+hands%2Ctools%2C137&ref=nb_sb_noss_1">this search</a> for examples.  You will need something to hold your items while soldering.<br>
+1 - <a href="https://a.co/d/0wVyD20" target="_blank">micro SD card</a> (16gb or larger).  Don't go cheap here.  Recommend you buy SanDisk brand.  16gb is plenty of space, you don't need space for this project. The card should come with an micro to standard size adapter.  If it doesn't you will need to get one. <br>
+1 - Soldering Iron kit (an iron with an iron stand and some solder, <a href="https://a.co/d/d0QlyU0" target="_blank">micro cutters</a>, maybe something <a href="https://a.co/d/caBHZSg" target="_blank">like this</a>)<br>
+1 - helping hands see <a href="https://www.amazon.com/s?k=helping+hands&i=tools&crid=38J2ATXAPQ9XL&sprefix=helping+hands%2Ctools%2C137&ref=nb_sb_noss_1" target="_blank">this search</a> for examples.  You will need something to hold your items while soldering.<br>
 <br> <br>
 <u>Optional hardware</u>:<br>
-You may need a <a href="https://a.co/d/4wtLp9Z">USB-SD card adapter</a> so you can read/write to the card.  Some laptops have this already so check before ordering. <br><br>
+You may need a <a href="https://a.co/d/4wtLp9Z" target="_blank">USB-SD card adapter</a> so you can read/write to the card.  Some laptops have this already so check before ordering. <br><br>
 <u>Optional alternative hardware</u>: <br>
 If you've never done a project like this and don't have any of the items listed above, here is a starter kit that has the M-F cables, low-voltage wires, a temporary breadbaoard, LEDs and resistors.  <br>
 ELEGOO Electronic Fun Kit for Arduino, Respberry Pi https://a.co/d/bWZt9zZ <br>
 <br>
 Respberry Pi alternatives:<br>
 Right now, rPi's are more expensive than they used to be.  so there are some alternatives you can try to use instead of an actual Pi.  I recommend googling "Raspberry Pi Alternatives" but here are a few that look like they may wor.  Overall, you must find somethign that has the same set of GPIO pins that the rPi has.:<br>
-<li><a href="https://a.co/d/6iG05cZ">Libre Computer Board AML-S905X-CC </a></li>
-<li><a href="https://a.co/d/2Vu5FYG">Banana Pi</a></li>
-<li><a href="https://a.co/d/5vRDpWE">Odroid</a></li>
+<li><a href="https://a.co/d/6iG05cZ" target="_blank">Libre Computer Board AML-S905X-CC </a></li>
+<li><a href="https://a.co/d/2Vu5FYG" target="_blank">Banana Pi</a></li>
+<li><a href="https://a.co/d/5vRDpWE" target="_blank">Odroid</a></li>
 <br><br>
 <h1>Build & Installation Instructions</h1>
 
-<a href="https://youtu.be/UqLbqoWmh2U">supplemental video guide here</a><br>
+<a href="https://youtu.be/UqLbqoWmh2U" target="_blank">supplemental video guide here</a><br>
 
 <h2>Raspberry Pi</h2>
 <ul>
@@ -58,14 +58,14 @@ Right now, rPi's are more expensive than they used to be.  so there are some alt
   <li>After it's finished writing the data, you can eject the card and place it in the Raspberry Pi. Don't poower on the spi just yet.</li>
   <li>First go find your router.  If you don't already know the admin password, you can check on the router as most modern routers will have that printed somewhere.  </li>
   <li>you will need to <a href="https://www.howtogeek.com/233952/how-to-find-your-routers-ip-address-on-any-computer-smartphone-or-tablet/">find your router's IP address</a></li>
-  <li>Once you have the address, put that IP in a browser window to connect to the router.  Login using the admin password.  If you can't find the router password and can't login, you will need to <a href="https://www.hellotech.com/guide/for/how-to-reset-router-and-modem">reset the router</a>.   This can be problematic and requires a netowrk cable so make sure you know what you're doing first.  </li>
+  <li>Once you have the address, put that IP in a browser window to connect to the router.  Login using the admin password.  If you can't find the router password and can't login, you will need to <a href="https://www.hellotech.com/guide/for/how-to-reset-router-and-modem" target="_blank">reset the router</a>.   This can be problematic and requires a netowrk cable so make sure you know what you're doing first.  </li>
   <li>Once logged in, go to the LOGS section (you may need to click ADVANCED if your router has a basic/advanced option) and you should have a log file to watch as it distributes IP addresses.  Once you have that, power on the rpi. </li>
   <li>Watch the log and look for the IP address given to the rpi. Write down the IP address <u>AND</a> the MAC address for that device, you will need both (example MAC:  ab:cd:ef:01:23:45).</li>
   <li>Now you need to power on each ESP32 running the code provided earlier.  They will attempt to get an IP address like your rpi.   Write down all IPs and MACs for each device.  </li>
-  <li>Now you will need to locate the DHCP area and find where you can reserve the DHCP address for your rpi. Check <a href="https://kb.netgear.com/25722/How-do-I-reserve-an-IP-address-on-my-NETGEAR-router">this link</a> for an example using a netgead router but you may have to google "dhcp reservation" and your router name to find the right guide.</li>
+  <li>Now you will need to locate the DHCP area and find where you can reserve the DHCP address for your rpi. Check <a href="https://kb.netgear.com/25722/How-do-I-reserve-an-IP-address-on-my-NETGEAR-router" target="_blank">this link</a> for an example using a netgead router but you may have to google "dhcp reservation" and your router name to find the right guide.</li>
   <li>Once your router has the IP reserved, you are done with the router.</li>
   <li>Now that you have the IP address, you can SSH into the rpi.<br>
-  <li>if you dont know how to SSH to a device, you can <a href="https://www.putty.org/">download putty</a>.  Click <a href="https://www.ssh.com/academy/ssh/putty/windows">here</a> for a guide on how to use putty for SSH. </li>
+  <li>if you dont know how to SSH to a device, you can <a href="https://www.putty.org/" target="_blank">download putty</a>.  Click <a href="https://www.ssh.com/academy/ssh/putty/windows" target="_blank">here</a> for a guide on how to use putty for SSH. </li>
   <li>After logging in run these commands: (you can paste copied text into the putty window using the right mouse button)<br>:
   <b>sudo apt-get -y install rsyslog && sudo nano /etc/rsyslog.d/shelter.conf</b>
   </li>
