@@ -162,7 +162,7 @@ to run rsyslog in debug mode, stop the syslog service with:<br>
 then run the service in the foreground with:<br>
 <b>/sbin/rsyslogd -dn</b></li>
 <li><b>readTime = chk[0]+" "+chk[1]+" "+chk[2]<br>
-IndexError: list index out of range<br>
+  IndexError: list index out of range</b><br>
 These two above lines typically indicate a problem loading the log file created by the syslog service.  Check the config.json file(s) to make sure the file name matches the file created by the syslog service.  Also make sure the file exists and the syslog service is writing to the file.<br>
 </li>
 <li><b>Config.json load failed.</b><br>
