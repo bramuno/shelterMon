@@ -224,7 +224,6 @@ print(output)
 f = open(statusFile, "w")
 f.write(output)
 f.close()
-sys.exit()
 # clear data log and add the last event
 f = open(logfile, "w")
 f.write(lastEvent)
