@@ -1,4 +1,4 @@
-#!/bin/python
+#!/bin/python3
 # sudo apt install rsyslog
 debug = ""
 import os, sys, json, subprocess, smtplib, datetime, time, os.path, pdb, argparse
