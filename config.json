@@ -10,7 +10,5 @@
 "SMTPuser":"SMTPuserNameHere",
 "SMTPpass":"SMTPpasswordHere",
 "SMTPserver":"smtp.gmail.com",
-"SMTPport":"465",
-"SMS":"5551114444",
-"SMScarrier":"0"
+"SMTPport":"465"
 }
