@@ -54,16 +54,11 @@ while g < len(tmplist):
     tempUnit =  str(get['tempUnit'])
     maxDuration =  int(get['maxDuration'])
     dests =  get['emailDestination']
-    SMTPuser =  get['SMTPuser']
-    SMTPpass =  get['SMTPpass']
-    SMTPserver =  get['SMTPserver']
-    SMTPport =  int(get['SMTPport'])
-
-    mSMTPuser = get['SMTPuser']
-    mSMTPpass = get['SMTPpass']
-    mSMTPserver = get['SMTPserver']
-    mSMTPport = get['SMTPport']
-
+    SMTPuser =  get['SMTPuser'];mSMTPuser = get['SMTPuser']
+    SMTPpass =  get['SMTPpass'];mSMTPpass = get['SMTPpass']
+    SMTPserver =  get['SMTPserver'];mSMTPserver = get['SMTPserver']
+    SMTPport =  int(get['SMTPport']);mSMTPport = int(get['SMTPport'])
+    #
     newfile = 0
     logfile = folderName+"/"+logfileName
     statusFile = folderName+"/"+statusFileName
