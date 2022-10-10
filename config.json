@@ -5,6 +5,7 @@
 "shelterName":"ShelterNameHere",
 "maxTemp":"95",
 "minTemp":"50",
+"maxDuration": "20",
 "tempUnit":"F",
 "emailDestination":"dest.email@gmail.com",
 "SMTPuser":"SMTPuserNameHere",
