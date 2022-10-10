@@ -7,9 +7,5 @@
 "minTemp":"50",
 "maxDuration": "20",
 "tempUnit":"F",
-"emailDestination":"dest.email@gmail.com",
-"SMTPuser":"SMTPuserNameHere",
-"SMTPpass":"SMTPpasswordHere",
-"SMTPserver":"smtp.gmail.com",
-"SMTPport":"465"
+"emailDestination":"dest.email@gmail.com"
 }
