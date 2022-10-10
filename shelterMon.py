@@ -159,10 +159,14 @@ while g < len(tmplist):
 
     diffMins = float(round(diffEpoch/60,2))
     temp=chk[3].split(",")
-    if ( float(temp[0]) > float(maxTemp) ) or ( float(temp[0]) < float(minTemp) )  :
+    finalTemp = temp[0]
+    tempC = round(float(finalTemp-32*(5/9)),2)
+    if tempUnit == "C":
+        finalTemp = tempC
+    else:
+        finalTemp = str(round(float(finalTemp),1))
+    if ( float(finalTemp) > float(maxTemp) ) or ( float(finalTemp) < float(minTemp) )  :
         state = 0
-
-    reading = str(round(float(temp[0]),1))
 
     if int(state) == 1:
         newDur = round(diffMins, 1)
@@ -172,9 +176,9 @@ while g < len(tmplist):
     if debug == 1:
         print("oldState = "+str(oldState))
         print("oldDur = "+str(oldDur))
-        print("maxTemp = ",str(maxTemp))
-        print("minTemp = ",str(minTemp))
-        print("temp[0] = ",str(temp[0]))
+        print("maxTemp = "+str(maxTemp)+str(tempUnit))
+        print("minTemp = "+str(minTemp)+str(tempUnit))
+        print("temp reading = ",str(finalTemp)+str(tempUnit))
         print("maxDuration = ",str(maxDuration))
         print("statusFile = ",str(statusFile))
         print("newfile = ",str(newfile))
@@ -201,9 +205,9 @@ while g < len(tmplist):
         subject = str(shelterName)+" Sensor temperature outside desired threshold."
     ########## END critical temperature alert
     ## alert sensor online but reading incorrectly
-    if ( float(temp[0]) < -60.0 ) :
+    if ( float(finalTemp) < -60.0 ) :
         alert = 1
-        body = "\nA sensor is not reading correctly:\n\nsensorA="+str(float(temp[0]))+"\n"
+        body = "\nA sensor is not reading correctly:\n\nsensorA="+str(float(finalTemp))+"\n"
         subject = 'A sensor is not reading correctly'
     ########## end
     if debug == 1:
@@ -229,7 +233,7 @@ while g < len(tmplist):
         if state == 1:
             newDur = "0"
 
-    output = '{"lastSeen":"'+str(lastSeen)+'","state":"'+str(state)+'","duration":"'+str(newDur)+'","lastTemp":"'+reading+'","minsSinceLastLog":"'+str(minsSinceLastLog)+'" }'
+    output = '{"lastSeen":"'+str(lastSeen)+'","state":"'+str(state)+'","duration":"'+str(newDur)+'","lastTemp":"'+str(finalTemp)+'","minsSinceLastLog":"'+str(minsSinceLastLog)+'" }'
     print(output)
 
     f = open(statusFile, "w")
@@ -298,7 +302,7 @@ if exists(alertFile):
             thisMsg = EmailMessage()
             thisMsg.set_content(thisBody)
             thisMsg['Subject'] = "Problem with temperature sensor"
-            thisMsg['From'] = "alert@temperatureMon.org"
+            thisMsg['From'] = "alet@temperatureMon.org"
             thisMsg['To'] = tgt
             msg(mSMTPserver, mSMTPport, mSMTPuser, mSMTPpass, thisMsg)
             x=x+1
