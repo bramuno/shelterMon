@@ -1,5 +1,9 @@
-#!/bin/python
+#!/bin/python3
 # sudo apt install rsyslog
+## version notes:
+## this script will look for .json config files stored in the path passed by -C option
+## usage: python3 shelterMon.py -C /path/to/folder
+## 
 debug = ""
 import os, sys, json, subprocess, smtplib, datetime, time, os.path, pdb, argparse, glob
 from email.message import EmailMessage
