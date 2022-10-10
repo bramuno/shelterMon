@@ -1,0 +1,6 @@
+{
+"SMTPuser":"SMTPuserNameHere",
+"SMTPpass":"SMTPpasswordHere",
+"SMTPserver":"smtp.gmail.com",
+"SMTPport":"465"
+}
