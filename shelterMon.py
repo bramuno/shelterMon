@@ -39,6 +39,21 @@ alertFile = ""
 alert = 0
 list = []
 g = 0
+
+configFolder = str(args.config)
+try:
+    f = open(configFolder+"/email.json", "r")
+    get = json.load(f)
+    f.close()
+except:
+    sys.exit(configFolder+"/email.json load failed.\n")
+
+SMTPuser =  get['SMTPuser']
+SMTPpass =  get['SMTPpass']
+SMTPserver =  get['SMTPserver']
+SMTPport =  int(get['SMTPport'])
+
+# begin loop
 while g < len(tmplist):
     lastSeen = 0
 
@@ -58,10 +73,6 @@ while g < len(tmplist):
     tempUnit =  str(get['tempUnit'])
     maxDuration =  int(get['maxDuration'])
     dests =  get['emailDestination']
-    SMTPuser =  get['SMTPuser'];mSMTPuser = get['SMTPuser']
-    SMTPpass =  get['SMTPpass'];mSMTPpass = get['SMTPpass']
-    SMTPserver =  get['SMTPserver'];mSMTPserver = get['SMTPserver']
-    SMTPport =  int(get['SMTPport']);mSMTPport = int(get['SMTPport'])
     #
     newfile = 0
     logfile = folderName+"/"+logfileName
