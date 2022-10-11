@@ -46,7 +46,7 @@ try:
     get = json.load(f)
     f.close()
 except:
-    sys.exit(configFolder+"/email.json load failed.\n")
+    sys.exit("failed to load "+configFolder+"/email.json \n")
 
 SMTPuser =  get['SMTPuser']
 SMTPpass =  get['SMTPpass']
@@ -56,210 +56,212 @@ SMTPport =  int(get['SMTPport'])
 # begin loop
 while g < len(tmplist):
     lastSeen = 0
-
-    try:
-        f = open(tmplist[g], "r")
-        get = json.load(f)
-        f.close()
-    except:
-        sys.exit("Config.json load failed.  --> "+str(tmplist[g])+"\n")
-
-    shelterName = get['shelterName']
-    folderName =  get['folderName']
-    logfileName =  str(get['logfileName'])
-    statusFileName =  logfileName+"-status.txt"
-    maxTemp =  float(get['maxTemp'])
-    minTemp =  float(get['minTemp'])
-    tempUnit =  str(get['tempUnit'])
-    maxDuration =  int(get['maxDuration'])
-    dests =  get['emailDestination']
-    #
-    newfile = 0
-    logfile = folderName+"/"+logfileName
-    statusFile = folderName+"/"+statusFileName
-
-    if not os.path.exists(logfile) or not os.path.exists(statusFile):
-        sample = '{"lastSeen":"1659588285","state":"1","duration":"0","lastTemp":"80.88","minsSinceLastLog":"0.0" }'
-        cmd = "mkdir -p "+str(folderName)
-        subprocess.check_output(cmd, shell=True)
-        cmd = "touch "+str(logfile)
-        subprocess.check_output(cmd, shell=True)
-        cmd = "echo '"+str(sample)+"' > "+str(statusFile)
-        subprocess.check_output(cmd, shell=True)
-
-    try:
-        f = open(statusFile, "r")
-        get = json.load(f)
-        oldStatus = f.read()
-        f.close()
+    if tmplist[g] != configFolder+"/email.json":
+        if debug == 1:
+            print("\nstarting: "+str(tmplist[g]))
         try:
-            oldState =  int(get['state'])
-            oldDur = float(get['duration'])
-            lastSeen = int(get['lastSeen'])
-            newfile = 0
+            f = open(tmplist[g], "r")
+            get = json.load(f)
+            f.close()
         except:
-            print("nope")
-    except:
-        get = ""
-        oldStatus = 0
-        oldState =  0
-        oldDur = 0
-        lastSeen = 0
-        dur = 0
-        if debug == 1:
-            print(str(statusFile)+" JSON load failed.\n")
-        f.close()
+            sys.exit("json config  load fail.  --> "+str(tmplist[g])+"\n")
 
-    if oldDur < 0:
-        oldDur = 0
+        shelterName = get['shelterName']
+        folderName =  get['folderName']
+        logfileName =  str(get['logfileName'])
+        statusFileName =  logfileName+"-status.txt"
+        maxTemp =  float(get['maxTemp'])
+        minTemp =  float(get['minTemp'])
+        tempUnit =  str(get['tempUnit'])
+        maxDuration =  int(get['maxDuration'])
+        dests =  get['emailDestination']
+        #
+        newfile = 0
+        logfile = folderName+"/"+logfileName
+        statusFile = folderName+"/"+statusFileName
 
-    if oldStatus == "" and oldState == "" and oldDur == "":
-        newfile = 1
+        if not os.path.exists(logfile) or not os.path.exists(statusFile):
+            sample = '{"lastSeen":"1659588285","state":"1","duration":"0","lastTemp":"80.88","minsSinceLastLog":"0.0" }'
+            cmd = "mkdir -p "+str(folderName)
+            subprocess.check_output(cmd, shell=True)
+            cmd = "touch "+str(logfile)
+            subprocess.check_output(cmd, shell=True)
+            cmd = "echo '"+str(sample)+"' > "+str(statusFile)
+            subprocess.check_output(cmd, shell=True)
 
-    # open data log
-    f = open(logfile, "r")
-    read = f.read()
-    f.close()
-    #
-    empty=0
-    state = 1
-    data = read.split("\n")
-    lines = len(data)
-    now = datetime.datetime.now()
-    if lines-2 < 0:
-        tgt=0
-    else:
-        tgt=lines-2
-
-    lastEvent = data[tgt]
-    nowEpoch = int(datetime.datetime.now().timestamp())
-    lastEvent = lastEvent.replace("  "," ")
-    chk = lastEvent.split(" ")
-    readTime = chk[0]+" "+chk[1]+" "+chk[2]
-    mo=str(chk[0])
-    months = {'jan':1,'feb':2,'mar':3,'apr':4,'may':5,'jun':6,'jul':7,'aug':8,'sep':9,'oct':10,'nov':11,'dec':12}
-    a = mo.strip()[:3].lower()
-    year = now.year
-    minute = now.strftime('%M')
-    month = months[a]
-    day=int(chk[1])
-    splTime = chk[2].split(":")
-    hour=int(splTime[0])
-    min=int(splTime[1])
-    sec=int(splTime[2])
-    logEpoch = int(datetime.datetime(year, month,day, hour, min, sec).timestamp())
-    diffEpoch = nowEpoch - lastSeen
-    secSinceLastLog = nowEpoch - logEpoch
-    minsSinceLastLog = round((secSinceLastLog/60),1)
-    if diffEpoch < 0:
-        diffEpoch = 0
-
-    if float(secSinceLastLog) < 0:
-        secSinceLastLog = 0
-
-    diffMins = float(round(diffEpoch/60,2))
-    temp=chk[3].split(",")
-    finalTemp = temp[0]
-    tempC = round(float(finalTemp-32*(5/9)),2)
-    if tempUnit == "C":
-        finalTemp = tempC
-    else:
-        finalTemp = str(round(float(finalTemp),1))
-    if ( float(finalTemp) > float(maxTemp) ) or ( float(finalTemp) < float(minTemp) )  :
-        state = 0
-
-    if int(state) == 1:
-        newDur = round(diffMins, 1)
-    else:
-        newDur = round((oldDur + diffMins), 1)
-
-    if debug == 1:
-        print("oldState = "+str(oldState))
-        print("oldDur = "+str(oldDur))
-        print("maxTemp = "+str(maxTemp)+str(tempUnit))
-        print("minTemp = "+str(minTemp)+str(tempUnit))
-        print("temp reading = ",str(finalTemp)+str(tempUnit))
-        print("maxDuration = ",str(maxDuration))
-        print("statusFile = ",str(statusFile))
-        print("newfile = ",str(newfile))
-
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    if int(GPIO.input(17)) == 0:
-        f = open(logfile, "w")
-        f.write(str(lastEvent))
-        f.close()
-        if debug == 1:
-            print("switchCheck = ",str(GPIO.input(17)))
-        sys.exit("\nDetected OFF switch position on syslog server. Quitting.\n")
-    ###################
-    # offline sensor alert (every 5m on the 5th minute)
-    if round(minsSinceLastLog,0) > 5:
-        body = "No contact from temperature sensor in "+str(minsSinceLastLog)+" minutes.\nPlease check it is online and batteries are charged.\nReboot if needed.\n"
-        subject = "No contact from temperature sensor"
-        alert = 1
-    ########## critical temperature alert begin
-    if ( state != 1 and int(oldState) == 0 and float(oldDur) > float(maxDuration) ) :
-        alert = 1
-        body = str(shelterName)+" has been reading "+str(reading)+str(tempUnit)+" degree temperature for at least "+str(oldDur)+" minutes!\n"
-        subject = str(shelterName)+" Sensor temperature outside desired threshold."
-    ########## END critical temperature alert
-    ## alert sensor online but reading incorrectly
-    if ( float(finalTemp) < -60.0 ) :
-        alert = 1
-        body = "\nA sensor is not reading correctly:\n\nsensorA="+str(float(finalTemp))+"\n"
-        subject = 'A sensor is not reading correctly'
-    ########## end
-    if debug == 1:
-        print("state = ",str(state))
-        print("nowEpoch = ",str(nowEpoch))
-        print("lastSeen = ",str(lastSeen))
-        print("diffEpoch = ",str(diffEpoch))
-        print("diffMins = ",str(diffMins))
-        print("newDur = ",str(newDur))
-        print("minsSinceLastLog = ",str(minsSinceLastLog))
-        print("thisMinute = ",str(minute))
-        print("switchCheck = ",str(GPIO.input(17)))
-        print("alert = ",str(alert))
-        print("logfile = ",str(logfile))
-
-    if newfile == 1:
-        newDur = "0"
-        lastSeen = str(nowEpoch)
-        if debug == 1:
-            print("\nnew status file created\n")
-    else:
-        lastSeen = str(logEpoch)
-        if state == 1:
-            newDur = "0"
-
-    output = '{"lastSeen":"'+str(lastSeen)+'","state":"'+str(state)+'","duration":"'+str(newDur)+'","lastTemp":"'+str(finalTemp)+'","minsSinceLastLog":"'+str(minsSinceLastLog)+'" }'
-    print(output)
-
-    f = open(statusFile, "w")
-    f.write(output)
-    f.close()
-    # clear data log and add the last event
-    f = open(logfile, "w")
-    f.write(lastEvent)
-    f.close()
-
-    ## create master file
-    if alert == 1:
-        alertFile = str(args.config)+"/alert.txt"
-        if exists(alertFile):
-            gg = open(alertFile, 'a')
+        try:
+            f = open(statusFile, "r")
+            get = json.load(f)
+            oldStatus = f.read()
+            f.close()
+            try:
+                oldState =  int(get['state'])
+                oldDur = float(get['duration'])
+                lastSeen = int(get['lastSeen'])
+                newfile = 0
+            except:
+                print("nope")
+        except:
+            get = ""
+            oldStatus = 0
+            oldState =  0
+            oldDur = 0
+            lastSeen = 0
+            dur = 0
             if debug == 1:
-                print("deleting alertFile")
+                print(str(statusFile)+" JSON load failed.\n")
+            f.close()
+
+        if oldDur < 0:
+            oldDur = 0
+
+        if oldStatus == "" and oldState == "" and oldDur == "":
+            newfile = 1
+
+        # open data log
+        f = open(logfile, "r")
+        read = f.read()
+        f.close()
+        #
+        empty=0
+        state = 1
+        data = read.split("\n")
+        lines = len(data)
+        now = datetime.datetime.now()
+        if lines-2 < 0:
+            tgt=0
         else:
-            gg = open(alertFile, 'x')
-            if debug == 1:
-                    print("creating alertFile")
-        alertOut = '{"dests":"'+str(dests)+'", "subject":"'+str(subject)+'", "body":"'+str(body)+'"}\nbreak'
+            tgt=lines-2
+
+        lastEvent = data[tgt]
+        nowEpoch = int(datetime.datetime.now().timestamp())
+        lastEvent = lastEvent.replace("  "," ")
+        chk = lastEvent.split(" ")
+        readTime = chk[0]+" "+chk[1]+" "+chk[2]
+        mo=str(chk[0])
+        months = {'jan':1,'feb':2,'mar':3,'apr':4,'may':5,'jun':6,'jul':7,'aug':8,'sep':9,'oct':10,'nov':11,'dec':12}
+        a = mo.strip()[:3].lower()
+        year = now.year
+        minute = now.strftime('%M')
+        month = months[a]
+        day=int(chk[1])
+        splTime = chk[2].split(":")
+        hour=int(splTime[0])
+        min=int(splTime[1])
+        sec=int(splTime[2])
+        logEpoch = int(datetime.datetime(year, month,day, hour, min, sec).timestamp())
+        diffEpoch = nowEpoch - lastSeen
+        secSinceLastLog = nowEpoch - logEpoch
+        minsSinceLastLog = round((secSinceLastLog/60),1)
+        if diffEpoch < 0:
+            diffEpoch = 0
+
+        if float(secSinceLastLog) < 0:
+            secSinceLastLog = 0
+
+        diffMins = float(round(diffEpoch/60,2))
+        temp=chk[3].split(",")
+        finalTemp = temp[0]
+        tempC = round(float(finalTemp)-32*(5/9),2)
+        if tempUnit == "C":
+            finalTemp = tempC
+        else:
+            finalTemp = str(round(float(finalTemp),1))
+        if ( float(finalTemp) > float(maxTemp) ) or ( float(finalTemp) < float(minTemp) )  :
+            state = 0
+
+        if int(state) == 1:
+            newDur = round(diffMins, 1)
+        else:
+            newDur = round((oldDur + diffMins), 1)
+
         if debug == 1:
-            print(str(alertOut)+" >> "+str(alertFile))
-        gg.write(alertOut)
-        gg.close()
+            print("oldState = "+str(oldState))
+            print("oldDur = "+str(oldDur))
+            print("maxTemp = "+str(maxTemp)+str(tempUnit))
+            print("minTemp = "+str(minTemp)+str(tempUnit))
+            print("temp reading = ",str(finalTemp)+str(tempUnit))
+            print("maxDuration = ",str(maxDuration))
+            print("statusFile = ",str(statusFile))
+            print("newfile = ",str(newfile))
+
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        if int(GPIO.input(17)) == 0:
+            f = open(logfile, "w")
+            f.write(str(lastEvent))
+            f.close()
+            if debug == 1:
+                print("switchCheck = ",str(GPIO.input(17)))
+            sys.exit("\nDetected OFF switch position on syslog server. Quitting.\n")
+        ###################
+        # offline sensor alert (every 5m on the 5th minute)
+        if round(minsSinceLastLog,0) > 5:
+            body = "No contact from temperature sensor in "+str(minsSinceLastLog)+" minutes.\nPlease check it is online and batteries are charged.\nReboot if needed.\n"
+            subject = "No contact from temperature sensor"
+            alert = 1
+        ########## critical temperature alert begin
+        if ( int(state) == 0 and int(oldState) == 0 and float(oldDur) > float(maxDuration) ) :
+            alert = 1
+            body = str(shelterName)+" has been reading "+str(reading)+str(tempUnit)+" degree temperature for at least "+str(oldDur)+" minutes!\n"
+            subject = str(shelterName)+" Sensor temperature outside desired threshold."
+        ########## END critical temperature alert
+        ## alert sensor online but reading incorrectly
+        if ( float(finalTemp) < -40.0 ) :
+            alert = 1
+            body = "\nA sensor is not reading correctly:\n\nsensorA="+str(float(finalTemp))+"\n"
+            subject = 'A sensor is not reading correctly'
+        ########## end
+        if debug == 1:
+            print("state = ",str(state))
+            print("nowEpoch = ",str(nowEpoch))
+            print("lastSeen = ",str(lastSeen))
+            print("diffEpoch = ",str(diffEpoch))
+            print("diffMins = ",str(diffMins))
+            print("newDur = ",str(newDur))
+            print("minsSinceLastLog = ",str(minsSinceLastLog))
+            print("thisMinute = ",str(minute))
+            print("switchCheck = ",str(GPIO.input(17)))
+            print("alert = ",str(alert))
+            print("logfile = ",str(logfile))
+
+        if newfile == 1:
+            newDur = "0"
+            lastSeen = str(nowEpoch)
+            if debug == 1:
+                print("\nnew status file created\n")
+        else:
+            lastSeen = str(logEpoch)
+            if state == 1:
+                newDur = "0"
+
+        output = '{"lastSeen":"'+str(lastSeen)+'","state":"'+str(state)+'","duration":"'+str(newDur)+'","lastTemp":"'+str(finalTemp)+'","minsSinceLastLog":"'+str(minsSinceLastLog)+'" }'
+        print(output)
+
+        f = open(statusFile, "w")
+        f.write(output)
+        f.close()
+        # clear data log and add the last event
+        f = open(logfile, "w")
+        f.write(lastEvent)
+        f.close()
+
+        ## create master file
+        if alert == 1:
+            alertFile = str(args.config)+"/alert.txt"
+            if exists(alertFile):
+                gg = open(alertFile, 'a')
+                if debug == 1:
+                    print("deleting alertFile")
+            else:
+                gg = open(alertFile, 'x')
+                if debug == 1:
+                        print("creating alertFile")
+            alertOut = '{"dests":"'+str(dests)+'", "subject":"'+str(subject)+'", "body":"'+str(body)+'"}\nbreak'
+            if debug == 1:
+                print(str(alertOut)+" >> "+str(alertFile))
+            gg.write(alertOut)
+            gg.close()
     g = g + 1
 
 ## END LOOP
@@ -302,7 +304,7 @@ if exists(alertFile):
             thisMsg = EmailMessage()
             thisMsg.set_content(thisBody)
             thisMsg['Subject'] = "Problem with temperature sensor"
-            thisMsg['From'] = "alet@temperatureMon.org"
+            thisMsg['From'] = "alert@temperatureMon.org"
             thisMsg['To'] = tgt
             msg(mSMTPserver, mSMTPport, mSMTPuser, mSMTPpass, thisMsg)
             x=x+1
