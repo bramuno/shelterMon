@@ -77,7 +77,7 @@ Right now, rPi's are more expensive than they used to be.  so there are some alt
   <li>now run this command to check your conf file is correct:<br>
   <br>rsyslogd -f /etc/rsyslog.conf -N1</b><br>
   <li>now run this command to restart rsyslog:<br>
-  <b>sudo systemctl restart rsyslog</b><br>If the command returns nothing, especially no errors, then you are fine.  Otherwise, go back into the file and try to find where the problem is.  syslog won't run if that file isn't perfect.</li>
+  <b>sudo systemctl restart syslog.socket</b><br>If the command returns nothing, especially no errors, then you are fine.  Otherwise, go back into the file and try to find where the problem is.  syslog won't run if that file isn't perfect.</li>
   <li>Now that syslog is listening make sure your sensors are powered on.  </li>
   <li>The sensors should start sending data to the rpi.  Now we can finish with the rpi.</li>
 
