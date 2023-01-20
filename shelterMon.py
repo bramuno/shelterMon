@@ -4,7 +4,7 @@
 ## this script will look for .json config files stored in the path passed by -C option
 ## usage: python3 shelterMon.py -C /path/to/folder
 ## 
-debug = ""
+debug = 0
 import os, sys, json, subprocess, smtplib, datetime, time, os.path, pdb, argparse, glob
 from email.message import EmailMessage
 from os.path import exists
@@ -16,6 +16,8 @@ args = parser.parse_args()
 if args.debug == "yes" or args.debug == "on" or str(args.debug) == "1":
     debug = 1
     print("Diplaying debug as: %s" % args.debug)
+if args.debug == "":
+    debug = 0
 if args.config:
     if debug == 1:
         print("Diplaying config file as: % s" % args.config)
@@ -36,7 +38,6 @@ cfg = str(configFolder)
 configFolder = str(configFolder)+"*.json"
 tmplist = glob.glob(configFolder)
 alertFile = ""
-alert = 0
 list = []
 g = 0
 
@@ -55,6 +56,7 @@ SMTPport =  int(get['SMTPport'])
 
 # begin loop
 while g < len(tmplist):
+    alert = 0
     lastSeen = 0
     if tmplist[g] != configFolder+"/email.json":
         if debug == 1:
@@ -197,20 +199,20 @@ while g < len(tmplist):
         ###################
         # offline sensor alert (every 5m on the 5th minute)
         if round(minsSinceLastLog,0) > 5:
-            body = "No contact from temperature sensor in "+str(minsSinceLastLog)+" minutes.\nPlease check it is online and batteries are charged.\nReboot if needed.\n"
-            subject = "No contact from temperature sensor"
+            body = "No contact from temperature sensor "+str(shelterName)+" in "+str(minsSinceLastLog)+" minutes.\nPlease check it is online and batteries are charged.\nReboot if needed.\n"
+            subject = "Temperature sensor offline"
             alert = 1
         ########## critical temperature alert begin
         if ( int(state) == 0 and int(oldState) == 0 and float(oldDur) > float(maxDuration) ) :
             alert = 1
-            body = str(shelterName)+" has been reading "+str(reading)+str(tempUnit)+" degree temperature for at least "+str(oldDur)+" minutes!\n"
-            subject = str(shelterName)+" Sensor temperature outside desired threshold."
+            body = str(shelterName)+" has been reading '"+str(reading)+str(tempUnit)+"' degree temperature for at least "+str(oldDur)+" minutes!\n"
+            subject = str(shelterName)+" Sensor temperature problem"
         ########## END critical temperature alert
         ## alert sensor online but reading incorrectly
         if ( float(finalTemp) < -40.0 ) :
             alert = 1
             body = "\nA sensor is not reading correctly:\n\nsensorA="+str(float(finalTemp))+"\n"
-            subject = 'A sensor is not reading correctly'
+            subject = 'Sensor read problem'
         ########## end
         if debug == 1:
             print("state = ",str(state))
@@ -270,7 +272,7 @@ if exists(alertFile):
     m = open(alertFile, 'r')
     read = m.read().split("\nbreak")
     m.close()
-    get = json.loads(read[0], strict=False)
+    ##get = json.loads(read[0], strict=False)
     emails = []
     body = ""
     x=0
@@ -290,27 +292,33 @@ if exists(alertFile):
     now = datetime.datetime.now()
     minute = now.strftime('%M')
     x=0
-    thisBody = ""
     if int(minute)%5 == 0:
         while x < len(emails):
             tgt = emails[x]
             b=0
+            mSubject = ""
+            thisBody = ""
             while b < len(read):
                 if tgt in read[b]:
                     line = json.loads(read[b], strict=False)
                     if line['body'] not in thisBody:
-                        thisBody = str(thisBody)+str(line['body'])+"\n"
+                        thisBody = str(line['body'])+"\n"
                 b=b+1
             thisMsg = EmailMessage()
             thisMsg.set_content(thisBody)
-            thisMsg['Subject'] = "Problem with temperature sensor"
+            thisMsg['Subject'] = line['subject']
             thisMsg['From'] = "alert@temperatureMon.org"
             thisMsg['To'] = tgt
-            msg(mSMTPserver, mSMTPport, mSMTPuser, mSMTPpass, thisMsg)
+            try:
+                msg(SMTPserver, SMTPport, SMTPuser, SMTPpass, thisMsg)
+            except Exception as e: 
+                print(e)
+            else:
+                print("Sent email to :"+str(tgt))
             x=x+1
     else:
         print("not the 5th minute, skipping notification")
-    if debug == 1:
-        print("deleting alertFile")
-    os.remove(alertFile)
+    if debug == 0:
+        print("deleting "+str(alertFile))
+        os.remove(alertFile)
 sys.exit()
