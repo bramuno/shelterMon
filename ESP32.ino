@@ -35,7 +35,11 @@ void setup() {
   Serial.println(WiFi.localIP());
 }
 
+void(* resetFunc) (void) = 0; //declare reset function at address 0 - MUST BE ABOVE LOOP
+
 void loop() {
+if ( millis()  >= 300000 ) resetFunc(); //call reset device every 7 days
+
 sensor0.requestTemperatures();  // send command 
 float temp0C = sensor0.getTempCByIndex(0);
 float temp0F = (temp0C*9/5) + 32;
