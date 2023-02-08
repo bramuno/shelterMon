@@ -35,10 +35,10 @@ void setup() {
   Serial.println(WiFi.localIP());
 }
 
-void(* resetFunc) (void) = 0; //declare reset function at address 0 - MUST BE ABOVE LOOP
+void(* resetFunc) (void) = 0; // function to reset the ESP
 
 void loop() {
-if ( millis()  >= 300000 ) resetFunc(); //call reset device every 7 days
+if ( millis()  >= 604800000 ) resetFunc(); // call reset ESP device every 7 days
 
 sensor0.requestTemperatures();  // send command 
 float temp0C = sensor0.getTempCByIndex(0);
