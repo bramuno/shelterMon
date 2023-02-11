@@ -2,6 +2,7 @@
 # sudo apt install rsyslog
 ## version notes:
 ## this script will look for .json config files stored in the path passed by -C option
+## to disable a shelter/location sensor, just rename the .json file to something without .json (eg.  file.save)
 ## usage: python3 shelterMon.py -C /path/to/folder
 ## 
 debug = 0
