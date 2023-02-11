@@ -237,7 +237,7 @@ while g < len(tmplist):
             if state == 1:
                 newDur = "0"
 
-        output = '{"lastSeen":"'+str(lastSeen)+'","state":"'+str(state)+'","duration":"'+str(newDur)+'","lastTemp":"'+str(finalTemp)+'","minsSinceLastLog":"'+str(minsSinceLastLog)+'" }'
+        output = '{"lastSeen":"'+str(lastSeen)+'","state":"'+str(state)+'","duration":"'+str(newDur)+'","lastTemp":"'+str(finalTemp)+'","minsSinceLastLog":"'+str(minsSinceLastLog)+'","location":"'+str(shelterName)+'" }'
         print(output)
 
         f = open(statusFile, "w")
