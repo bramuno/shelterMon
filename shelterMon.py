@@ -70,6 +70,7 @@ while g < len(tmplist)-1:
         except:
             sys.exit("json config  load fail.  --> "+str(tmplist[g])+"\n")
 
+        enable = str(get['enable'])
         location = str(get['locationName'])
         folderName =  str(get['folderName'])
         logfileName =  str(get['logfileName'])
@@ -192,6 +193,7 @@ while g < len(tmplist)-1:
             print("maxDuration = ",str(maxDuration))
             print("statusFile = ",str(statusFile))
             print("newfile = ",str(newfile))
+            print("enable = ",str(enable))
 
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -251,17 +253,20 @@ while g < len(tmplist)-1:
             notifyMin = notifyMin + 1
             
         output = '{"lastSeen":"'+str(lastSeen)+'","OKstatus":"'+str(OKstatus)+'","duration":"'+str(newDur)+'","lastTemp":"'+str(finalTemp)+'","minsSinceLastLog":"'+str(minsSinceLastLog)+'","locationName":"'+str(location)+'","notifyMin":"'+str(notifyMin)+'" }'
-        print(output)
+        if int(enable) == 1:
+            print(output)
+            f = open(statusFile, "w")
+            f.write(output)
+            f.close()
+        else:
+            print("Location <"+str(location)+"> disabled in config")
         
-        f = open(statusFile, "w")
-        f.write(output)
-        f.close()
         # clear data log and add the last event
         f = open(logfile, "w")
         f.write(lastEvent)
         f.close()
 
-    if alert == 1:
+    if alert == 1 and enable == 1:
         if int(notifyMin) % int(throttle) == 0:
             thisMsg = EmailMessage()
             thisMsg.set_content(body)
