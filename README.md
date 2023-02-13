@@ -112,22 +112,24 @@ Right now, rPi's are more expensive than they used to be.  so there are some alt
   <li>Now run this command:<br><b>sudo nano /home/shelterMon/config.json</b></li>
   <li>When nano opens the blank document, go to the repo and look for the "config.json" file. Open the file and copy the data, then paste it into the nano window. Now update the information to suit your preferences.<br>
   
+"enable":"1",                     <-- use 1 to enable, 0 to disable checks for this location
 "folderName":"/home/shelterMon",  <-- leave this as is unless you know what you are doing <br>
 "logfileName":"sensor1.log",      <-- Make sure the <b>logfileName</b> matches the file name as mentioned in the syslog.conf file you created earlier <br>
 "statusFileName":"status.txt",    <-- leave this as is unless you know what you are doing <br>
-"shelterName":"ShelterNameHere",  <-- Change this value to the name of the Shelter or the location name where the sensor has been placed <br>
+"locationName":"LocationNameHere",  <-- Change this value to the name of the Shelter or the location name where the sensor has been placed <br>
 "maxTemp":"95",                   <-- Change this to your maximum allowed temperature <br>
 "minTemp":"50",                   <-- Change this to your minimum required temperature  <br>
 "tempUnit":"F",                   <-- Change this to either C for Celcius or F for Farenheit <br>
-"emailDestination":"dest.email@gmail.com",  <-- Change this to your desired email destination where alerts should be sent <br>
+"emailDestination":"dest.email@gmail.com",  <-- Change this to your desired email destination where alerts should be sent <br> 
+"throttle":"20"                   <-- set the number of minutes to wait between sending alert notifications
+ <br> 
+ </li>    
+ <li>Now edit the <b>email.json</b> file to update your SMTP server settings<br>
 "SMTPuser":"SMTPuserNameHere",    <-- Change this to your SMTP username from the previous section <br>
 "SMTPpass":"SMTPpasswordHere",    <-- Change this to your SMTP password from the previous section <br>
 "SMTPserver":"smtp.gmail.com",    <-- Chnage this to your SMTP server address from the previous section  <br>
 "SMTPport":"465",                 <-- Change this to your SMTP server's destination port from the previous section  <br>
-"SMS":"5551114444",               <-- Change this to your SMS phone number including area code, no hyphens and no country code <br>
-"SMScarrier":"0"                  <-- Change this to your SMS carrier code as defined fom the list below  <br>  
- <br> 
- </li>    
+  </li>
 <h3>SMS carriers codes</h3>
 0 - Verizon<br>
 1 - AT&T<br>
