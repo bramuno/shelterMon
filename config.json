@@ -7,5 +7,6 @@
 "minTemp":"50",
 "maxDuration": "20",
 "tempUnit":"F",
-"emailDestination":"dest.email@gmail.com"
+"emailDestination":"dest.email@gmail.com",
+"throttle":"20"
 }
