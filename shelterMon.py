@@ -40,7 +40,6 @@ configFolder = str(configFolder)+"*.json"
 tmplist = glob.glob(configFolder)
 alertFile = ""
 list = []
-g = 0
 
 configFolder = str(args.config)
 try:
@@ -55,8 +54,10 @@ SMTPpass =  get['SMTPpass']
 SMTPserver =  get['SMTPserver']
 SMTPport =  int(get['SMTPport'])
 
+g = 0
 # begin loop
-while g < len(tmplist):
+while g < len(tmplist)-1:
+    notifyMin = -1
     alert = 0
     lastSeen = 0
     if tmplist[g] != configFolder+"/email.json":
@@ -69,8 +70,8 @@ while g < len(tmplist):
         except:
             sys.exit("json config  load fail.  --> "+str(tmplist[g])+"\n")
 
-        shelterName = get['shelterName']
-        folderName =  get['folderName']
+        location = str(get['locationName'])
+        folderName =  str(get['folderName'])
         logfileName =  str(get['logfileName'])
         statusFileName =  logfileName+"-status.txt"
         maxTemp =  float(get['maxTemp'])
@@ -78,13 +79,14 @@ while g < len(tmplist):
         tempUnit =  str(get['tempUnit'])
         maxDuration =  int(get['maxDuration'])
         dests =  get['emailDestination']
+        throttle =  get['throttle']
         #
         newfile = 0
         logfile = folderName+"/"+logfileName
         statusFile = folderName+"/"+statusFileName
 
         if not os.path.exists(logfile) or not os.path.exists(statusFile):
-            sample = '{"lastSeen":"1659588285","state":"1","duration":"0","lastTemp":"80.88","minsSinceLastLog":"0.0" }'
+            sample = '{"lastSeen":"1659588285","OKstatus":"1","duration":"0","lastTemp":"80.88","minsSinceLastLog":"0.0","notifyMin":"0" }'
             cmd = "mkdir -p "+str(folderName)
             subprocess.check_output(cmd, shell=True)
             cmd = "touch "+str(logfile)
@@ -98,16 +100,17 @@ while g < len(tmplist):
             oldStatus = f.read()
             f.close()
             try:
-                oldState =  int(get['state'])
+                oldOKstatus =  int(get['OKstatus'])
                 oldDur = float(get['duration'])
                 lastSeen = int(get['lastSeen'])
                 newfile = 0
+                notifyMin = int(get['notifyMin'])
             except:
-                print("nope")
+                print("status file load fail")
         except:
             get = ""
             oldStatus = 0
-            oldState =  0
+            oldOKstatus =  0
             oldDur = 0
             lastSeen = 0
             dur = 0
@@ -118,7 +121,7 @@ while g < len(tmplist):
         if oldDur < 0:
             oldDur = 0
 
-        if oldStatus == "" and oldState == "" and oldDur == "":
+        if oldStatus == "" and oldOKstatus == "" and oldDur == "":
             newfile = 1
 
         # open data log
@@ -127,7 +130,7 @@ while g < len(tmplist):
         f.close()
         #
         empty=0
-        state = 1
+        OKstatus = 1
         data = read.split("\n")
         lines = len(data)
         now = datetime.datetime.now()
@@ -155,6 +158,8 @@ while g < len(tmplist):
         logEpoch = int(datetime.datetime(year, month,day, hour, min, sec).timestamp())
         diffEpoch = nowEpoch - lastSeen
         secSinceLastLog = nowEpoch - logEpoch
+        if(secSinceLastLog) < 0:
+            secSinceLastLog = 10000000000
         minsSinceLastLog = round((secSinceLastLog/60),1)
         if diffEpoch < 0:
             diffEpoch = 0
@@ -171,15 +176,15 @@ while g < len(tmplist):
         else:
             finalTemp = str(round(float(finalTemp),1))
         if ( float(finalTemp) > float(maxTemp) ) or ( float(finalTemp) < float(minTemp) )  :
-            state = 0
+            OKstatus = 0
 
-        if int(state) == 1:
+        if int(OKstatus) == 1:
             newDur = round(diffMins, 1)
         else:
             newDur = round((oldDur + diffMins), 1)
 
         if debug == 1:
-            print("oldState = "+str(oldState))
+            print("oldOKstatus = "+str(oldOKstatus))
             print("oldDur = "+str(oldDur))
             print("maxTemp = "+str(maxTemp)+str(tempUnit))
             print("minTemp = "+str(minTemp)+str(tempUnit))
@@ -199,24 +204,24 @@ while g < len(tmplist):
             sys.exit("\nDetected OFF switch position on syslog server. Quitting.\n")
         ###################
         # offline sensor alert (every 5m on the 5th minute)
-        if round(minsSinceLastLog,0) > 5:
-            body = "No contact from temperature sensor "+str(shelterName)+" in "+str(minsSinceLastLog)+" minutes.\nPlease check it is online and batteries are charged.\nReboot if needed.\n"
+        if round(minsSinceLastLog,0) > 5 or round(minsSinceLastLog,0) < 0:
+            body = "No contact from temperature sensor "+str(location)+" in "+str(minsSinceLastLog)+" minutes.\nPlease check it is online and batteries are charged.\nReboot if needed.\n"
             subject = "Temperature sensor offline"
             alert = 1
         ########## critical temperature alert begin
-        if ( int(state) == 0 and int(oldState) == 0 and float(oldDur) > float(maxDuration) ) :
+        if ( int(OKstatus) == 0 and int(oldOKstatus) == 0 and float(oldDur) > float(maxDuration) ) :
             alert = 1
-            body = str(shelterName)+" has been reading '"+str(reading)+str(tempUnit)+"' degree temperature for at least "+str(oldDur)+" minutes!\n"
-            subject = str(shelterName)+" Sensor temperature problem"
+            body = str(location)+" has been reading '"+str(reading)+str(tempUnit)+"' degree temperature for at least "+str(oldDur)+" minutes!\n"
+            subject = str(location)+" Sensor temperature OKstatus"
         ########## END critical temperature alert
         ## alert sensor online but reading incorrectly
         if ( float(finalTemp) < -40.0 ) :
             alert = 1
             body = "\nA sensor is not reading correctly:\n\nsensorA="+str(float(finalTemp))+"\n"
-            subject = 'Sensor read problem'
+            subject = 'Sensor read OKstatus'
         ########## end
         if debug == 1:
-            print("state = ",str(state))
+            print("OKstatus = ",str(OKstatus))
             print("nowEpoch = ",str(nowEpoch))
             print("lastSeen = ",str(lastSeen))
             print("diffEpoch = ",str(diffEpoch))
@@ -227,6 +232,7 @@ while g < len(tmplist):
             print("switchCheck = ",str(GPIO.input(17)))
             print("alert = ",str(alert))
             print("logfile = ",str(logfile))
+            print("notifyMin = ",str(notifyMin))
 
         if newfile == 1:
             newDur = "0"
@@ -235,12 +241,18 @@ while g < len(tmplist):
                 print("\nnew status file created\n")
         else:
             lastSeen = str(logEpoch)
-            if state == 1:
+            if OKstatus == 1:
                 newDur = "0"
-
-        output = '{"lastSeen":"'+str(lastSeen)+'","state":"'+str(state)+'","duration":"'+str(newDur)+'","lastTemp":"'+str(finalTemp)+'","minsSinceLastLog":"'+str(minsSinceLastLog)+'","location":"'+str(shelterName)+'" }'
+        if alert == 1:
+            OKstatus = 0
+        if alert == 0:
+            notifyMin = 0
+        else:
+            notifyMin = notifyMin + 1
+            
+        output = '{"lastSeen":"'+str(lastSeen)+'","OKstatus":"'+str(OKstatus)+'","duration":"'+str(newDur)+'","lastTemp":"'+str(finalTemp)+'","minsSinceLastLog":"'+str(minsSinceLastLog)+'","locationName":"'+str(location)+'","notifyMin":"'+str(notifyMin)+'" }'
         print(output)
-
+        
         f = open(statusFile, "w")
         f.write(output)
         f.close()
@@ -249,77 +261,25 @@ while g < len(tmplist):
         f.write(lastEvent)
         f.close()
 
-        ## create master file
-        if alert == 1:
-            alertFile = str(args.config)+"/alert.txt"
-            if exists(alertFile):
-                gg = open(alertFile, 'a')
-                if debug == 1:
-                    print("deleting alertFile")
-            else:
-                gg = open(alertFile, 'x')
-                if debug == 1:
-                        print("creating alertFile")
-            alertOut = '{"dests":"'+str(dests)+'", "subject":"'+str(subject)+'", "body":"'+str(body)+'"}\nbreak'
-            if debug == 1:
-                print(str(alertOut)+" >> "+str(alertFile))
-            gg.write(alertOut)
-            gg.close()
-    g = g + 1
-
-## END LOOP
-
-if exists(alertFile):
-    m = open(alertFile, 'r')
-    read = m.read().split("\nbreak")
-    m.close()
-    ##get = json.loads(read[0], strict=False)
-    emails = []
-    body = ""
-    x=0
-    while x < len(read):
-        if read[x] == "\n" or  read[x] == "":
-            read.pop(x)
-        else:
-            line = json.loads(read[x], strict=False)
-            b=0
-            tmp = line['dests'].split(',')
-            while b < len(tmp):
-                tmp[b] = tmp[b].replace(" ","")
-                emails.append(tmp[b])
-                b=b+1
-        x=x+1
-
-    now = datetime.datetime.now()
-    minute = now.strftime('%M')
-    x=0
-    if int(minute)%5 == 0:
-        while x < len(emails):
-            tgt = emails[x]
-            b=0
-            mSubject = ""
-            thisBody = ""
-            while b < len(read):
-                if tgt in read[b]:
-                    line = json.loads(read[b], strict=False)
-                    if line['body'] not in thisBody:
-                        thisBody = str(line['body'])+"\n"
-                b=b+1
+    if alert == 1:
+        if int(notifyMin) % int(throttle) == 0:
             thisMsg = EmailMessage()
-            thisMsg.set_content(thisBody)
-            thisMsg['Subject'] = line['subject']
+            thisMsg.set_content(body)
+            thisMsg['Subject'] = subject
             thisMsg['From'] = "alert@temperatureMon.org"
-            thisMsg['To'] = tgt
+            thisMsg['To'] = dests
             try:
                 msg(SMTPserver, SMTPport, SMTPuser, SMTPpass, thisMsg)
             except Exception as e: 
                 print(e)
             else:
-                print("Sent email to :"+str(tgt))
-            x=x+1
-    else:
-        print("not the 5th minute, skipping notification")
-    if debug == 0:
-        print("deleting "+str(alertFile))
-        os.remove(alertFile)
+                print("Sent email to: "+str(dests))
+        else:
+            print("throttling notifications to every "+str(throttle)+" minutes")
+
+
+
+
+    g = g + 1
+
 sys.exit()
