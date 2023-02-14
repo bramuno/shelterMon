@@ -9,6 +9,6 @@
 "maxDuration": "20",
 "tempUnit":"F",
 "emailDestination":"dest.email@gmail.com",
-"destSMS":"+15551234567"
+"destSMS":"+15551234567",
 "throttle":"20"
 }
