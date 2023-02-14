@@ -3,11 +3,12 @@
 "folderName":"/home/shelterMon",
 "logfileName":"sensor1.log",
 "statusFileName":"status.txt",
-"locationName":"ShelterNameHere",
+"locationName":"LocationNameHere",
 "maxTemp":"95",
 "minTemp":"50",
 "maxDuration": "20",
 "tempUnit":"F",
 "emailDestination":"dest.email@gmail.com",
+"destSMS":"+15551234567"
 "throttle":"20"
 }
