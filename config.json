@@ -1,5 +1,5 @@
 {
-"enable":"1",
+"enabled":"yes",
 "folderName":"/home/shelterMon",
 "logfileName":"sensor1.log",
 "statusFileName":"status.txt",
