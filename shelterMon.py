@@ -316,6 +316,6 @@ while g < len(tmplist):
     g = g + 1
 
 if ON == 0:
-    sys.exit("\n\n!!!!!!!!!!!!!!!\nDetected OFF switch position.  Notifications are disabled.\n!!!!!!!!!!!!!!!\n")
+    sys.exit("\n\n!!!!!!!!!!!!!!!\nDetected OFF switch position.  All notifications are disabled.\n!!!!!!!!!!!!!!!\n")
 else:
     sys.exit()
