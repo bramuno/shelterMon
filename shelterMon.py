@@ -312,7 +312,7 @@ while g < len(tmplist)-1:
                     url='https://api.twilio.com/2010-04-01/Accounts/'+str(acctID)+'/Messages.json'
                     cmd='curl -X POST "'+str(url)+'" --data-urlencode "Body='+str(body)+'" --data-urlencode "From='+str(fromNumber)+'" --data-urlencode "To='+str(destSMS)+'" -u '+str(acctID)+':'+str(token)
                     try:
-                        response = str(subprocess.check_output(cmd, shell=True))
+                        response = str(os.system(cmd))
                         if debug == 1:
                             print("SMS response: \n",response)
                     except Exception as e: 
