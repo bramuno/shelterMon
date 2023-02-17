@@ -1,6 +1,6 @@
 {
-"serviceID":"",
-"acctID":"",
-"fromNumber":"",
-"token":""
+"twilioServiceID":"",
+"twilioAcctID":"",
+"twilioFromNumber":"",
+"twilioToken":""
 }
