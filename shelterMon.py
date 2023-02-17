@@ -15,9 +15,9 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-C", "--config", help = "config")
 parser.add_argument("-d", "--debug", help = "debug")
 args = parser.parse_args()
-if args.debug == "yes" or args.debug == "on" or str(args.debug) == "1":
+if args.debug.lower() == "yes" or args.debug.lower() == "on" or str(args.debug.lower()) == "1":
     debug = 1
-    print("Diplaying debug as: %s" % args.debug)
+    print("Diplaying debug as: %s" % args.debug.lower())
 if args.debug == "":
     debug = 0
 if args.config:
