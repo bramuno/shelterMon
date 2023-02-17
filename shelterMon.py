@@ -82,7 +82,7 @@ else:
 
 g = 0
 # begin loop
-while g < len(tmplist)-1:
+while g < len(tmplist):
     notifyMin = -1
     alert = 0
     lastSeen = 0
