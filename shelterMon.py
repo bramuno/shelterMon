@@ -6,10 +6,10 @@
 ## usage: python3 shelterMon.py -C /path/to/folder
 ## 
 debug = 0
+ON = 1
 import os, sys, json, subprocess, smtplib, datetime, time, os.path, pdb, argparse, glob
 from email.message import EmailMessage
 from os.path import exists
-from twilio.rest import Client
 import RPi.GPIO as GPIO
 parser = argparse.ArgumentParser()
 parser.add_argument("-C", "--config", help = "config")
@@ -24,6 +24,11 @@ if args.debug:
 if args.config:
     if debug == 1:
         print("Diplaying config file as: % s" % args.config)
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+if int(GPIO.input(17)) == 0:
+    ON = 0
 
 def msg(SMTPserver, SMTPport, SMTPuser, SMTPpass, message):
     server = smtplib.SMTP_SSL(SMTPserver, SMTPport)
@@ -61,17 +66,17 @@ if os.path.exists(configFolder+"/sms.json"):
         f = open(configFolder+"/sms.json", "r")
         getSMS = json.load(f)
         f.close()
-        sid =  str(getSMS['serviceID'])
-        token =  str(getSMS['token'])
-        acctID =  str(getSMS['acctID'])
-        fromNumber =  str(getSMS['fromNumber'])
+        sid =  str(getSMS['twilioServiceID'])
+        twilioToken =  str(getSMS['twilioToken'])
+        twilioAcctID =  str(getSMS['twilioAcctID'])
+        twilioFromNumber =  str(getSMS['twilioFromNumber'])
     except:
-        sys.exit("failed to load "+configFolder+"/sms.json \n")
+        sys.exit("failed to load values from '"+configFolder+"/sms.json'.  Check the json syntax is correct.\n")
 else:
     sid = ""
-    token = ""
-    acctID = ""
-    fromNumber = ""
+    twilioToken = ""
+    twilioAcctID = ""
+    twilioFromNumber = ""
 
 
 
@@ -121,7 +126,6 @@ while g < len(tmplist)-1:
             try:
                 f = open(statusFile, "r")
                 get = json.load(f)
-                oldStatus = f.read()
                 f.close()
                 try:
                     oldOKstatus =  int(get['OKstatus'])
@@ -133,7 +137,6 @@ while g < len(tmplist)-1:
                     print("status file load fail")
             except:
                 get = ""
-                oldStatus = 0
                 oldOKstatus =  0
                 oldDur = 0
                 lastSeen = 0
@@ -145,7 +148,7 @@ while g < len(tmplist)-1:
             if oldDur < 0:
                 oldDur = 0
 
-            if oldStatus == "" and oldOKstatus == "" and oldDur == "":
+            if oldOKstatus == "" and oldDur == "":
                 newfile = 1
 
             # open data log
@@ -218,15 +221,6 @@ while g < len(tmplist)-1:
                 print("newfile = ",str(newfile))
                 print("enabled = ",str(enabled))
 
-            GPIO.setmode(GPIO.BCM)
-            GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-            if int(GPIO.input(17)) == 0:
-                f = open(logfile, "w")
-                f.write(str(lastEvent))
-                f.close()
-                if debug == 1:
-                    print("switchCheck = ",str(GPIO.input(17)))
-                sys.exit("\nDetected OFF switch position on syslog server. Quitting.\n")
             ###################
             # offline sensor alert (every 5m on the 5th minute)
             if round(minsSinceLastLog,0) > 5 or round(minsSinceLastLog,0) < 0:
@@ -294,7 +288,7 @@ while g < len(tmplist)-1:
         else:
             print("config: "+tmplist[g]+" is disabled, skipping.")
 
-        if alert == 1 and enabled == "yes":
+        if alert == 1 and enabled == "yes" and ON == 1:
             if int(notifyMin) % int(throttle) == 0:
                 thisMsg = EmailMessage()
                 thisMsg.set_content(body)
@@ -308,9 +302,9 @@ while g < len(tmplist)-1:
                 else:
                     print("Sent email to: "+str(dests))
                 # send sms if available
-                if sid != "" and token != "":
-                    url='https://api.twilio.com/2010-04-01/Accounts/'+str(acctID)+'/Messages.json'
-                    cmd='curl -X POST "'+str(url)+'" --data-urlencode "Body='+str(body)+'" --data-urlencode "From='+str(fromNumber)+'" --data-urlencode "To='+str(destSMS)+'" -u '+str(acctID)+':'+str(token)
+                if sid != "" and twilioToken != "":
+                    url='https://api.twilio.com/2010-04-01/Accounts/'+str(twilioAcctID)+'/Messages.json'
+                    cmd='curl -X POST "'+str(url)+'" --data-urlencode "Body='+str(body)+'" --data-urlencode "From='+str(twilioFromNumber)+'" --data-urlencode "To='+str(destSMS)+'" -u '+str(twilioAcctID)+':'+str(twilioToken)
                     try:
                         response = str(os.system(cmd))
                         if debug == 1:
@@ -321,4 +315,7 @@ while g < len(tmplist)-1:
                 print("throttling notifications to every "+str(throttle)+" minutes")
     g = g + 1
 
-sys.exit()
+if ON == 0:
+    sys.exit("\n\n!!!!!!!!!!!!!!!\nDetected OFF switch position.  Notifications are disabled.\n!!!!!!!!!!!!!!!\n")
+else:
+    sys.exit()
