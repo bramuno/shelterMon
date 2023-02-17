@@ -2,7 +2,6 @@
 "enabled":"yes",
 "folderName":"/home/shelterMon",
 "logfileName":"sensor1.log",
-"statusFileName":"status.txt",
 "locationName":"LocationNameHere",
 "maxTemp":"95",
 "minTemp":"50",
