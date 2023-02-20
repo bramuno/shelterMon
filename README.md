@@ -154,14 +154,27 @@ Run this command: (if it prompts for an editor, choose NANO) <br>
 </ul>
 <h1>SMS (optional)</h1>
 SMS alerts are an optional feature to send alert notifications via SMS to a mobile device.  This can be useful as many people don't check their email all day long. This is one method and requires a subscription that costs money.  It's cheap but a bug in the code could cause too many alerts to be sent and could accidentally rack up charges fast.  So be warned. <br><br>
-As an alternative you send text to a specific mobile carrier's desginated domain like "vtext.com".  Here is an example article: https://www.verizon.com/about/news/vzw/2013/06/computer-to-phone-text-messaging, HOWEVER be warned as I tested this thoroughly for this project before going with Twilio.   I can onlhy speak for Verizon as thats all i could test since that's ny carrier, so maybe the other carriers are better in some areas.   BUt Verizon SERIOUSLY THROTTLES the messages sent to vtext.com.   In my testing  on several different days, I sent more than ~10 mesages in a short amount of time, and Verizon stopped delivering those messages. I later got som eemails saying the message i sent hours ago has been delayed and not delivered yet.  That was a very reliable proble  <br><br>
+As an alternative you send text to a specific mobile carrier's desginated domain like "vtext.com".  Here is an example article: https://www.verizon.com/about/news/vzw/2013/06/computer-to-phone-text-messaging, HOWEVER be warned as I tested this thoroughly for this project before going with Twilio.   I can onlhy speak for Verizon as thats all i could test since that's ny carrier, so maybe the other carriers are better in some areas.   <br>BUt Verizon SERIOUSLY THROTTLES the messages sent to vtext.com.   In my testing  on several different days, I sent more than ~10 mesages in a short amount of time, and Verizon stopped delivering those messages. I later got som eemails saying the message i sent hours ago has been delayed and not delivered yet.  That was a very reliable problem and it's why I don't recommend using it as a permanent solution.  <br><br>
 Use the below steps to create and use a Twilio account. These instructions are likely to get depreacted as their website and protocols mentioned below may change over time.  So you will have to do your best to do what is needed to get the necessary information.  At the time this was written, you can rent a phone number from Twilio for $1.15/month.
 <li>Go to https://www.twilio.com/ and register for an account, then login. </li>
+<li>Buy a phone number (you get one free if you are doing the free trial)</li>
+<li>on the left menu, click MESSAGING and click SERVICES.</li>
+<li>Click CREATE MESSAGING SERVICE, give it a quick name and click NEXT</li>
+<li>skip the rest by clicking SKIP SETUP</li>
+<li>When it loads the list of services, click the service you just created to open it again.</li>
+<li>Click SENDER POOL then click ADD SENDERS</li>
+<li>Select PHONE NUMBER as the sender type, then search for the number you got earlier.  Select your number from the list and click  ADD PHONE NUMBERS.   Your number should now be found in the SENDER POOL.  </li>
+<li>On the left menu, click on PROPERTIES and you shold find you Service ID.  Copy that to notepad for later. </li>
+<li>Upper right corner, click ACCOUNT and select API KEYS & TOKENS.  Scroll down to AUTH TOKENS.   Copy your Account ID and your primary token values. </li>
+<li>You now have enough info to use the service.  Now edit the sms.json file in your folder. </li>
+<li>"twilioServiceID":""  <-- this is your Service ID</li>
+<li>"twilioAcctID":""  <-- This is your Account ID</li>
+<li>"twilioFromNumber":""  <-- This is your twilio phone number </li>
+<li>"twilioToken":""  <-- This is your Auth Token </li>
+<li>Save the file and exit the editor.  remember to validate the json code.</li>
+<li>Now just ensure you have a destination SMS number specified in each location's .json file.  </li>
 <li></li>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
+
 
 <h1>Troubleshooting</h1>
 <li><b>Syslog problems</b><br>
