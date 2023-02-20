@@ -8,7 +8,6 @@
 ## alert test usage: python3 shelterMon.py -C /path/to/folder -t yes
 ## 
 debug = 0
-ON = 1
 test = 0
 import os, sys, json, subprocess, smtplib, datetime, time, os.path, pdb, argparse, glob
 from email.message import EmailMessage
@@ -38,7 +37,8 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 if int(GPIO.input(17)) == 0:
     ON = 0
-
+else:
+    ON = 1
 if args.test:
     test = str(args.test.lower())
     if test == 1 or test == 1 or test == "true" or test == "yes":
