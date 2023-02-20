@@ -1,15 +1,16 @@
 This project is designed to help animal shelters monitor the temperature of various kennels they have to ensure the animals are safe.  You can use this for other reasons but you may need to make some additional adjustments not mentioned here. 
 
-This project uses an ESP32 wifi development board connected to two DS18B20 temperature sensors to constantly send temperature readings to a syslog server on the user's home network.  The syslog server runs a cron script to monitor the termperature and alert the user if both sensors have been exceeded the temperature threshold for too long a time period.   
+This project uses an ESP32 wifi development board connected to two DS18B20 temperature sensors to constantly send temperature readings to a syslog server on the user's  network.  The syslog server runs a cron script to monitor the termperature and alert the user if both sensors have been exceeded the temperature threshold for too long a time period.   
 
 Usage and build instructions are below.  I have written these instructions for people that are not tech savvy.  If you know a tech person, I would recommend getting assistance from that person.  worst case, you can google "hackerspace" or "makerspace" and your city name to locate any possible nearby hackerspace/makerspace.  you can reach out to them to locate someone that can help you with this project.  The hardest part in this project is soldering, so if you can handle that you should be fine.  There are lots of tutorials on youtube to help you learn.
 
 I welcome others to assist me with this project to improve wherever possible, so if you would like to collboarte and contribute, please drop me a line.  
 
 <h2>Obligatory Disclaimer</h2>
-All the advice and instruction given is for EDUCATIONAL PURPOSES ONLY.  I am not responsible for anything you do or destroy or anything else that happens as a result of your efforts.  Nothing is fool-proof so do not trust this or anything as a perfect solution for monitoring temperatures.   If you want a guaranteed solution, you should buy one. I am making this project because I have not found many solutions that will do the same thing at an affordable price which is what this project accomplishes.   <br>
+All the advice and instruction given is for EDUCATIONAL PURPOSES ONLY.  I am not responsible for anything you do or destroy or anything else that happens as a result of your efforts.  Nothing is fool-proof so do not trust this or anything as a perfect solution for monitoring temperatures.   If you want a guaranteed solution, you should buy one. I am making this project because I have zero solutions that will do the same thing at an affordable price which is what this project accomplishes.   <br>
 ALSO, this project involves some soldering which is recommended to install a physical switch.  I am not responsible for hurting yourself or burning something to the ground.  If you are not comfortable soldering, you can reach out to your local hackerspace/makerspace for help. <br>
-Ultimately it is YOUR RESPONSIBILITY to do all the proper research of all the subjects discussed here before attempting anything yourself.  
+Ultimately it is YOUR RESPONSIBILITY to do all the proper research of all the subjects discussed here before attempting anything yourself. <br>
+ALSO, this projct requires Wi-Fi is available at all of the locations you need to monitor.  So that is something else you will need to ensure is ready before you attempt to start this project. 
 
 <h2>Hardware:</h2>
 links provided here are only examples as you can swap out brands as needed to save money as long as the part does what it required, any by all means if you can find it somewhere else then you don't need amazon :)<br>
@@ -66,14 +67,14 @@ Right now, rPi's are more expensive than they used to be.  so there are some alt
   <li>Once your router has the IP reserved, you are done with the router.</li>
   <li>Now that you have the IP address, you can SSH into the rpi.<br>
   <li>if you dont know how to SSH to a device, you can <a href="https://www.putty.org/" target="_blank">download putty</a>.  Click <a href="https://www.ssh.com/academy/ssh/putty/windows" target="_blank">here</a> for a guide on how to use putty for SSH. </li>
-  <li>After logging in run these commands: (you can paste copied text into the putty window using the right mouse button)<br>:
+  <li>After logging in run these commands: (you can paste copied text into the putty window using the right mouse button):<br>
   <b>sudo apt-get -y install rsyslog && sudo nano /etc/rsyslog.d/shelter.conf</b>
   </li>
   <li>Nano will open to a blank page, go to the repo and find the file named "syslog.conf", open it and copy the data.  Then paste the data into the nano window. hit CTRL-O and ENTER to save, then CTRL-X to exit. </li>
   <li>Use the provided examples and duplicate as needed to have one line for each sensor you have.  The first section defines the log file location, and the second section ties the log file to the IP address of the sensors.   Update the IP addresses to match the IPs you got earlier for each ESP32 device.    Each line has to be unique so change the 1's and 2's as needed.  If you dont have that many devices, don't worry about the extra lines.    hit CTRL-O and ENTER to save, then CTRL-X to exit. </li>
   <li>now run this command to edit the rsyslog.conf file<br>
   <b>sudo nano /etc/rsyslog.conf</b><br>
-  locate "module(load="imudp")" and remove the # before it. Do the same for next line.  Then change 'port="514"' to 'port="3333"' and use CTRL-O to save and CTRL-X to exit.</li>
+  locate "module(load="imudp")" and remove the # before it. Do the same for next line.  Then change <b>port="514"</b> to <b>port="3333"</b> and use CTRL-O to save and CTRL-X to exit.</li>
   <li>now run this command to check your conf file is correct:<br>
   <br>rsyslogd -f /etc/rsyslog.conf -N1</b><br>
   <li>now run this command to restart rsyslog:<br>
@@ -111,35 +112,29 @@ Right now, rPi's are more expensive than they used to be.  so there are some alt
   <li>When nano opens the blank document, go to the repo and look for the "shelterMon.py" file. Open the file and copy the data, then paste it into the nano window.  hit CTRL-O and ENTER to save, then CTRL-X to exit.</li>
   <li>Now run this command:<br><b>sudo nano /home/shelterMon/config.json</b></li>
   <li>When nano opens the blank document, go to the repo and look for the "config.json" file. Open the file and copy the data, then paste it into the nano window. Now update the information to suit your preferences.<br>
-  
-"enable":"1",                     <-- use 1 to enable, 0 to disable checks for this location
-"folderName":"/home/shelterMon",  <-- leave this as is unless you know what you are doing <br>
-"logfileName":"sensor1.log",      <-- Make sure the <b>logfileName</b> matches the file name as mentioned in the syslog.conf file you created earlier <br>
-"statusFileName":"status.txt",    <-- leave this as is unless you know what you are doing <br>
-"locationName":"LocationNameHere",  <-- Change this value to the name of the Shelter or the location name where the sensor has been placed <br>
-"maxTemp":"95",                   <-- Change this to your maximum allowed temperature <br>
-"minTemp":"50",                   <-- Change this to your minimum required temperature  <br>
-"tempUnit":"F",                   <-- Change this to either C for Celcius or F for Farenheit <br>
-"emailDestination":"dest.email@gmail.com",  <-- Change this to your desired email destination where alerts should be sent <br> 
-"throttle":"20"                   <-- set the number of minutes to wait between sending alert notifications
- <br> 
+ <ul> 
+<li>"enable":"1",                     <-- use 1 to enable, 0 to disable checks for this location</li><br>
+<li>"folderName":"/home/shelterMon",  <-- leave this as is unless you know what you are doing </li><br>
+<li>"logfileName":"sensor1.log",      <-- Make sure the <b>logfileName</b> matches the file name as mentioned in the syslog.conf file you created earlier </li><br>
+<li>"locationName":"LocationNameHere",  <-- Change this value to the name of the Shelter or the location name where the sensor has been placed </li><br>
+<li>"maxTemp":"95",                   <-- Change this to your maximum allowed temperature </li><br>
+<li>"minTemp":"50",                   <-- Change this to your minimum required temperature  </li><br>
+<li>"maxDuration":"20"                <-- Set this value to the longest time a bad result is tolderable until it should send a notification alert</li>
+<li>"tempUnit":"F",                   <-- Change this to either C for Celcius or F for Farenheit</li> <br></li>
+<li>"emailDestination":"dest.email@gmail.com",  <-- Change this to your desired email destination where alerts should be sent</li> <br> 
+<li>"destSMS":"+15551234567"</li>     <-- set this value to the destination phone number to receive SMS alerts.  If none, leave the value blank.</li>
+<li>"throttle":"20"                   <-- set the number of minutes to wait between sending alert notifications</li>
+ <br></ul> 
  </li>    
  <li>Now edit the <b>email.json</b> file to update your SMTP server settings<br>
-"SMTPuser":"SMTPuserNameHere",    <-- Change this to your SMTP username from the previous section <br>
-"SMTPpass":"SMTPpasswordHere",    <-- Change this to your SMTP password from the previous section <br>
-"SMTPserver":"smtp.gmail.com",    <-- Chnage this to your SMTP server address from the previous section  <br>
-"SMTPport":"465",                 <-- Change this to your SMTP server's destination port from the previous section  <br>
-  </li>
-<h3>SMS carriers codes</h3>
-0 - Verizon<br>
-1 - AT&T<br>
-2 - Boost<br>
-3 - T-Mobile<br>
-4 - Cricket<br>
-5 - Sprint<br><br>
-
-  <li>hit CTRL-O and ENTER to save, then CTRL-X to exit.</li>
-  <li>Restart rsyslog just incase with this command:<br>
+  <ul>
+<li>"SMTPuser":"SMTPuserNameHere",    <-- Change this to your SMTP username from the previous section </li><br>
+<li>"SMTPpass":"SMTPpasswordHere",    <-- Change this to your SMTP password from the previous section </li><br>
+<li>"SMTPserver":"smtp.gmail.com",    <-- Chnage this to your SMTP server address from the previous section  </li><br>
+<li>"SMTPport":"465",            <-- Change this to your< SMTP server's destination port from the previous section  </li></ul><br>
+<li>hit CTRL-O and ENTER to save, then CTRL-X to exit.</li>
+<li>The sms.json is remaining but that is optional and will be addressed later in this guide.</li>
+<li>Restart rsyslog just incase with this command:<br>
 <b>sudo systemctl restart rsyslog</b></li>
   <li>Repeat the previous step for all the sensors you have, and be sure to name the file with a unique name each time (eg, change config1.json to config.json)</li>
   <li>Now test each config by running the command:<br>
@@ -156,8 +151,17 @@ Run this command: (if it prompts for an editor, choose NANO) <br>
   <li>Use CTRL-O & ENTER to save then CTRL-X to quit</li>
   <li>Now you are ready to start testing the system is doing what it should be doing.  Use whatever you can to test the sensor's temperature readings (hairdryer, etc).  <br>Turn off the sensor's power supply but leave the Raspberry Pi running.  It should notify you the sensor is offline.<br>Keep the ESP32 powered on but disconenct the sensor from the ESP32, you should get a notification the sensor is not reading correctly within 10 minutes. <br> </li>
   <li>Now you just need to place the sensor(s) where they need to go and use a USB charge adapter to power the sensor unit.  the unit needs to be in a place where it can communicate with the WiFi. </li>
-  <li>Thanks for reading this. </li>
 </ul>
+<h1>SMS (optional)</h1>
+SMS alerts are an optional feature to send alert notifications via SMS to a mobile device.  This can be useful as many people don't check their email all day long. This is one method and requires a subscription that costs money.  It's cheap but a bug in the code could cause too many alerts to be sent and could accidentally rack up charges fast.  So be warned. <br><br>
+As an alternative you send text to a specific mobile carrier's desginated domain like "vtext.com".  Here is an example article: https://www.verizon.com/about/news/vzw/2013/06/computer-to-phone-text-messaging, HOWEVER be warned as I tested this thoroughly for this project before going with Twilio.   I can onlhy speak for Verizon as thats all i could test since that's ny carrier, so maybe the other carriers are better in some areas.   BUt Verizon SERIOUSLY THROTTLES the messages sent to vtext.com.   In my testing  on several different days, I sent more than ~10 mesages in a short amount of time, and Verizon stopped delivering those messages. I later got som eemails saying the message i sent hours ago has been delayed and not delivered yet.  That was a very reliable proble  <br><br>
+Use the below steps to create and use a Twilio account. These instructions are likely to get depreacted as their website and protocols mentioned below may change over time.  So you will have to do your best to do what is needed to get the necessary information.  At the time this was written, you can rent a phone number from Twilio for $1.15/month.
+<li>Go to https://www.twilio.com/ and register for an account, then login. </li>
+<li></li>
+<li></li>
+<li></li>
+<li></li>
+<li></li>
 
 <h1>Troubleshooting</h1>
 <li><b>Syslog problems</b><br>
@@ -170,7 +174,7 @@ then run the service in the foreground with:<br>
 These two above lines typically indicate a problem loading the log file created by the syslog service.  Check the config.json file(s) to make sure the file name matches the file created by the syslog service.  Also make sure the file exists and the syslog service is writing to the file.<br>
 </li>
 <li><b>Config.json load failed.</b><br>
-this message typically means there is a parsing error on the config.json file, or the json files does not exist.  This will happen if there is an extra comma, or unbalanced quotes, etc.  the JSON format must be perfect , so if you can't figure it out just go back to the default config.json file provided in the github repo and paste it into your file again.</li>
+this message typically means there is a parsing error on the config.json file, or the json files does not exist.  This will happen if there is an extra comma, or unbalanced quotes, etc.  the JSON format must be perfect , so if you can't figure it out just go back to the default config.json file provided in the github repo and paste it into your file again.  you can also google for an online json validator to help you find the error in the json code.</li>
 <li></li>
 <li></li>
 <li></li>
