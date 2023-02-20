@@ -4,9 +4,12 @@
 ## this script will look for .json config files stored in the path passed by -C option
 ## to disable a shelter/location sensor, just rename the .json file to something without .json (eg.  file.save)
 ## usage: python3 shelterMon.py -C /path/to/folder
+## debug usage: python3 shelterMon.py -C /path/to/folder -d yes
+## alert test usage: python3 shelterMon.py -C /path/to/folder -t yes
 ## 
 debug = 0
 ON = 1
+test = 1
 import os, sys, json, subprocess, smtplib, datetime, time, os.path, pdb, argparse, glob
 from email.message import EmailMessage
 from os.path import exists
@@ -14,6 +17,7 @@ import RPi.GPIO as GPIO
 parser = argparse.ArgumentParser()
 parser.add_argument("-C", "--config", help = "config")
 parser.add_argument("-d", "--debug", help = "debug")
+parser.add_argument("-t", "--test", help = "test")
 args = parser.parse_args()
 if args.debug:
     if args.debug.lower() == "yes" or args.debug.lower() == "on" or str(args.debug.lower()) == "1":
@@ -24,11 +28,22 @@ if args.debug:
 if args.config:
     if debug == 1:
         print("Diplaying config file as: % s" % args.config)
+if args.test:
+    if debug == 1:
+        print("Diplaying config file as: % s" % args.test)
 
+# detect physical switch position
+# off switch disables all notifications
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 if int(GPIO.input(17)) == 0:
     ON = 0
+
+if args.test:
+    test = str(args.test.lower())
+    if test == 1 or test == 1 or test == "true" or test == "yes":
+        test = 1
+        print("\n\n TESTING NOTIFICATIONS ENABLED\n\n")
 
 def msg(SMTPserver, SMTPport, SMTPuser, SMTPpass, message):
     server = smtplib.SMTP_SSL(SMTPserver, SMTPport)
@@ -220,6 +235,7 @@ while g < len(tmplist):
                 print("statusFile = ",str(statusFile))
                 print("newfile = ",str(newfile))
                 print("enabled = ",str(enabled))
+                print("test = ",str(test))
 
             ###################
             # offline sensor alert (every 5m on the 5th minute)
@@ -288,7 +304,7 @@ while g < len(tmplist):
         else:
             print("config: "+tmplist[g]+" is disabled, skipping.")
 
-        if alert == 1 and enabled == "yes" and ON == 1:
+        if alert == 1 and enabled == "yes" and ON == 1 and test == "0":
             if int(notifyMin) % int(throttle) == 0:
                 thisMsg = EmailMessage()
                 thisMsg.set_content(body)
@@ -313,6 +329,34 @@ while g < len(tmplist):
                         print(e)
             else:
                 print("throttling notifications to every "+str(throttle)+" minutes")
+
+        if test == 1 and enabled == "yes" and ON == 1 :
+            body = "This is a forced test of the notifications."
+            subject = "Test message from temperaure monitor"
+            thisMsg = EmailMessage()
+            thisMsg.set_content(body)
+            thisMsg['Subject'] = subject
+            thisMsg['From'] = "alert@temperatureMon.org"
+            thisMsg['To'] = dests
+            try:
+                msg(SMTPserver, SMTPport, SMTPuser, SMTPpass, thisMsg)
+            except Exception as e: 
+                print(e)
+            else:
+                print("Sent TEST email to: "+str(dests))
+            # send sms if available
+            if sid != "" and twilioToken != "":
+                url='https://api.twilio.com/2010-04-01/Accounts/'+str(twilioAcctID)+'/Messages.json'
+                cmd='curl -s -X POST "'+str(url)+'" --data-urlencode "Body='+str(body)+'" --data-urlencode "From='+str(twilioFromNumber)+'" --data-urlencode "To='+str(destSMS)+'" -u '+str(twilioAcctID)+':'+str(twilioToken)
+                try:
+                    response = str(subprocess.check_output(cmd, shell=True))
+                    if debug == 1:
+                        print("SMS response: \n",response)
+                    print("Send SMS to "+destSMS+"")
+                except Exception as e: 
+                    print(e)
+        if test == 1 and enabled == "yes" and ON == 0:
+            print("The Switch is OFF.  You need to turn the witch to ON to enable notifications.")
     g = g + 1
 
 if ON == 0:
