@@ -61,10 +61,10 @@ Right now, rPi's are more expensive than they used to be.  so there are some alt
   <li>you will need to <a href="https://www.howtogeek.com/233952/how-to-find-your-routers-ip-address-on-any-computer-smartphone-or-tablet/">find your router's IP address</a></li>
   <li>Once you have the address, put that IP in a browser window to connect to the router.  Login using the admin password.  If you can't find the router password and can't login, you will need to <a href="https://www.hellotech.com/guide/for/how-to-reset-router-and-modem" target="_blank">reset the router</a>.   This can be problematic and requires a netowrk cable so make sure you know what you're doing first.  </li>
   <li>Once logged in, go to the LOGS section (you may need to click ADVANCED if your router has a basic/advanced option) and you should have a log file to watch as it distributes IP addresses.  Once you have that, power on the rpi. </li>
-  <li>Watch the log and look for the IP address given to the rpi. Write down the IP address <u>AND</a> the MAC address for that device, you will need both (example MAC:  ab:cd:ef:01:23:45).</li>
+  <li>Watch the log and look for the IP address given to the rpi. Write down the IP address <u>AND</a> the MAC address for that device, you will need both (example MAC:  ab:00:ef:01:23:45).</li>
   <li>Now you need to power on each ESP32 running the code provided earlier.  They will attempt to get an IP address like your rpi.   Write down all IPs and MACs for each device.  </li>
   <li>Now you will need to locate the DHCP area and find where you can reserve the DHCP address for your rpi. Check <a href="https://kb.netgear.com/25722/How-do-I-reserve-an-IP-address-on-my-NETGEAR-router" target="_blank">this link</a> for an example using a netgead router but you may have to google "dhcp reservation" and your router name to find the right guide.</li>
-  <li>Once your router has the IP reserved, you are done with the router.</li>
+  <li>Once your router has the IP reserved, you are done with the router.   REMEMBER how to get back here because you will need to reserve the IPs for each ESP32 device as well.  More on that later.</li>
   <li>Now that you have the IP address, you can SSH into the rpi.<br>
   <li>if you dont know how to SSH to a device, you can <a href="https://www.putty.org/" target="_blank">download putty</a>.  Click <a href="https://www.ssh.com/academy/ssh/putty/windows" target="_blank">here</a> for a guide on how to use putty for SSH. </li>
   <li>After logging in run these commands: (you can paste copied text into the putty window using the right mouse button):<br>
@@ -94,6 +94,9 @@ Right now, rPi's are more expensive than they used to be.  so there are some alt
   </li>
   <li>Make sure your <a href="https://www.arduino.cc/en/software">Arduino IDE</a> settings are as instructed by the ESP32 guide, then click the UPLOAD button.  remember uploading is not that simple for ESP32 so refer back to the previous ESP32 guide and remember you need to hold the reset button on the ESP32 then wait for the arduino output to say "uploading..." and then release the button.  it may take a few tries to get it right.</li>
   <li>Repeat the upload process as needed if you have more sensors.</li>
+  <li>Once all the sensors are working on the network, you need to reserve the IP address for each device.  Go back to the router's DHCP reservation area and then restart the ESP32 devices.  WHen the devices restart, they should as the router for an IP address and the router will respond.  Reserve each device and be sure to label them.  </li>
+
+
   
 <h2>Email user account</h2>
   <li>If you are using your gmail/google account, you can follow <a href="https://support.google.com/accounts/answer/185833?hl=en">this guide</a> to setup your google account information. Don't use your normal gmail password. </li>
