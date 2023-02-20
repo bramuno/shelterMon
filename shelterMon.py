@@ -9,7 +9,7 @@
 ## 
 debug = 0
 ON = 1
-test = 1
+test = 0
 import os, sys, json, subprocess, smtplib, datetime, time, os.path, pdb, argparse, glob
 from email.message import EmailMessage
 from os.path import exists
