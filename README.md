@@ -1,6 +1,6 @@
 This project is designed to help animal shelters monitor the temperature of various kennels they have to ensure the animals are safe.  You can use this for other reasons but you may need to make some additional adjustments not mentioned here. 
 
-This project uses an ESP32 wifi development board connected to a DS18B20 temperature sensors to constantly send temperature readings to a syslog server on the user's  network.  The syslog server runs a cron script to monitor the termperature and alert the user if both sensors have been exceeded the temperature threshold for too long a time period.   
+This project uses an ESP32 wifi development board connected to a DS18B20 temperature sensor to constantly send temperature readings to a syslog server on the wireless network.  The syslog server runs a cron script to monitor the termperature and alert the user if both sensors have been exceeded the temperature threshold for too long a time period.   
 
 Usage and build instructions are below.  I have written these instructions for people that are not tech savvy.  If you know a tech person, I would recommend getting assistance from that person.  worst case, you can google "hackerspace" or "makerspace" and your city name to locate any possible nearby hackerspace/makerspace.  you can reach out to them to locate someone that can help you with this project.  The hardest part in this project is soldering, so if you can handle that you should be fine.  There are lots of tutorials on youtube to help you learn.
 
