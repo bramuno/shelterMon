@@ -68,7 +68,7 @@ Right now, rPi's are more expensive than they used to be.  so there are some alt
   <li>Now that you have the IP address, you can SSH into the rpi.<br>
   <li>if you dont know how to SSH to a device, you can <a href="https://www.putty.org/" target="_blank">download putty</a>.  Click <a href="https://www.ssh.com/academy/ssh/putty/windows" target="_blank">here</a> for a guide on how to use putty for SSH. </li>
   <li>After logging in run these commands: (you can paste copied text into the putty window using the right mouse button):<br>
-  <b>sudo apt-get -y install rsyslog git && sudo cd /home && sudo git clone https://github.com/bramuno/shelterMonitor.git && sudo mv shelterMonitor/ shelterMon/ && sudo cd /home/shelterMon && sudo cp /home/shelterMon/shelter.conf /etc/rsyslog.d/ && nano /etc/rsyslog.d/shelter.conf</b></li>
+  <b>sudo apt-get -y install rsyslog git && sudo cd /home && sudo git clone https://github.com/bramuno/shelterMonitor.git && sudo cd shelterMon && sudo cp shelter.conf /etc/rsyslog.d/ && nano /etc/rsyslog.d/shelter.conf</b></li>
   <li>Edit the file and use the provided examples and duplicate as needed to have one line for each sensor you have.  The first section defines the log file location, and the second section ties the log file to the IP address of the sensors.   Update the IP addresses to match the IPs you got earlier for each ESP32 device.    Each line has to be unique so change the 1's and 2's as needed.  If you dont have that many devices, don't worry about the extra lines.    hit CTRL-O and ENTER to save, then CTRL-X to exit. </li>
   <li>now run this command to edit the rsyslog.conf file<br>
   <b>sudo nano /etc/rsyslog.conf</b><br>
