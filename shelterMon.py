@@ -7,7 +7,7 @@
 ## debug usage: python3 shelterMon.py -C /path/to/folder -d yes
 ## alert test usage: python3 shelterMon.py -C /path/to/folder -t yes
 ## 
-# change the 'useSwitch' option to 0 if you are not using a raspberry pi
+# change the 'useSwitch' option to 0 if you are not using a raspberry pi or other board with GPIO pins
 useSwitch = 1
 #
 debug = 0
