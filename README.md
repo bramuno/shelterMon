@@ -10,7 +10,7 @@ I welcome others to assist me with this project to improve wherever possible, so
 All the advice and instruction given is for EDUCATIONAL PURPOSES ONLY.  I am not responsible for anything you do or destroy or anything else that happens as a result of your efforts.  Nothing is fool-proof so do not trust this or anything as a perfect solution for monitoring temperatures.   If you want a guaranteed solution, you should buy one. I am making this project because I have zero solutions that will do the same thing at an affordable price which is what this project accomplishes.   <br>
 ALSO, this project involves some soldering which is recommended to install a physical switch.  I am not responsible for hurting yourself or burning something to the ground.  If you are not comfortable soldering, you can reach out to your local hackerspace/makerspace for help. <br>
 Ultimately it is YOUR RESPONSIBILITY to do all the proper research of all the subjects discussed here before attempting anything yourself. <br>
-ALSO, this projct requires Wi-Fi is available at all of the locations you need to monitor.  So that is something else you will need to ensure is ready before you attempt to start this project. 
+ALSO, this project requires Wi-Fi is available at all of the locations you need to monitor.  So that is something else you will need to ensure is ready before you attempt to start this project. 
 
 <h2>Hardware:</h2>
 links provided here are only examples as you can swap out brands as needed to save money as long as the part does what it required, any by all means if you can find it somewhere else then you don't need amazon :)<br>
@@ -38,7 +38,7 @@ ELEGOO Electronic Fun Kit for Arduino, Respberry Pi https://a.co/d/bWZt9zZ <br>
 Respberry Pi alternatives:<br>
 Right now, rPi's are more expensive than they used to be.  so there are some alternatives you can try to use instead of an actual Pi.  I recommend googling "Raspberry Pi Alternatives" but here are a few that look like they may wor.  Overall, you must find somethign that has the same set of GPIO pins that the rPi has.:<br>
 <li><a href="https://a.co/d/6iG05cZ" target="_blank">Libre Computer Board AML-S905X-CC </a></li>
-<li><a href="https://a.co/d/2Vu5FYG" target="_blank">Banana Pi</a></li>
+<li><a href="https://a.co/d/2Vu5FYG" target="_blank">Banana Pi</a> (I was not able to get the rPi libraries to work with this board)</li>
 <li><a href="https://a.co/d/5vRDpWE" target="_blank">Odroid</a></li>
 <br><br>
 <h1>Build & Installation Instructions</h1>
@@ -56,23 +56,22 @@ Right now, rPi's are more expensive than they used to be.  so there are some alt
   <li>Set the wireless LAN (wifi) information</li>
   <li>Click SAVE</li>
   <li>Now click WRITE</li>
-  <li>After it's finished writing the data, you can eject the card and place it in the Raspberry Pi. Don't poower on the spi just yet.</li>
+  <li>After it's finished writing the data, you can eject the card and place it in the Raspberry Pi. Don't power on the pi just yet.</li>
   <li>First go find your router.  If you don't already know the admin password, you can check on the router as most modern routers will have that printed somewhere.  </li>
   <li>you will need to <a href="https://www.howtogeek.com/233952/how-to-find-your-routers-ip-address-on-any-computer-smartphone-or-tablet/">find your router's IP address</a></li>
-  <li>Once you have the address, put that IP in a browser window to connect to the router.  Login using the admin password.  If you can't find the router password and can't login, you will need to <a href="https://www.hellotech.com/guide/for/how-to-reset-router-and-modem" target="_blank">reset the router</a>.   This can be problematic and requires a netowrk cable so make sure you know what you're doing first.  </li>
-  <li>Once logged in, go to the LOGS section (you may need to click ADVANCED if your router has a basic/advanced option) and you should have a log file to watch as it distributes IP addresses.  Once you have that, power on the rpi. </li>
+  <li>Once you have the address, put that IP in a browser window to connect to the router.  Login using the admin password.  If you can't find the router password and can't login, you will need to <a href="https://www.hellotech.com/guide/for/how-to-reset-router-and-modem" target="_blank">reset the router</a>.   This can be problematic and requires a network cable so make sure you know what you're doing first.  </li>
+  <li>Once logged in, go to the LOGS section (you may need to click ADVANCED if your router has a basic/advanced option) and you should have a log file to watch as it assigns IP addresses to your devices.  Once you have that, power on the rpi. </li>
   <li>Watch the log and look for the IP address given to the rpi. Write down the IP address <u>AND</a> the MAC address for that device, you will need both (example MAC:  ab:00:ef:01:23:45).</li>
-  <li>Now you need to power on each ESP32 running the code provided earlier.  They will attempt to get an IP address like your rpi.   Write down all IPs and MACs for each device.  </li>
-  <li>Now you will need to locate the DHCP area and find where you can reserve the DHCP address for your rpi. Check <a href="https://kb.netgear.com/25722/How-do-I-reserve-an-IP-address-on-my-NETGEAR-router" target="_blank">this link</a> for an example using a netgead router but you may have to google "dhcp reservation" and your router name to find the right guide.</li>
+  <li>Now you will need to locate the DHCP area and find where you can reserve the DHCP address for your rpi. Check <a href="https://kb.netgear.com/25722/How-do-I-reserve-an-IP-address-on-my-NETGEAR-router" target="_blank">this link</a> for an example using a netgead router but you may have to google "dhcp reservation" and your router name/model to find the right guide.</li>
   <li>Once your router has the IP reserved, you are done with the router.   REMEMBER how to get back here because you will need to reserve the IPs for each ESP32 device as well.  More on that later.</li>
   <li>Now that you have the IP address, you can SSH into the rpi.<br>
   <li>if you dont know how to SSH to a device, you can <a href="https://www.putty.org/" target="_blank">download putty</a>.  Click <a href="https://www.ssh.com/academy/ssh/putty/windows" target="_blank">here</a> for a guide on how to use putty for SSH. </li>
-  <li>After logging in run these commands: (you can paste copied text into the putty window using the right mouse button):<br>
-  <b>sudo apt-get -y install rsyslog git && sudo cd /home && sudo git clone https://github.com/bramuno/shelterMonitor.git && sudo cd shelterMon && sudo cp shelter.conf /etc/rsyslog.d/ && nano /etc/rsyslog.d/shelter.conf</b></li>
-  <li>Edit the file and use the provided examples and duplicate as needed to have one line for each sensor you have.  The first section defines the log file location, and the second section ties the log file to the IP address of the sensors.   Update the IP addresses to match the IPs you got earlier for each ESP32 device.    Each line has to be unique so change the 1's and 2's as needed.  If you dont have that many devices, don't worry about the extra lines.    hit CTRL-O and ENTER to save, then CTRL-X to exit. </li>
+  <li>$`\textcolor{green}{\text{your text}}`$ After logging in run these commands: (you can paste copied text into the putty window clicking the putty window with the right mouse button):<br>
+  <b>sudo apt-get -y install rsyslog git && sudo cd /home && sudo git clone https://github.com/bramuno/shelterMon.git && sudo cd shelterMon && sudo cp shelter.conf /etc/rsyslog.d/ && nano /etc/rsyslog.d/shelter.conf</b></li>
+  <li>Edit the file and use the provided examples and replicate as needed to have one line for each ESP32 sensor you have.  The first section defines the log file location, and the second section ties the log file to the IP address of the sensors.   Update the IP addresses to match the IPs you got earlier for each ESP32 device.    Each line has to be unique so change the 1's and 2's as needed.  If you dont have that many devices, don't worry about the extra lines.    hit CTRL-O and ENTER to save, then CTRL-X to exit. </li>
   <li>now run this command to edit the rsyslog.conf file<br>
   <b>sudo nano /etc/rsyslog.conf</b><br>
-  locate "module(load="imudp")" and remove the # before it. Do the same for next line.  Then change <b>port="514"</b> to <b>port="3333"</b> and use CTRL-O to save and CTRL-X to exit.</li>
+  locate <b>module(load="imudp")</b> and remove the # before it. Do the same for next line.  Then change <b>port="514"</b> to <b>port="3333"</b> and use CTRL-O to save and CTRL-X to exit.</li>
   <li>now run this command to check your conf file is correct:<br>
   <br>rsyslogd -f /etc/rsyslog.conf -N1</b><br>
   <li>now run this command to restart rsyslog:<br>
