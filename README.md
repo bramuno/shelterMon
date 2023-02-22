@@ -14,7 +14,7 @@ ALSO, this project requires Wi-Fi is available at all of the locations you need 
 
 <h2>Hardware:</h2>
 links provided here are only examples as you can swap out brands as needed to save money as long as the part does what it required, any by all means if you can find it somewhere else then you don't need amazon :)<br>
-1 - <a href="https://a.co/d/iUwvwW4" target="_blank">Raspberry Pi</a> or alternative, see below for some cheaper alternatives<br>(make sure it comes with a PROPER power supply or buy one with it)<br>
+1 - <a href="https://a.co/d/iUwvwW4" target="_blank">Raspberry Pi</a> or alternative, (potentially optional) see below for more info and cheaper alternatives<br>(make sure it comes with a PROPER power supply or buy one with it)<br>
 ?? - <a href="https://www.amazon.com/dp/B013GB27HS?ref_=cm_sw_r_cp_ud_dp_G5QE4ZMDYW0S37ADKY5F" target="_blank">DS18B20 Temperature Sensor</a> (one for each area you need to monitor)<br>
 ?? - <a href="https://a.co/d/4bGYlUr" target="_blank">ESP-32 WiFi Development Board</a> (one for each area you need to monitor)<br>
 ?? - <a href="https://a.co/d/buQ9nun" target="_blank">Breakout board</a> for ESP32 (one for each area you need to monitor)<br>
@@ -35,7 +35,8 @@ You may need a <a href="https://a.co/d/4wtLp9Z" target="_blank">USB-SD card adap
 If you've never done a project like this and don't have any of the items listed above, here is a starter kit that has the M-F cables, low-voltage wires, a temporary breadbaoard, LEDs and resistors.  <br>
 ELEGOO Electronic Fun Kit for Arduino, Respberry Pi https://a.co/d/bWZt9zZ <br>
 <br>
-Respberry Pi alternatives:<br>
+Respberry Pi notes & alternatives:<br>
+A pi is optional, you can run this on a desktop or server because everything is handled over the Wi-Fi network.  But you may need to remove some of the code.  The pi is very useful to create a physical switch to disable alerts. 
 Right now, rPi's are more expensive than they used to be.  You DO NOT NEED to get the latest rPi.  We bought a rPi version 2 for cheap while the version 4 (latest) was ~$150.  You need version 2 or greater.  <br><br>there are some alternatives you can try to use instead of an actual Pi.  I recommend googling "Raspberry Pi Alternatives" but here are a few that look like they may wor.  Overall, you must find somethign that has the same set of GPIO pins that the rPi has.:<br>
 <li><a href="https://a.co/d/6iG05cZ" target="_blank">Libre Computer Board AML-S905X-CC </a></li>
 <li><a href="https://a.co/d/2Vu5FYG" target="_blank">Banana Pi</a> (I was not able to get the rPi libraries to work with this board)</li>
