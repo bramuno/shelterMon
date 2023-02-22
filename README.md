@@ -167,7 +167,8 @@ Use the below steps to create and use a Twilio account. These instructions are l
 <li>"twilioToken":"AAABBBCCC"          <-- This is your Auth Token </li></ul>
 <li>Save the file and exit the editor.  remember to validate the json code.</li>
 <li>Now just ensure you have a destination SMS number specified in each location's .json file.  </li>
-
+<li>You can test the notifications (email and SMS) by running the following command:<br>
+<b>python3 /home/shelterMon/shelterMon.py -C /home/shelterMon -t yes</b></li>
 
 <h1>Troubleshooting</h1>
 <li><b>Syslog problems</b><br>
