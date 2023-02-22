@@ -102,10 +102,10 @@ Right now, rPi's are more expensive than they used to be.  so there are some alt
   <li>save the username, password and server info as you will need it later. </li>
 
 
-  <h2>Breadboard Hat</h2>
+  <h2>Breadboard Hat (optional)</h2>
   The breadboard hat provides a physical switch to enable/disable the monitor and also an LED that indicates the position of the switch.  <br>
   <img src="https://raw.githubusercontent.com/bramuno/shelterMonitor/main/breadboardHatDone.jpg" width="200"><br>
-  Please refer to the images for the <a href="https://raw.githubusercontent.com/bramuno/shelterMonitor/main/breadboardHat.jpg">soldering connections</a> and the video for help with the soldering details.  Otherwise, I suggest you locate someone that knows how to solder or you can reach our to your local hackerspace/makerspace.  If this is your only project you plan to make, then it would be better to lean on some help instead of buying a soldering station.<br><br>
+  Please refer to the images for the <a href="https://raw.githubusercontent.com/bramuno/shelterMonitor/main/breadboardHat.jpg">soldering connections</a> and the video for help with the soldering details.  Otherwise, I suggest you locate someone that knows how to solder or you can reach our to your local hackerspace/makerspace.  If this is your only project you plan to make, then it would be better to lean on some help instead of buying a soldering station.<br>Again, this step is optional as you don't NEED a switch to allow this to read temperatures and send alerts.  However, if there is a problem and the tech person isn't available to disable the alerts, then you could end up sending a lot of emails and SMS messages, which as mentioned in the SMS section below could lead to an expensive scenario.  <br>There are also other ways to make this switch that are more simple and less shiny.  It really doesn't matter as long as it works.  The LED design allows for non-techy people to flip the switch and show an indicator that the switch is on the OFF position.<br><br>
   
 <h2>Python Script</h2>
   The python script depends on the breadboard hat, so make sure that's working as expected before proceeding or you will likely get lots of email/SMS alerts.<br>
@@ -123,10 +123,11 @@ Right now, rPi's are more expensive than they used to be.  so there are some alt
 <li>"maxDuration":"20"                <-- Set this value to the longest time a bad result is tolderable until it should send a notification alert</li>
 <li>"tempUnit":"F",                   <-- Change this to either C for Celcius or F for Farenheit</li> <br></li>
 <li>"emailDestination":"dest.email@gmail.com",  <-- Change this to your desired email destination where alerts should be sent</li> <br> 
-<li>"destSMS":"+15551234567"</li>     <-- set this value to the destination phone number to receive SMS alerts.  If none, leave the value blank.</li>
+<li>"destSMS":"+15551234567"</li>     <-- set this value to the destination phone number to receive SMS alerts.  If not using SMS alerts, leave the value blank.< (empty quotes "" )/li>
 <li>"throttle":"20"                   <-- set the number of minutes to wait between sending alert notifications</li>
  <br></ul> 
- </li>    
+ </li>
+ <li>Repeat the above process for all the sensors your have installed.  Name each file to describe it's location and follow with <b>.json</b> (eg.  kennels.json)</li>
  <li>Now edit the <b>email.json</b> file to update your SMTP server settings<br>
   <ul>
 <li>"SMTPuser":"SMTPuserNameHere",    <-- Change this to your SMTP username from the previous section </li><br>
@@ -139,16 +140,16 @@ Right now, rPi's are more expensive than they used to be.  so there are some alt
 <b>sudo systemctl restart rsyslog</b></li>
   <li>Repeat the previous step for all the sensors you have, and be sure to name the file with a unique name each time (eg, change config1.json to config.json)</li>
   <li>Now test each config by running the command:<br>
-  <b>python /home/shelterMon/shelterMon.py -C CONFIGFILE</b>
-  <br>where CONFIGFILE is the full path of the config files you created a couple steps back<br>
-  Example:<br><b>python /home/shelterMon/shelterMon.py -C /home/shelterMon/config.json -d yes </b></li>
-  OR <br><b>python /home/shelterMon/shelterMon.py /home/shelterMon/myConfigFileName.json -d yes </b></li>
+  <b>python /home/shelterMon/shelterMon.py -C CONFIGFOLDER</b>
+  <br>where CONFIGFOLDER is the full path of the json config files you just created.<br>
+  Example:<br><b>python /home/shelterMon/shelterMon.py -C /home/shelterMon/ -d yes </b></li>
+  OR <br><b>python /home/shelterMon/shelterMon.py /home/shelterMon/ -d yes </b></li>
     <li>If the test is successful you will not get any errors.  If the breadboard hat is working correctly, you should get a message that states the switch is OFF and the script will quit.  When in the ON position, the script should finish without errors.  Refer to the video for a demonstration.</li>
 <li>Now we need to tell the server to run that command by itself every minute.<br>
 Run this command: (if it prompts for an editor, choose NANO) <br>
 <b>crontab -e</b></li>
   <li>Now paste the following line into the nano editor just like you did for the previous files:<br>
-  <b>* * * * * sudo python /home/shelterMon/shelterMon.py -C /home/shelterMon/config.json > /dev/null 2>&1</b></li>
+  <b>* * * * * sudo python /home/shelterMon/shelterMon.py -C /home/shelterMon/ > /dev/null 2>&1</b></li>
   <li>Use CTRL-O & ENTER to save then CTRL-X to quit</li>
   <li>Now you are ready to start testing the system is doing what it should be doing.  Use whatever you can to test the sensor's temperature readings (hairdryer, etc).  <br>Turn off the sensor's power supply but leave the Raspberry Pi running.  It should notify you the sensor is offline.<br>Keep the ESP32 powered on but disconenct the sensor from the ESP32, you should get a notification the sensor is not reading correctly within 10 minutes. <br> </li>
   <li>Now you just need to place the sensor(s) where they need to go and use a USB charge adapter to power the sensor unit.  the unit needs to be in a place where it can communicate with the WiFi. </li>
