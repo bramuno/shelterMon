@@ -161,13 +161,12 @@ Use the below steps to create and use a Twilio account. These instructions are l
 <li>Upper right corner, click ACCOUNT and select API KEYS & TOKENS.  Scroll down to AUTH TOKENS.   Copy your Account ID and your primary token values. </li>
 <li>You now have enough info to use the service.  Now edit the sms.json file in your folder. </li>
 <ul>
-<li>"twilioServiceID":""  <-- this is your Service ID</li>
-<li>"twilioAcctID":""  <-- This is your Account ID</li>
-<li>"twilioFromNumber":""  <-- This is your twilio phone number </li>
-<li>"twilioToken":""  <-- This is your Auth Token </li></ul>
+<li>"twilioServiceID":"ABC123"         <-- this is your Service ID</li>
+<li>"twilioAcctID":"DEF123"            <-- This is your Account ID</li>
+<li>"twilioFromNumber":"+15551234567"  <-- This is your twilio phone number </li>
+<li>"twilioToken":"AAABBBCCC"          <-- This is your Auth Token </li></ul>
 <li>Save the file and exit the editor.  remember to validate the json code.</li>
 <li>Now just ensure you have a destination SMS number specified in each location's .json file.  </li>
-<li></li>
 
 
 <h1>Troubleshooting</h1>
@@ -182,7 +181,3 @@ These two above lines typically indicate a problem loading the log file created 
 </li>
 <li><b>Config.json load failed.</b><br>
 this message typically means there is a parsing error on the config.json file, or the json files does not exist.  This will happen if there is an extra comma, or unbalanced quotes, etc.  the JSON format must be perfect , so if you can't figure it out just go back to the default config.json file provided in the github repo and paste it into your file again.  you can also google for an online json validator to help you find the error in the json code.</li>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
