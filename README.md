@@ -20,10 +20,10 @@ links provided here are only examples as you can swap out brands as needed to sa
 ?? - <a href="https://a.co/d/buQ9nun" target="_blank">Breakout board</a> for ESP32 (one for each area you need to monitor)<br>
 ?? - <a href="https://a.co/d/6vf3yfr" target="_blank">USB chargers</a> (one for each area you need to monitor) <br>
 ??- Low voltage wires (cat5 cable works great)<br>
-1 - <a href="https://a.co/d/dl4wDO9" target="_blank">lighted toggle switch 3-pole</a> any style is ok as long as its an 3-pole<br>
-1 - <a href="https://a.co/d/bAP9Ayc" target="_blank">solderable breadboard hat</a><br>
-1 - 200ohm resistor (have to buy a pack, but you may be able to locate a someone that has a few to spare)<br>
-1 - basic LED <br>
+1 - <a href="https://a.co/d/dl4wDO9" target="_blank">(optional) lighted toggle switch 3-pole</a> any style is ok as long as its an 3-pole<br>
+1 - <a href="https://a.co/d/bAP9Ayc" target="_blank">(optional) solderable breadboard hat</a><br>
+1 - 200ohm resistor (optional) (have to buy a pack, but you may be able to locate a someone that has a few to spare)<br>
+1 - basic LED (optional) <br>
 1 - tiny flat head screwdriver <br>
 1 - <a href="https://a.co/d/0wVyD20" target="_blank">micro SD card</a> (16gb or larger).  Don't go cheap here.  Recommend you buy SanDisk brand.  16gb is plenty of space, you don't need space for this project. The card should come with an micro to standard size adapter.  If it doesn't you will need to get one. <br>
 1 - Soldering Iron kit (an iron with an iron stand and some solder, <a href="https://a.co/d/d0QlyU0" target="_blank">micro cutters</a>, maybe something <a href="https://a.co/d/caBHZSg" target="_blank">like this</a>)<br>
