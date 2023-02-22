@@ -7,12 +7,14 @@
 ## debug usage: python3 shelterMon.py -C /path/to/folder -d yes
 ## alert test usage: python3 shelterMon.py -C /path/to/folder -t yes
 ## 
+# change the 'useSwitch' option to 0 if you are not using a raspberry pi
+useSwitch = 1
+#
 debug = 0
 test = 0
 import os, sys, json, subprocess, smtplib, datetime, time, os.path, pdb, argparse, glob
 from email.message import EmailMessage
 from os.path import exists
-import RPi.GPIO as GPIO
 parser = argparse.ArgumentParser()
 parser.add_argument("-C", "--config", help = "config")
 parser.add_argument("-d", "--debug", help = "debug")
@@ -33,17 +35,19 @@ if args.test:
 
 # detect physical switch position
 # off switch disables all notifications
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-if int(GPIO.input(17)) == 0:
-    ON = 0
-else:
-    ON = 1
-if args.test:
-    test = str(args.test.lower())
-    if test == 1 or test == 1 or test == "true" or test == "yes":
-        test = 1
-        print("\n\n TESTING NOTIFICATIONS ENABLED\n\n")
+if useSwitch == 1:
+    import RPi.GPIO as GPIO
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    if int(GPIO.input(17)) == 0:
+        ON = 0
+    else:
+        ON = 1
+    if args.test:
+        test = str(args.test.lower())
+        if test == 1 or test == 1 or test == "true" or test == "yes":
+            test = 1
+            print("\n\n TESTING NOTIFICATIONS ENABLED\n\n")
 
 def msg(SMTPserver, SMTPport, SMTPuser, SMTPpass, message):
     server = smtplib.SMTP_SSL(SMTPserver, SMTPport)
