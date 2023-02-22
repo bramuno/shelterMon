@@ -67,38 +67,38 @@ Right now, rPi's are more expensive than they used to be.  so there are some alt
   <li>Now that you have the IP address, you can SSH into the rpi.<br>
   <li>if you dont know how to SSH to a device, you can <a href="https://www.putty.org/" target="_blank">download putty</a>.  Click <a href="https://www.ssh.com/academy/ssh/putty/windows" target="_blank">here</a> for a guide on how to use putty for SSH. </li>
   <li>After logging in run these commands: (you can paste copied text into the putty window clicking the putty window with the right mouse button):<br>
-  <b>[- sudo apt-get -y install rsyslog git && sudo cd /home && sudo git clone https://github.com/bramuno/shelterMon.git && sudo cd shelterMon && sudo cp shelter.conf /etc/rsyslog.d/ && nano /etc/rsyslog.d/shelter.conf -]</b></li>
+  <b>sudo apt-get -y install rsyslog git && sudo cd /home && sudo git clone https://github.com/bramuno/shelterMon.git && sudo cd shelterMon && sudo cp shelter.conf /etc/rsyslog.d/ && nano /etc/rsyslog.d/shelter.conf</b></li>
   <li>Edit the file and use the provided examples and replicate as needed to have one line for each ESP32 sensor you have.  The first section defines the log file location, and the second section ties the log file to the IP address of the sensors.   Update the IP addresses to match the IPs you got earlier for each ESP32 device.    Each line has to be unique so change the 1's and 2's as needed.  If you dont have that many devices, don't worry about the extra lines.    hit CTRL-O and ENTER to save, then CTRL-X to exit. </li>
   <li>now run this command to edit the rsyslog.conf file<br>
   <b>sudo nano /etc/rsyslog.conf</b><br>
   locate <b>module(load="imudp")</b> and remove the # before it. Do the same for next line.  Then change <b>port="514"</b> to <b>port="3333"</b> and use CTRL-O to save and CTRL-X to exit.</li>
   <li>now run this command to check your conf file is correct:<br>
-  <br>rsyslogd -f /etc/rsyslog.conf -N1</b><br>
+  rsyslogd -f /etc/rsyslog.conf -N1</b><br>
   <li>now run this command to restart rsyslog:<br>
   <b>sudo systemctl restart syslog.socket</b><br>If the command returns nothing, especially no errors, then you are fine.  Otherwise, go back into the file and try to find where the problem is.  syslog won't run if that file isn't perfect.</li>
-  <li>Now that syslog is listening make sure your sensors are powered on.  </li>
-  <li>The sensors should start sending data to the rpi.  Now we can finish with the rpi.</li>
+  <li>Now that syslog is listening we can setup the sensors. </li>
+
 
   
   <h2>ESP32 & sensors</h2>
-  <li>Pop the ESP32 boards into the breakout boards. Make sure the pins line up.  </li>
-  <li>The sensors should have come with 3 cables with a header that conects to the sensor board.  Connect the cables to the boards. </li>
+  <li>Pop the ESP32 boards into the breakout boards. Make sure the pins line up by matching the labels.  </li>
+  <li>The sensors should have come with 3 cables with a header that conects to the sensor board.  Connect the white header plugs into the sensor boards. </li>
   <li>Now the other end of the cables go to the breakout baord.   The red cable goes to the 3V3 pin, the black cable goes to the GND pin, and the yellow cable goes to P14.</li>
   <li>To power on, connect a micro-usb cable to the ESP32 and connect the other end to a usb charger port (like a cell phone charger) or for now you can use the USB port on your computer. </li>
-  <li>read <a href="https://dronebotworkshop.com/esp32-intro/">this guide</a> on getting to know the basics on the ESP32, follow the instructions to setup arduino IDE and pay attention on how to upload code to the board.  It requires you hold the reset button until the board begins uploading, so it may take some practice. </li>
+  <li>read <a href="https://dronebotworkshop.com/esp32-intro/">this guide</a> on getting to know the basics on the ESP32, follow the instructions to setup arduino IDE and pay attention on how to upload code to the board.  It requires you press the reset button just before the board begins uploading, so it may take some practice. </li>
   <li>Now that you are familiar with the ES32, you can upload the code to the board.  See the project repo and look for the file "ESP32.ino".  Open that file and copy the code into the arduino IDE.  Now look for the areas you need to edit.  Look for the comments "user changes here".  Update the SSIDname and SSIDpassword to your wifi SSID name and password, and update the udpAddress to the IP address of the rpi.  Leave the rest unless you know what you are doing. </li>
   <li>Now you need the additional libraries before you upload. Click SKETCH menu and select INCLUDE LIBRARY and then select MANAGE LIBRARIES.  It should open a window to allow you to search for new libraries.  Search for <b>dallas</b> and install <b>DallasTemp by Miles Burton</b>.  Choose the option to INSTALL ALL DEPENDENCIES (otherwise search for <b>OneWire by Jim Studt</b> and install that as well).  You should be good to upload now. 
   </li>
   <li>Make sure your <a href="https://www.arduino.cc/en/software">Arduino IDE</a> settings are as instructed by the ESP32 guide, then click the UPLOAD button.  remember uploading is not that simple for ESP32 so refer back to the previous ESP32 guide and remember you need to hold the reset button on the ESP32 then wait for the arduino output to say "uploading..." and then release the button.  it may take a few tries to get it right.</li>
   <li>Repeat the upload process as needed if you have more sensors.</li>
-  <li>Once all the sensors are working on the network, you need to reserve the IP address for each device.  Go back to the router's DHCP reservation area and then restart the ESP32 devices.  WHen the devices restart, they should as the router for an IP address and the router will respond.  Reserve each device and be sure to label them.  </li>
+  <li>Once all the sensors are have the wifi code uploaded, you need to reserve the IP address for each device.  Go back to the router's DHCP reservation area and then restart the ESP32 devices.  When the devices restart, they should ask the router for an IP address and the router will respond.  Once you have the IP and MAC addresses, go back to the DHCP reservation area in the router to reserve each device.   Then be sure to label each ESP32 (use the bottom side of the breakout board).  </li>
 
 
   
 <h2>Email user account</h2>
   <li>If you are using your gmail/google account, you can follow <a href="https://support.google.com/accounts/answer/185833?hl=en">this guide</a> to setup your google account information. Don't use your normal gmail password. </li>
   <li>If you are using something else, then you will need to locate your mail server inforamtion.  You can ask your IT person if you have one, or you can google "smtp server" and the name of your mail provider (eg "smtp server yahoo).  But you will have to check their documentation if it doesnt work as you may need to create an app password similar to the gmail procedure. </li>
-  <li>save the username, password and server info as you will need it later. </li>
+  <li>save the username, password and server address and server port as you will need that later. </li>
 
 
   <h2>Breadboard Hat (optional)</h2>
@@ -107,56 +107,48 @@ Right now, rPi's are more expensive than they used to be.  so there are some alt
   Please refer to the images for the <a href="https://raw.githubusercontent.com/bramuno/shelterMonitor/main/breadboardHat.jpg">soldering connections</a> and the video for help with the soldering details.  Otherwise, I suggest you locate someone that knows how to solder or you can reach our to your local hackerspace/makerspace.  If this is your only project you plan to make, then it would be better to lean on some help instead of buying a soldering station.<br>Again, this step is optional as you don't NEED a switch to allow this to read temperatures and send alerts.  However, if there is a problem and the tech person isn't available to disable the alerts, then you could end up sending a lot of emails and SMS messages, which as mentioned in the SMS section below could lead to an expensive scenario.  <br>There are also other ways to make this switch that are more simple and less shiny.  It really doesn't matter as long as it works.  The LED design allows for non-techy people to flip the switch and show an indicator that the switch is on the OFF position.<br><br>
   
 <h2>Python Script</h2>
-  The python script depends on the breadboard hat, so make sure that's working as expected before proceeding or you will likely get lots of email/SMS alerts.<br>
-  <li>Run this command:<br><b>sudo mkdir -p  /home/shelterMon && sudo nano /home/shelterMon/shelterMon.py</b></li>
-  <li>When nano opens the blank document, go to the repo and look for the "shelterMon.py" file. Open the file and copy the data, then paste it into the nano window.  hit CTRL-O and ENTER to save, then CTRL-X to exit.</li>
-  <li>Now run this command:<br><b>sudo nano /home/shelterMon/config.json</b></li>
-  <li>When nano opens the blank document, go to the repo and look for the "config.json" file. Open the file and copy the data, then paste it into the nano window. Now update the information to suit your preferences.<br>
+  <li>On the rPi, run this command:<br><b>sudo nano /home/shelterMon/config.json</b></li>
+  <li>When nano opens the file, use the information below to configure your devices:
  <ul> 
-<li>"enable":"1",                     <-- use 1 to enable, 0 to disable checks for this location</li><br>
-<li>"folderName":"/home/shelterMon",  <-- leave this as is unless you know what you are doing </li><br>
-<li>"logfileName":"sensor1.log",      <-- Make sure the <b>logfileName</b> matches the file name as mentioned in the syslog.conf file you created earlier </li><br>
-<li>"locationName":"LocationNameHere",  <-- Change this value to the name of the Shelter or the location name where the sensor has been placed </li><br>
-<li>"maxTemp":"95",                   <-- Change this to your maximum allowed temperature </li><br>
-<li>"minTemp":"50",                   <-- Change this to your minimum required temperature  </li><br>
+<li>"enable":"1",                     <-- use 1 to enable, 0 to disable checks for this location</li>
+<li>"logfileName":"sensor1.log",      <-- Make sure the <b>logfileName</b> matches the file name as mentioned in the syslog.conf file you created earlier </li>
+<li>"locationName":"Kennels",  <-- Change this value to the name of the Shelter or the location name where the sensor has been placed </li>
+<li>"maxTemp":"95",                   <-- Change this to your maximum allowed temperature </li>
+<li>"minTemp":"50",                   <-- Change this to your minimum required temperature  </li>
 <li>"maxDuration":"20"                <-- Set this value to the longest time a bad result is tolderable until it should send a notification alert</li>
-<li>"tempUnit":"F",                   <-- Change this to either C for Celcius or F for Farenheit</li> <br></li>
-<li>"emailDestination":"dest.email@gmail.com",  <-- Change this to your desired email destination where alerts should be sent</li> <br> 
-<li>"destSMS":"+15551234567"</li>     <-- set this value to the destination phone number to receive SMS alerts.  If not using SMS alerts, leave the value blank.< (empty quotes "" )/li>
+<li>"tempUnit":"F",                   <-- Change this to either C for Celcius or F for Farenheit</li>
+<li>"emailDestination":"dest.email@gmail.com",  <-- Change this to your desired email destination where alerts should be sent.  Use commas to separate multiple email addresses.</li>
+<li>"destSMS":"+15551234567"</li>     <-- set this value to the destination phone number to receive SMS alerts.  If not using SMS alerts, leave the value blank. (empty quotes "" ).  </li>
 <li>"throttle":"20"                   <-- set the number of minutes to wait between sending alert notifications</li>
- <br></ul> 
+ </ul> 
  </li>
  <li>Repeat the above process for all the sensors your have installed.  Name each file to describe it's location and follow with <b>.json</b> (eg.  kennels.json)</li>
- <li>Now edit the <b>email.json</b> file to update your SMTP server settings<br>
+ <li>Now edit the <b>email.json</b> file to update your SMTP server settings
   <ul>
-<li>"SMTPuser":"SMTPuserNameHere",    <-- Change this to your SMTP username from the previous section </li><br>
-<li>"SMTPpass":"SMTPpasswordHere",    <-- Change this to your SMTP password from the previous section </li><br>
-<li>"SMTPserver":"smtp.gmail.com",    <-- Chnage this to your SMTP server address from the previous section  </li><br>
-<li>"SMTPport":"465",            <-- Change this to your< SMTP server's destination port from the previous section  </li></ul><br>
+<li>"SMTPuser":"SMTPuserNameHere",    <-- Change this to your SMTP username from the email section </li>
+<li>"SMTPpass":"SMTPpasswordHere",    <-- Change this to your SMTP password from the email section </li>
+<li>"SMTPserver":"smtp.gmail.com",    <-- Chnage this to your SMTP server address from the email section  </li>
+<li>"SMTPport":"465",            <-- Change this to your< SMTP server's destination port from the email section  </li></ul>
 <li>hit CTRL-O and ENTER to save, then CTRL-X to exit.</li>
 <li>The sms.json is remaining but that is optional and will be addressed later in this guide.</li>
-<li>Restart rsyslog just incase with this command:<br>
-<b>sudo systemctl restart rsyslog</b></li>
-  <li>Repeat the previous step for all the sensors you have, and be sure to name the file with a unique name each time (eg, change config1.json to config.json)</li>
   <li>Now test each config by running the command:<br>
-  <b>python /home/shelterMon/shelterMon.py -C CONFIGFOLDER</b>
-  <br>where CONFIGFOLDER is the full path of the json config files you just created.<br>
+  <b>python3 /home/shelterMon/shelterMon.py -C CONFIGFOLDER</b>
+  <br>where CONFIGFOLDER is the full path of the folder that contains the json config files you just created.  It should be <b>/home/shelterMon</b><br>
   Example:<br><b>python /home/shelterMon/shelterMon.py -C /home/shelterMon/ -d yes </b></li>
-  OR <br><b>python /home/shelterMon/shelterMon.py /home/shelterMon/ -d yes </b></li>
     <li>If the test is successful you will not get any errors.  If the breadboard hat is working correctly, you should get a message that states the switch is OFF and the script will quit.  When in the ON position, the script should finish without errors.  Refer to the video for a demonstration.</li>
 <li>Now we need to tell the server to run that command by itself every minute.<br>
 Run this command: (if it prompts for an editor, choose NANO) <br>
 <b>crontab -e</b></li>
-  <li>Now paste the following line into the nano editor just like you did for the previous files:<br>
+  <li>Now paste the following line into the nano editor:<br>
   <b>* * * * * sudo python /home/shelterMon/shelterMon.py -C /home/shelterMon/ > /dev/null 2>&1</b></li>
   <li>Use CTRL-O & ENTER to save then CTRL-X to quit</li>
-  <li>Now you are ready to start testing the system is doing what it should be doing.  Use whatever you can to test the sensor's temperature readings (hairdryer, etc).  <br>Turn off the sensor's power supply but leave the Raspberry Pi running.  It should notify you the sensor is offline.<br>Keep the ESP32 powered on but disconenct the sensor from the ESP32, you should get a notification the sensor is not reading correctly within 10 minutes. <br> </li>
-  <li>Now you just need to place the sensor(s) where they need to go and use a USB charge adapter to power the sensor unit.  the unit needs to be in a place where it can communicate with the WiFi. </li>
+  <li>Now you are ready to start testing the system is doing what it should be doing.  Use whatever you can to test the sensor's temperature readings (hairdryer, freezer, etc).  <br>Turn off the sensor's power supply but leave the Raspberry Pi running.  It should notify you the sensor is offline.<br>Keep the ESP32 powered on but disconenct the sensor from the ESP32, you should get a notification the sensor is not reading correctly within 5 minutes. <br> </li>
+  <li>Now you just need to place the sensor(s) where they need to go and use a USB charge adapter to power the sensor unit.  the unit needs to be in a place where it can communicate with the WiFi.  Also keep in mind the sensor should not be too high up since warm air rises.  so a more accurate temperature reading that reflects what the animals will be feeling is going to be when the sensor is closer to their level.  </li>
 </ul>
 <h1>SMS (optional)</h1>
 SMS alerts are an optional feature to send alert notifications via SMS to a mobile device.  This can be useful as many people don't check their email all day long. This is one method and requires a subscription that costs money.  It's cheap but a bug in the code could cause too many alerts to be sent and could accidentally rack up charges fast.  So be warned. <br><br>
-As an alternative you send text to a specific mobile carrier's desginated domain like "vtext.com".  Here is an example article: https://www.verizon.com/about/news/vzw/2013/06/computer-to-phone-text-messaging, HOWEVER be warned as I tested this thoroughly for this project before going with Twilio.   I can onlhy speak for Verizon as thats all i could test since that's ny carrier, so maybe the other carriers are better in some areas.   <br>BUt Verizon SERIOUSLY THROTTLES the messages sent to vtext.com.   In my testing  on several different days, I sent more than ~10 mesages in a short amount of time, and Verizon stopped delivering those messages. I later got som eemails saying the message i sent hours ago has been delayed and not delivered yet.  That was a very reliable problem and it's why I don't recommend using it as a permanent solution.  <br><br>
-Use the below steps to create and use a Twilio account. These instructions are likely to get depreacted as their website and protocols mentioned below may change over time.  So you will have to do your best to do what is needed to get the necessary information.  At the time this was written, you can rent a phone number from Twilio for $1.15/month.
+As an alternative you send text to a specific mobile carrier's desginated domain like "vtext.com".  Here is an <a href='https://www.verizon.com/about/news/vzw/2013/06/computer-to-phone-text-messaging'>example article</a>. HOWEVER be warned as I tested this thoroughly for this project before going with Twilio.   I can only speak for Verizon as thats all i could test since that's ny carrier, so maybe the other carriers are better in some areas.   <br>But Verizon SERIOUSLY THROTTLES the messages sent to vtext.com.   In my testing  on several different days, I sent more than ~10 mesages in a short amount of time, and Verizon stopped delivering those messages. I later got some emails saying the message I sent hours ago has been delayed and not delivered yet.  That was a very reliable problem and it's why I don't recommend using it as a permanent solution.  <br><br>
+Use the below steps to create and use a Twilio account. These instructions are likely to get depreacted as their website and protocols mentioned below may change over time.  So you will have to do your best to do what is needed to get the necessary information.  At the time this was written, you can rent a phone number from Twilio for ~$2/month.
 <li>Go to https://www.twilio.com/ and register for an account, then login. </li>
 <li>Buy a phone number (you get one free if you are doing the free trial)</li>
 <li>on the left menu, click MESSAGING and click SERVICES.</li>
@@ -168,10 +160,11 @@ Use the below steps to create and use a Twilio account. These instructions are l
 <li>On the left menu, click on PROPERTIES and you shold find you Service ID.  Copy that to notepad for later. </li>
 <li>Upper right corner, click ACCOUNT and select API KEYS & TOKENS.  Scroll down to AUTH TOKENS.   Copy your Account ID and your primary token values. </li>
 <li>You now have enough info to use the service.  Now edit the sms.json file in your folder. </li>
+<ul>
 <li>"twilioServiceID":""  <-- this is your Service ID</li>
 <li>"twilioAcctID":""  <-- This is your Account ID</li>
 <li>"twilioFromNumber":""  <-- This is your twilio phone number </li>
-<li>"twilioToken":""  <-- This is your Auth Token </li>
+<li>"twilioToken":""  <-- This is your Auth Token </li></ul>
 <li>Save the file and exit the editor.  remember to validate the json code.</li>
 <li>Now just ensure you have a destination SMS number specified in each location's .json file.  </li>
 <li></li>
