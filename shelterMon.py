@@ -252,8 +252,8 @@ while g < len(tmplist):
             ## alert sensor online but reading incorrectly
             if ( float(finalTemp) < -40.0 ) :
                 alert = 1
-                body = "\nA sensor is not reading correctly:\n\nsensorA="+str(float(finalTemp))+"\n"
-                subject = 'Sensor read OKstatus'
+                body = "\nSensor "+str(location)+" is not reading correctly:\n\nsensorA="+str(float(finalTemp))+"\nPlease check the connection.\n"
+                subject = str(location)+" Sensor problem"
             ########## end
             if debug == 1:
                 print("OKstatus = ",str(OKstatus))
