@@ -117,7 +117,7 @@ A pi is optional, you can run this on a desktop or server because everything is 
 <li>"locationName":"Kennels",  <-- Change this value to the name of the Shelter or the location name where the sensor has been placed </li>
 <li>"maxTemp":"95",                   <-- Change this to your maximum allowed temperature </li>
 <li>"minTemp":"50",                   <-- Change this to your minimum required temperature  </li>
-<li>"maxDuration":"20"                <-- Set this value to the longest time a bad result is tolderable until it should send a notification alert</li>
+<li>"maxDuration":"20"                <-- Set this value to the longest time a bad result is tolerable until it should send a notification alert</li>
 <li>"tempUnit":"F",                   <-- Change this to either C for Celcius or F for Farenheit</li>
 <li>"emailDestination":"dest.email@gmail.com",  <-- Change this to your desired email destination where alerts should be sent.  Use commas to separate multiple email addresses.</li>
 <li>"destSMS":"+15551234567"</li>     <-- set this value to the destination phone number to receive SMS alerts.  Use a comma to separate multiple numbers.  If not using SMS alerts, leave the value blank. (empty quotes "" ).  </li>
