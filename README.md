@@ -120,7 +120,7 @@ A pi is optional, you can run this on a desktop or server because everything is 
 <li>"maxDuration":"20"                <-- Set this value to the longest time a bad result is tolderable until it should send a notification alert</li>
 <li>"tempUnit":"F",                   <-- Change this to either C for Celcius or F for Farenheit</li>
 <li>"emailDestination":"dest.email@gmail.com",  <-- Change this to your desired email destination where alerts should be sent.  Use commas to separate multiple email addresses.</li>
-<li>"destSMS":"+15551234567"</li>     <-- set this value to the destination phone number to receive SMS alerts.  If not using SMS alerts, leave the value blank. (empty quotes "" ).  </li>
+<li>"destSMS":"+15551234567"</li>     <-- set this value to the destination phone number to receive SMS alerts.  Use a comma to separate multiple numbers.  If not using SMS alerts, leave the value blank. (empty quotes "" ).  </li>
 <li>"throttle":"20"                   <-- set the number of minutes to wait between sending alert notifications</li>
  </ul> 
  </li>
