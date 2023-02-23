@@ -274,6 +274,10 @@ while g < len(tmplist):
                 print("logfile = ",str(logfile))
                 print("notifyMin = ",str(notifyMin))
                 print("notify = "+str(notifyMin)+"%"+str(throttle))
+                print("sid = ",str(sid))
+                print("twilioAcctID = ",str(twilioAcctID))
+                print("twilioFromNumber = ",str(twilioFromNumber))
+                print("twilioToken = ",str(twilioToken))
 
 
             if newfile == 1:
@@ -336,7 +340,7 @@ while g < len(tmplist):
 
         if test == 1 and enabled == "yes" and ON == 1 :
             body = "This is a forced test of the notifications."
-            subject = "Test message from temperaure monitor"
+            subject = "Test message from temperaure monitor "+str(location)
             thisMsg = EmailMessage()
             thisMsg.set_content(body)
             thisMsg['Subject'] = subject
@@ -350,15 +354,22 @@ while g < len(tmplist):
                 print("Sent TEST email to: "+str(dests))
             # send sms if available
             if sid != "" and twilioToken != "":
-                url='https://api.twilio.com/2010-04-01/Accounts/'+str(twilioAcctID)+'/Messages.json'
-                cmd='curl -s -X POST "'+str(url)+'" --data-urlencode "Body='+str(body)+'" --data-urlencode "From='+str(twilioFromNumber)+'" --data-urlencode "To='+str(destSMS)+'" -u '+str(twilioAcctID)+':'+str(twilioToken)
-                try:
-                    response = str(subprocess.check_output(cmd, shell=True))
-                    if debug == 1:
-                        print("SMS response: \n",response)
-                    print("Send SMS to "+destSMS+"")
-                except Exception as e: 
-                    print(e)
+                x=0
+                smslist=destSMS.split(",")
+                while x < len(smslist):
+                    destSMS = str(smslist[x])
+                    url='https://api.twilio.com/2010-04-01/Accounts/'+str(twilioAcctID)+'/Messages.json'
+                    cmd='curl -s -X POST "'+str(url)+'" --data-urlencode "Body='+str(body)+'" --data-urlencode "From='+str(twilioFromNumber)+'" --data-urlencode "To='+str(destSMS)+'" -u '+str(twilioAcctID)+':'+str(twilioToken)
+                    #pdb.set_trace()
+                    try:
+                        response = str(subprocess.check_output(cmd, shell=True))
+                        if debug == 1:
+                            print("SMS response: \n",response)
+                        print("Send SMS to "+destSMS+"")
+                    except Exception as e: 
+                        print(e)
+                    x=x+1
+                    time.sleep(2)
         if test == 1 and enabled == "yes" and ON == 0:
             print("The Switch is OFF.  You need to turn the witch to ON to enable notifications.")
     g = g + 1
