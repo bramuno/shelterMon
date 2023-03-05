@@ -7,7 +7,7 @@
 ## debug usage: python3 shelterMon.py -C /path/to/folder -d yes
 ## alert test usage: python3 shelterMon.py -C /path/to/folder -t yes
 ## 
-# change the 'useSwitch' option to 0 if you are not using a raspberry pi or other board with GPIO pins
+# change the 'useSwitch' option to 0 if you are not using a raspberry pi or other device with GPIO pins
 useSwitch = 1
 #
 debug = 0
@@ -45,9 +45,11 @@ if useSwitch == 1:
         ON = 1
     if args.test:
         test = str(args.test.lower())
-        if test == 1 or test == 1 or test == "true" or test == "yes":
+        if test == "1" or test == 1 or test == "true" or test == "yes":
             test = 1
             print("\n\n TESTING NOTIFICATIONS ENABLED\n\n")
+else:
+    ON = 1  ## default ON when no switch in use
 
 def msg(SMTPserver, SMTPport, SMTPuser, SMTPpass, message):
     server = smtplib.SMTP_SSL(SMTPserver, SMTPport)
@@ -99,7 +101,7 @@ else:
     twilioFromNumber = ""
 
 
-
+diffChange = 5
 g = 0
 # begin loop
 while g < len(tmplist):
@@ -151,23 +153,26 @@ while g < len(tmplist):
                     oldOKstatus =  int(get['OKstatus'])
                     oldDur = float(get['duration'])
                     lastSeen = int(get['lastSeen'])
+                    lastTemp = float(get['lastTemp'])
                     newfile = 0
                     notifyMin = int(get['notifyMin'])
+                    diffChange = int(get['diffChange'])
                 except:
                     print("status file load fail")
             except:
                 get = ""
-                oldOKstatus =  0
-                oldDur = 0
+                oldOKstatus =  ""
+                oldDur = ""
                 lastSeen = 0
+                lastTemp = 0
                 dur = 0
+                diffChange = 0
                 if debug == 1:
                     print(str(statusFile)+" JSON load failed.\n")
                 f.close()
 
             if oldDur < 0:
                 oldDur = 0
-
             if oldOKstatus == "" and oldDur == "":
                 newfile = 1
 
@@ -225,6 +230,12 @@ while g < len(tmplist):
             if ( float(finalTemp) > float(maxTemp) ) or ( float(finalTemp) < float(minTemp) )  :
                 OKstatus = 0
 
+            ## check for a frozen sensor
+            if lastTemp == finalTemp:
+                diffChange = diffChange + 1
+            else:
+                diffChange = 0
+
             if int(OKstatus) == 1:
                 newDur = round(diffMins, 1)
             else:
@@ -235,31 +246,40 @@ while g < len(tmplist):
                 print("oldDur = "+str(oldDur))
                 print("maxTemp = "+str(maxTemp)+str(tempUnit))
                 print("minTemp = "+str(minTemp)+str(tempUnit))
-                print("temp reading = ",str(finalTemp)+str(tempUnit))
+                print("new reading = ",str(finalTemp))
+                print("lastTemp = ",str(lastTemp))
                 print("maxDuration = ",str(maxDuration))
                 print("statusFile = ",str(statusFile))
                 print("newfile = ",str(newfile))
                 print("enabled = ",str(enabled))
                 print("test = ",str(test))
 
-            ###################
-            # offline sensor alert (every 5m on the 5th minute)
+            ########## offline sensor alert (every 5m on the 5th minute)
             if round(minsSinceLastLog,0) > 5 or round(minsSinceLastLog,0) < 0:
                 body = "No contact from temperature sensor '"+str(location)+"' in "+str(minsSinceLastLog)+" minutes.\nPlease verify it is online and reboot if needed.\n"
                 subject = "Temperature sensor offline"
                 alert = 1
             ########## critical temperature alert begin
-            if ( int(OKstatus) == 0 and int(oldOKstatus) == 0 and float(oldDur) > float(maxDuration) ) :
+            if ( int(OKstatus) == 0 and float(oldDur) > float(maxDuration) ) :
                 alert = 1
                 body = str(location)+" has been reading '"+str(finalTemp)+str(tempUnit)+"' degree temperature for at least "+str(oldDur)+" minutes!\n"
                 subject = str(location)+" Sensor temperature OKstatus"
-            ########## END critical temperature alert
-            ## alert sensor online but reading incorrectly
+            ########## alert sensor online but reading incorrectly
             if ( float(finalTemp) < -40.0 ) :
                 alert = 1
                 body = "\nSensor "+str(location)+" is not reading correctly:\n\nsensorA="+str(float(finalTemp))+"\nPlease check the connection.\n"
                 subject = str(location)+" Sensor problem"
-            ########## end
+            ######### sensor is frozen
+            if ( diffChange > 1440 ) :
+                alert = 1
+                OKstatus = 0
+                body = "\nSensor "+str(location)+" is not reading correctly.  Reading has not changed from "+str(float(finalTemp))+str(tempUnit)+" in over "+str(diffChange)+" minutes.\nPlease reboot the ESP device\n"
+                subject = str(location)+" sensor problem"
+            ########## end alerts
+            if int(notifyMin) % int(throttle) == 0:
+                go = " - should send alert "
+            else:
+                go = " - should not send alert"
             if debug == 1:
                 print("OKstatus = ",str(OKstatus))
                 print("nowEpoch = ",str(nowEpoch))
@@ -269,18 +289,22 @@ while g < len(tmplist):
                 print("diffMins = ",str(diffMins))
                 print("newDur = ",str(newDur))
                 print("minsSinceLastLog = ",str(minsSinceLastLog))
+                print("diffChange = ",str(diffChange))
                 print("thisMinute = ",str(minute))
                 print("switchCheck = ",str(GPIO.input(17)))
                 print("alert = ",str(alert))
                 print("logfile = ",str(logfile))
+                print("ON = ",str(ON))
+                print("test = ",str(test))
                 print("notifyMin = ",str(notifyMin))
-                print("notify = "+str(notifyMin)+"%"+str(throttle))
+                print("notify = "+str(notifyMin)+"%"+str(throttle)+str(go)  )
                 print("sid = ",str(sid))
                 print("twilioAcctID = ",str(twilioAcctID))
                 print("twilioFromNumber = ",str(twilioFromNumber))
                 print("twilioToken = ",str(twilioToken))
 
-
+            if alert == 1 and debug == 1:
+                print("body = ",str(body))
             if newfile == 1:
                 newDur = "0"
                 lastSeen = str(nowEpoch)
@@ -297,7 +321,7 @@ while g < len(tmplist):
             else:
                 notifyMin = notifyMin + 1
                 
-            output = '{"lastSeen":"'+str(lastSeen)+'","OKstatus":"'+str(OKstatus)+'","duration":"'+str(newDur)+'","lastTemp":"'+str(finalTemp)+'","minsSinceLastLog":"'+str(minsSinceLastLog)+'","locationName":"'+str(location)+'","notifyMin":"'+str(notifyMin)+'" }'
+            output = '{"lastSeen":"'+str(lastSeen)+'","OKstatus":"'+str(OKstatus)+'","duration":"'+str(newDur)+'","lastTemp":"'+str(finalTemp)+'","minsSinceLastLog":"'+str(minsSinceLastLog)+'","locationName":"'+str(location)+'","notifyMin":"'+str(notifyMin)+'","diffChange":"'+str(diffChange)+'" }'
             if enabled == "yes":
                 print(output)
                 f = open(statusFile, "w")
@@ -319,7 +343,7 @@ while g < len(tmplist):
             else:
                 j = open(alertFile, "x")
 
-        if alert == 1 and enabled == "yes" and ON == 1 and test == "0":
+        if (alert == 1 and enabled == "yes" and ON == 1 and test == 0):
             if int(notifyMin) % int(throttle) == 0:
                 thisMsg = EmailMessage()
                 thisMsg.set_content(body)
@@ -374,7 +398,6 @@ while g < len(tmplist):
                     destSMS = str(smslist[x])
                     url='https://api.twilio.com/2010-04-01/Accounts/'+str(twilioAcctID)+'/Messages.json'
                     cmd='curl -s -X POST "'+str(url)+'" --data-urlencode "Body='+str(body)+'" --data-urlencode "From='+str(twilioFromNumber)+'" --data-urlencode "To='+str(destSMS)+'" -u '+str(twilioAcctID)+':'+str(twilioToken)
-                    #pdb.set_trace()
                     try:
                         response = str(subprocess.check_output(cmd, shell=True))
                         if debug == 1:
