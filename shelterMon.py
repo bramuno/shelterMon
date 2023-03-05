@@ -64,6 +64,7 @@ if len(configFolder)-1 != "/":
 cfg = str(configFolder)
 configFolder = str(configFolder)+"*.json"
 tmplist = glob.glob(configFolder)
+tmplist = sorted(tmplist)
 alertFile = ""
 list = []
 
@@ -312,6 +313,12 @@ while g < len(tmplist):
         else:
             print("config: "+tmplist[g]+" is disabled, skipping.")
 
+            alertFile = "/home/shelterMon/alerts.txt"
+            if os.path.exists(alertFile):
+                j = open(alertFile, "a")
+            else:
+                j = open(alertFile, "x")
+
         if alert == 1 and enabled == "yes" and ON == 1 and test == "0":
             if int(notifyMin) % int(throttle) == 0:
                 thisMsg = EmailMessage()
@@ -337,8 +344,15 @@ while g < len(tmplist):
                         print(e)
             else:
                 print("throttling notifications to every "+str(throttle)+" minutes")
+            now = datetime.datetime.now()
+            j.write(str(now)+",DestEmail='"+str(dests)+"',Message='"+str(thisMsg)+"'\n"+str(now)+",DestSMS='"+str(destSMS)+",SMSResponse='"+str(response)+"'\n")
+            j.close()
 
         if test == 1 and enabled == "yes" and ON == 1 :
+            if os.path.exists(alertFile):
+                j = open(alertFile, "a")
+            else:
+                j = open(alertFile, "x")
             body = "This is a forced test of the notifications."
             subject = "Test message from temperaure monitor "+str(location)
             thisMsg = EmailMessage()
@@ -370,6 +384,9 @@ while g < len(tmplist):
                         print(e)
                     x=x+1
                     time.sleep(2)
+            now = datetime.datetime.now()
+            j.write(str(now)+",DestEmail='"+str(dests)+"',Message='"+str(thisMsg)+"'\n"+str(now)+",DestSMS='"+str(destSMS)+",SMSResponse='"+str(response)+"'\n")
+            j.close()
         if test == 1 and enabled == "yes" and ON == 0:
             print("The Switch is OFF.  You need to turn the witch to ON to enable notifications.")
     g = g + 1
