@@ -1,4 +1,3 @@
-#!/bin/python3
 # sudo apt install rsyslog
 ## version notes:
 ## this script will look for .json config files stored in the path passed by -C option
