@@ -5,7 +5,6 @@
 ## usage: python3 shelterMon.py -C /path/to/folder
 ## debug usage: python3 shelterMon.py -C /path/to/folder -d yes
 ## alert test usage: python3 shelterMon.py -C /path/to/folder -t yes
-## NOTE: do NOT leave a trailing / after the folder path (eg. /path/to/folder/ )
 #
 # change the 'useSwitch' option to 0 if you are not using a raspberry pi or other device with GPIO pins
 useSwitch = 1
@@ -67,25 +66,29 @@ cfg = str(configFolder)
 configFolder = str(configFolder)+"*.json"
 tmplist = glob.glob(configFolder)
 tmplist = sorted(tmplist)
-alertFile = ""
 list = []
 
 configFolder = str(args.config)
+emailFile = configFolder+"/email.json"
+emailFile = emailFile.replace("//","/")
+
 try:
-    f = open(configFolder+"/email.json", "r")
+    f = open(emailFile, "r")
     get = json.load(f)
     f.close()
+    SMTPuser =  get['SMTPuser']
+    SMTPpass =  get['SMTPpass']
+    SMTPserver =  get['SMTPserver']
+    SMTPport =  int(get['SMTPport'])
 except:
-    sys.exit("failed to load "+configFolder+"/email.json \n")
+    sys.exit("failed to load "+str(emailFile)+" \n")
 
-SMTPuser =  get['SMTPuser']
-SMTPpass =  get['SMTPpass']
-SMTPserver =  get['SMTPserver']
-SMTPport =  int(get['SMTPport'])
 
-if os.path.exists(configFolder+"/sms.json"):
+smsFile = configFolder+"/sms.json"
+smsFile = smsFile.replace("//","/")
+if os.path.exists(smsFile):
     try:
-        f = open(configFolder+"/sms.json", "r")
+        f = open(smsFile, "r")
         getSMS = json.load(f)
         f.close()
         sid =  str(getSMS['twilioServiceID'])
@@ -93,7 +96,7 @@ if os.path.exists(configFolder+"/sms.json"):
         twilioAcctID =  str(getSMS['twilioAcctID'])
         twilioFromNumber =  str(getSMS['twilioFromNumber'])
     except:
-        sys.exit("failed to load values from '"+configFolder+"/sms.json'.  Check the json syntax is correct.\n")
+        sys.exit("failed to load values from '"+str(smsFile)+"'.  Check the json syntax is correct.\n")
 else:
     sid = ""
     twilioToken = ""
@@ -108,16 +111,13 @@ while g < len(tmplist):
     notifyMin = -1
     alert = 0
     lastSeen = 0
-    if tmplist[g] != configFolder+"/email.json" and tmplist[g] != configFolder+"/sms.json":
+    if tmplist[g] != str(emailFile) and tmplist[g] != str(smsFile):
         if debug == 1:
             print("\nstarting: "+str(tmplist[g]))
         try:
             f = open(tmplist[g], "r")
             get = json.load(f)
             f.close()
-
-            if g == 2:
-                pdb.set_trace()
             enabled = str(get['enabled']).lower()
             location = str(get['locationName'])
             folderName =  str(get['folderName'])
@@ -261,20 +261,20 @@ while g < len(tmplist):
 
             ########## offline sensor alert (every 5m on the 5th minute)
             if round(minsSinceLastLog,0) > 5 or round(minsSinceLastLog,0) < 0:
-                body = "No contact from temperature sensor '"+str(location)+"' in "+str(minsSinceLastLog)+" minutes.\nPlease verify it is online and reboot if needed.\n"
+                body = "No contact from temperature '"+str(location)+"' sensor in "+str(minsSinceLastLog)+" minutes.\nPlease verify it is online and power cycle if needed.\n"
                 subject = "Temperature sensor offline"
                 alert = 1
             ########## critical temperature alert begin
             if ( int(OKstatus) == 0 and float(oldDur) > float(maxDuration) ) :
                 alert = 1
-                body = str(location)+" has been reading '"+str(finalTemp)+str(tempUnit)+"' degree temperature for at least "+str(oldDur)+" minutes!\n"
-                subject = str(location)+" Sensor temperature OKstatus"
+                body = str(location)+" is reading '"+str(finalTemp)+str(tempUnit)+"' degree temperature.  This location has been below the max temperature of "+str(maxTemp)+" for at least "+str(oldDur)+" minutes!\n"
+                subject = str(location)+" sensor at '"+str(finalTemp)+str(tempUnit)+"'"
             ########## alert sensor online but reading incorrectly
             if ( float(finalTemp) < -40.0 ) :
                 alert = 1
-                body = "\nSensor "+str(location)+" is not reading correctly:\n\nsensorA="+str(float(finalTemp))+"\nPlease check the connection.\n"
+                body = "\nSensor "+str(location)+" is not reading correctly:\n\nLatest reading at: "+str(float(finalTemp))+"\n\nThis typically happens when one of the three wires connecting to the ESP device is disconnected or loose. \nPlease check the connection or power cycle the device.\n"
                 subject = str(location)+" Sensor problem"
-            ######### sensor is frozen
+            ######### sensor is frozen (for at least 24h)
             if ( int(diffChange) > 1440 ) :
                 alert = 1
                 OKstatus = 0
