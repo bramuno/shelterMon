@@ -5,7 +5,8 @@
 ## usage: python3 shelterMon.py -C /path/to/folder
 ## debug usage: python3 shelterMon.py -C /path/to/folder -d yes
 ## alert test usage: python3 shelterMon.py -C /path/to/folder -t yes
-## 
+## NOTE: do NOT leave a trailing / after the folder path (eg. /path/to/folder/ )
+#
 # change the 'useSwitch' option to 0 if you are not using a raspberry pi or other device with GPIO pins
 useSwitch = 1
 #
@@ -114,21 +115,26 @@ while g < len(tmplist):
             f = open(tmplist[g], "r")
             get = json.load(f)
             f.close()
-        except:
-            sys.exit("json config  load fail.  --> "+str(tmplist[g])+"\n")
 
-        enabled = get['enabled'].lower()
-        location = str(get['locationName'])
-        folderName =  str(get['folderName'])
-        logfileName =  str(get['logfileName'])
-        statusFileName =  str(logfileName)+"-status.txt"
-        maxTemp =  float(get['maxTemp'])
-        minTemp =  float(get['minTemp'])
-        tempUnit =  str(get['tempUnit'])
-        maxDuration =  int(get['maxDuration'])
-        dests =  str(get['emailDestination'])
-        destSMS =  str(get['destSMS'])
-        throttle =  str(get['throttle'])
+            if g == 2:
+                pdb.set_trace()
+            enabled = str(get['enabled']).lower()
+            location = str(get['locationName'])
+            folderName =  str(get['folderName'])
+            logfileName =  str(get['logfileName'])
+            statusFileName =  str(logfileName)+"-status.txt"
+            maxTemp =  float(get['maxTemp'])
+            minTemp =  float(get['minTemp'])
+            tempUnit =  str(get['tempUnit'])
+            maxDuration =  int(get['maxDuration'])
+            dests =  str(get['emailDestination'])
+            destSMS =  str(get['destSMS'])
+            sendSMS = destSMS.split(",")
+            throttle =  str(get['throttle'])
+        except Exception as e:
+            print(e)
+            sys.exit("\njson config  load fail.  --> "+str(tmplist[g])+"\n")
+
         #
         newfile = 0
         logfile = folderName+"/"+logfileName
@@ -269,10 +275,10 @@ while g < len(tmplist):
                 body = "\nSensor "+str(location)+" is not reading correctly:\n\nsensorA="+str(float(finalTemp))+"\nPlease check the connection.\n"
                 subject = str(location)+" Sensor problem"
             ######### sensor is frozen
-            if ( diffChange > 1440 ) :
+            if ( int(diffChange) > 1440 ) :
                 alert = 1
                 OKstatus = 0
-                body = "\nSensor "+str(location)+" is not reading correctly.  Reading has not changed from "+str(float(finalTemp))+str(tempUnit)+" in over "+str(diffChange)+" minutes.\nPlease reboot the ESP device\n"
+                body = "\nSensor "+str(location)+" has stopped reading.  Temeperature has not changed from "+str(float(finalTemp))+str(tempUnit)+" in over "+str(diffChange)+" minutes.\nPlease reboot the ESP device\n"
                 subject = str(location)+" sensor problem"
             ########## end alerts
             if int(notifyMin) % int(throttle) == 0:
@@ -301,6 +307,7 @@ while g < len(tmplist):
                 print("twilioAcctID = ",str(twilioAcctID))
                 print("twilioFromNumber = ",str(twilioFromNumber))
                 print("twilioToken = ",str(twilioToken))
+                print("sendSMS = ",str(sendSMS))
 
             if alert == 1 and debug == 1:
                 print("body = ",str(body))
@@ -336,12 +343,6 @@ while g < len(tmplist):
         else:
             print("config: "+tmplist[g]+" is disabled, skipping.")
 
-            alertFile = "/home/shelterMon/alerts.txt"
-            if os.path.exists(alertFile):
-                j = open(alertFile, "a")
-            else:
-                j = open(alertFile, "x")
-
         if (alert == 1 and enabled == "yes" and ON == 1 and test == 0):
             if int(notifyMin) % int(throttle) == 0:
                 thisMsg = EmailMessage()
@@ -357,19 +358,27 @@ while g < len(tmplist):
                     print("Sent email to: "+str(dests))
                 # send sms if available
                 if sid != "" and twilioToken != "":
-                    url='https://api.twilio.com/2010-04-01/Accounts/'+str(twilioAcctID)+'/Messages.json'
-                    cmd='curl -X POST "'+str(url)+'" --data-urlencode "Body='+str(body)+'" --data-urlencode "From='+str(twilioFromNumber)+'" --data-urlencode "To='+str(destSMS)+'" -u '+str(twilioAcctID)+':'+str(twilioToken)
-                    try:
-                        response = str(os.system(cmd))
-                        if debug == 1:
-                            print("SMS response: \n",response)
-                    except Exception as e: 
-                        print(e)
+                    aa = 0
+                    while aa < len(sendSMS):
+                        url='https://api.twilio.com/2010-04-01/Accounts/'+str(twilioAcctID)+'/Messages.json'
+                        cmd='curl -X POST "'+str(url)+'" --data-urlencode "Body='+str(body)+'" --data-urlencode "From='+str(twilioFromNumber)+'" --data-urlencode "To='+str(sendSMS[aa])+'" -u '+str(twilioAcctID)+':'+str(twilioToken)
+                        try:
+                            response = str(os.system(cmd))
+                            if debug == 1:
+                                print("SMS response: \n",response)
+                        except Exception as e: 
+                            print(e)
+                        aa = aa + 1
+                now = datetime.datetime.now()
+                alertFile = "/home/shelterMon/alerts.txt"
+                if os.path.exists(alertFile):
+                    j = open(alertFile, "a")
+                else:
+                    j = open(alertFile, "x")
+                j.write(str(now)+",DestEmail='"+str(dests)+"',Message='"+str(thisMsg)+"'\n"+str(now)+",DestSMS='"+str(destSMS)+",SMSResponse='"+str(response)+"'\n")
+                j.close()
             else:
                 print("throttling notifications to every "+str(throttle)+" minutes")
-            now = datetime.datetime.now()
-            j.write(str(now)+",DestEmail='"+str(dests)+"',Message='"+str(thisMsg)+"'\n"+str(now)+",DestSMS='"+str(destSMS)+",SMSResponse='"+str(response)+"'\n")
-            j.close()
 
         if test == 1 and enabled == "yes" and ON == 1 :
             if os.path.exists(alertFile):
