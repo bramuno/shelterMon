@@ -9,5 +9,7 @@
 "tempUnit":"F",
 "emailDestination":"dest.email@gmail.com",
 "destSMS":"+15551234567",
-"throttle":"20"
+"throttle":"20",
+"locationID":"1",
+"locationUnit":"2"
 }
