@@ -8,10 +8,12 @@
 #
 # change the 'useSwitch' option to 0 if you are not using a raspberry pi or other device with GPIO pins
 useSwitch = 1
+# change the 'useASM' option to 1 if you intend to link your script to ASM
+useASM = 0
 #
 debug = 0
 test = 0
-import os, sys, json, subprocess, smtplib, datetime, time, os.path, pdb, argparse, glob
+import os, sys, json, subprocess, smtplib, datetime, time, os.path, pdb, argparse, glob, requests
 from email.message import EmailMessage
 from os.path import exists
 parser = argparse.ArgumentParser()
@@ -86,6 +88,8 @@ except:
 
 smsFile = configFolder+"/sms.json"
 smsFile = smsFile.replace("//","/")
+asmFile = configFolder+"/asm.json"
+asmFile = asmFile.replace("//","/")
 if os.path.exists(smsFile):
     try:
         f = open(smsFile, "r")
@@ -103,15 +107,47 @@ else:
     twilioAcctID = ""
     twilioFromNumber = ""
 
+#pdb.set_trace()
+if os.path.exists(asmFile):
+    try:
+        f = open(asmFile, "r")
+        getASM = json.load(f)
+        f.close()
+        ASMacct =  str(getASM['account'])
+        ASMuser =  str(getASM['username'])
+        ASMpass =  str(getASM['password'])
+        ASMtitle =  str(getASM['title'])
+    except:
+        sys.exit("failed to load values from '"+str(asmFile)+"'.  Check the json syntax is correct.\n")
+else:
+    ASMacct = ""
+    ASMuser = ""
+    ASMpass = ""
+    ASMtitle = ""
+
+ASMok = 0
+if ASMacct != "" and ASMuser != "" and ASMpass != "" and ASMtitle != "":
+    ASMok = 1
+    URL = 'https://service.sheltermanager.com/asmservice'
+    PARAMS = {'username':ASMuser, 'password': ASMpass, 'account':ASMacct, 'title':ASMtitle, 'method':'json_report'}
+    if debug == 1:
+        print("getting ASM data via API...")
+    try:
+        req = requests.get(url = URL, params = PARAMS)
+        req.raise_for_status()
+    except requests.exceptions.HTTPError as err:
+        raise SystemExit(err)
+    data = req.json()
 
 diffChange = 5
 g = 0
 # begin loop
 while g < len(tmplist):
+    occupied = 0
     notifyMin = -1
     alert = 0
     lastSeen = 0
-    if tmplist[g] != str(emailFile) and tmplist[g] != str(smsFile):
+    if tmplist[g] != str(emailFile) and tmplist[g] != str(smsFile) and tmplist[g] != str(asmFile):
         if debug == 1:
             print("\nstarting: "+str(tmplist[g]))
         try:
@@ -131,6 +167,9 @@ while g < len(tmplist):
             destSMS =  str(get['destSMS'])
             sendSMS = destSMS.split(",")
             throttle =  str(get['throttle'])
+            checkASM =  str(get['checkASM']).lower()
+            locationID =  str(get['locationID'])
+            locationUnit =  str(get['locationUnit'])
         except Exception as e:
             print(e)
             sys.exit("\njson config  load fail.  --> "+str(tmplist[g])+"\n")
@@ -140,7 +179,43 @@ while g < len(tmplist):
         logfile = folderName+"/"+logfileName
         statusFile = folderName+"/"+statusFileName
 
-        if enabled == "yes":
+        ## check ASM for current occupancy and update json conifg file
+        if ASMok == 1 and checkASM == "yes":
+            d=0
+            skip = 0
+            while d<len(data):
+                locID = str(data[d]['SHELTERLOCATION'])
+                locUnit = str(data[d]['SHELTERLOCATIONUNIT'])
+                if locID == locationID and locUnit == locationUnit:
+                    if debug == 1:
+                        print("matched "+str(tmplist[g])+" with locationID: '"+str(locationID)+"', Unit: '"+str(locationUnit)+"'")
+                    occupied = 1
+                    break
+                d=d+1
+            if occupied == 1:
+                ## update config file to enable the sensor checks
+                get['enabled']="yes"
+                if debug == 1:
+                    print(str(tmplist[g])+" is occupied.  Enabling.")
+            else:
+                get['enabled']="no"
+                if debug == 1:
+                    print(str(tmplist[g])+" is NOT occupied.  Disabling.")
+            try:
+                ff = open(tmplist[g], "w")
+                ff.write(json.dumps(get, indent=1))
+                ff.close()
+            except Exception as e:
+                print(e)
+                print("\nFailed to update "+str(tmplist[g]))
+        else:
+            if debug == 1:
+                print("Check of ASM is disabled or asm.json file is missing/incomplete. skipping...")
+        #
+        enabled = get['enabled']
+        if enabled == "no":
+            print("config: "+tmplist[g]+" is disabled, skipping.")
+            else:
             if not os.path.exists(logfile) or not os.path.exists(statusFile):
                 sample = '{"lastSeen":"1659588285","OKstatus":"1","duration":"0","lastTemp":"80.88","minsSinceLastLog":"0.0","notifyMin":"0" }'
                 cmd = "mkdir -p "+str(folderName)
@@ -228,7 +303,7 @@ while g < len(tmplist):
             temp=chk[3].split(",")
             finalTemp = temp[0]
             tempC = round(float(finalTemp)-32*(5/9),2)
-            if tempUnit == "C":
+            if tempUnit == "C" or tempUnit == "c":
                 finalTemp = tempC
             else:
                 finalTemp = str(round(float(finalTemp),1))
@@ -281,7 +356,7 @@ while g < len(tmplist):
                 body = "\nSensor "+str(location)+" has stopped reading.  Temeperature has not changed from "+str(float(finalTemp))+str(tempUnit)+" in over "+str(diffChange)+" minutes.\nPlease reboot the ESP device\n"
                 subject = str(location)+" sensor problem"
             ########## end alerts
-            if int(notifyMin) % int(throttle) == 0:
+            if int(notifyMin) % int(throttle) == 0 :
                 go = " - should send alert "
             else:
                 go = " - should not send alert"
@@ -308,6 +383,7 @@ while g < len(tmplist):
                 print("twilioFromNumber = ",str(twilioFromNumber))
                 print("twilioToken = ",str(twilioToken))
                 print("sendSMS = ",str(sendSMS))
+                print("\n")
 
             if alert == 1 and debug == 1:
                 print("body = ",str(body))
@@ -340,8 +416,6 @@ while g < len(tmplist):
             f = open(logfile, "w")
             f.write(lastEvent)
             f.close()
-        else:
-            print("config: "+tmplist[g]+" is disabled, skipping.")
 
         if (alert == 1 and enabled == "yes" and ON == 1 and test == 0):
             if int(notifyMin) % int(throttle) == 0:
