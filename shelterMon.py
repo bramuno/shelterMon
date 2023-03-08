@@ -107,7 +107,6 @@ else:
     twilioAcctID = ""
     twilioFromNumber = ""
 
-#pdb.set_trace()
 if os.path.exists(asmFile):
     try:
         f = open(asmFile, "r")
@@ -125,6 +124,7 @@ else:
     ASMpass = ""
     ASMtitle = ""
 
+reportData = ""
 ASMok = 0
 if ASMacct != "" and ASMuser != "" and ASMpass != "" and ASMtitle != "":
     ASMok = 1
@@ -137,7 +137,7 @@ if ASMacct != "" and ASMuser != "" and ASMpass != "" and ASMtitle != "":
         req.raise_for_status()
     except requests.exceptions.HTTPError as err:
         raise SystemExit(err)
-    data = req.json()
+    reportData = req.json()
 
 diffChange = 5
 g = 0
@@ -181,11 +181,10 @@ while g < len(tmplist):
 
         ## check ASM for current occupancy and update json conifg file
         if ASMok == 1 and checkASM == "yes":
-            d=0
-            skip = 0
-            while d<len(data):
-                locID = str(data[d]['SHELTERLOCATION'])
-                locUnit = str(data[d]['SHELTERLOCATIONUNIT'])
+            d = 0
+            while d<len(reportData):
+                locID = str(reportData[d]['SHELTERLOCATION'])
+                locUnit = str(reportData[d]['SHELTERLOCATIONUNIT'])
                 if locID == locationID and locUnit == locationUnit:
                     if debug == 1:
                         print("matched "+str(tmplist[g])+" with locationID: '"+str(locationID)+"', Unit: '"+str(locationUnit)+"'")
@@ -195,12 +194,10 @@ while g < len(tmplist):
             if occupied == 1:
                 ## update config file to enable the sensor checks
                 get['enabled']="yes"
-                if debug == 1:
-                    print(str(tmplist[g])+" is occupied.  Enabling.")
+                print(str(location)+" is occupied.  Enabling.")
             else:
                 get['enabled']="no"
-                if debug == 1:
-                    print(str(tmplist[g])+" is NOT occupied.  Disabling.")
+                print(str(location)+" is NOT occupied.  Disabling.")
             try:
                 ff = open(tmplist[g], "w")
                 ff.write(json.dumps(get, indent=1))
@@ -215,7 +212,7 @@ while g < len(tmplist):
         enabled = get['enabled']
         if enabled == "no":
             print("config: "+tmplist[g]+" is disabled, skipping.")
-            else:
+        else:
             if not os.path.exists(logfile) or not os.path.exists(statusFile):
                 sample = '{"lastSeen":"1659588285","OKstatus":"1","duration":"0","lastTemp":"80.88","minsSinceLastLog":"0.0","notifyMin":"0" }'
                 cmd = "mkdir -p "+str(folderName)
