@@ -231,7 +231,7 @@ locationUnit - this is the label/name of that unit found within the location in 
 </ul>
 
 
-<h1>Exmaple output</h1>
+<h1>Example output</h1>
 Below is the example output of what the script does at our location.  Quarantine shed #2 is occupied, but the others are not.  All the sheds are checking against ASM for occupancy but the other locations are not because they are never empty.
 
 <blockquote>root@server# python3 /home/shelterMon/shelterMon.py -C /home/shelterMon/<br>
