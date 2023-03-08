@@ -47,7 +47,7 @@ Right now, rPi's are more expensive than they used to be.  You DO NOT NEED to ge
 <a href="https://youtu.be/UqLbqoWmh2U" target="_blank">supplemental video guide here</a><br>
 
 <h2>Raspberry Pi</h2>
-A pi is optional, you can run this on a desktop or server because everything is handled over the Wi-Fi network.  Just edit <b>shelterMon.py</b> and edit <b>useSwitch = 1</b> to <b>useSwitch = 0</b>.  Otherwise, follow these steps to setup the pi. 
+A pi is optional, you can run this on a desktop or server because everything is handled over the Wi-Fi network.   But this script requires a LINUX operating system with python3 installed.  Just edit <b>shelterMon.py</b> and edit <b>useSwitch = 1</b> to <b>useSwitch = 0</b>.  Otherwise, follow these steps to setup the pi. 
 <ul>
 <li>go to https://www.raspberrypi.com/software/ and download the latest Raspbery Pi system imager tool. </li>
   <li>run the EXE file and install the tool, then run the tool.</li>
