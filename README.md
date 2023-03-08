@@ -184,3 +184,48 @@ These two above lines typically indicate a problem loading the log file created 
 </li>
 <li><b>Config.json load failed.</b><br>
 this message typically means there is a parsing error on the config.json file, or the json files does not exist.  This will happen if there is an extra comma, or unbalanced quotes, etc.  the JSON format must be perfect , so if you can't figure it out just go back to the default config.json file provided in the github repo and paste it into your file again.  you can also google for an online json validator to help you find the error in the json code.</li>
+
+
+
+<h1>EXTRA OPTIONS</h1>
+
+<h2>ASM connectivity</h2>
+Since this script is made for animal rescue shelters, I added a feature to incorporate sheltermanager.com with the temperature checks.   In our example, most of our sensor locations are all indoors and 99% of the time they are fully occupied.  So there is no question to monitor those locations.  However, we also have some sheds built outside with A/C meant for quarantining sick animals.   These locations aren't typically occupied so if we need them monitored we would have to manually enable/disable those locations every time they are used or cleared, or we can rely on our shelter management software to do it for us.  There are other shelter manager platforms out there, but ours is ASM so thats what I wrote it for.    If you use something else, you can alsways modify the script if you know what you are doing.  <br>
+<br>
+So the script contacts ASM and grabs some data that holds the occupancy data for those outdoor locations.  with that, the script can enable/disable the checks on those locations.  Thus if the temperature is too high/low for that location but there is no animal using it, then there is no need to send an alert.  This makes things much easier for us so we don't have to worry about enabling/disabling the checks.<br>
+<br>
+If you are using ASM, you can follow these steps to use it with the script. <br>
+<ul>
+<li>In ASM, first create a new USER ROLE.  ONLY give that new role permissions to VIEW REPORTS, nothing else. </li>
+<li>Next create a new USER ACCOUNT and grant that user the new role you just created. </li>
+<li>Now you need to create a new REPORT.  Go to SETTINGS > REPORTS and creata a new report. Name it whatever you want but place it in a container that you are sure no one will accidently delete or mess with.  I advise not using spaces in the title. <br>
+Grant the new role to the new report.  Paste the below text into the SQL box:
+ <blockquote>SELECT a.animalName,a.SHELTERLOCATIONUNIT,a.ShelterLocation,
+CASE WHEN a.ActiveMovementType = 2 THEN 'Foster' WHEN a.ActiveMovementType = 8 THEN 'Retailer' WHEN a.ActiveMovementType = 1 THEN 'Trial Adoption' 
+ELSE i.LocationName END AS LocationName
+FROM animal a
+LEFT OUTER JOIN animaltype t ON t.ID = a.AnimalTypeID
+LEFT OUTER JOIN species s ON s.ID = a.SpeciesID
+LEFT OUTER JOIN lksex sx ON sx.ID = a.Sex
+LEFT OUTER JOIN internallocation i ON i.ID = a.ShelterLocation
+WHERE a.Archived = 0 and a.ShelterLocation = 1111
+ORDER BY a.ShelterLocation, SHELTERLOCATIONUNIT</blockquote>
+</li>
+  <li>Here you need to figure out the numerical location ID of the location found in ASM.  If you click on SHELTER VIEW and then click on that specifc location, it will bring up the animals in that location.  in the URL address bar, you will see the numerical value of that location ID after "shelterlocation".  (eg.  https://us000.sheltermanager.com/animal_find_results?logicallocation=onshelter&shelterlocation=123456) </li>
+  <li>Take that number of your location and replace with the number found in the above SQL query <b>a.ShelterLocation = 18</b>.  Replace the "1111" with your number.</li>
+<li>If you have more than one location that needs to be included in the report, then you are going to have to figure out how to get the report to include all the locationd and units you require.</li>
+<li>Now hit the SQL check button and then hit the button to generate the HTML.  If no errors, click SAVE</li>
+<li>Check the report is working using the REPORTS menu.  When the report opens in the browser, look at the URL address bar.  the <b>report ID number</b> will be in the address. You will need that below.  (eg.  https://us000.sheltermanager.com/report?id=1234567890)</li>
+<li>Now on your pi or server, run this command:<br><b>nano /home/shelterMon/asm.json</b></li>
+<li>Add the information the file is asking for and save then exit.<br>
+Account - your ASM account number<br>
+Username - the new user account you created above  <br>
+Password - the passwrd for the new user account you created above<br>
+Title - the title of the report you created above. If the name has any spaces, replace the space character with + (eg "Spaces+are+Fun) <br></li>
+<li>Now edit the .json config file for the location(s) you need to check against ASM.<br><b>nano /home/shelterMon/config.json</b></li>
+<li>Towards the end of the file you will see these three fields.  Edit them as needed, then save and exit. <br>
+checkASM -set this option to "yes" to enable checks against ASM<br>
+locationID - this is the numeric report ID of the report you created earlier. <br>
+locationUnit - this is the label/name of that unit found within the location in ASM.  This is custom to what your org has labeled it in ASM, so be sure it matches exactly including whitespace characters. We use numbers for our units, but some are words.  <br></li>
+<li>Now you can do a test run of the script and check for errors.  As long as the location's config file has the checkASM value enabled and the asm.json file has all the required info, it should run the check against ASM to look for occupancy. </li>
+</ul>
