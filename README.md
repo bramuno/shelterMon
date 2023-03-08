@@ -234,7 +234,7 @@ locationUnit - this is the label/name of that unit found within the location in 
 <h1>Exmaple output</h1>
 Below is the example output of what the script does at our location.  Quarantine shed #2 is occupied, but the others are not.  All the sheds are checking against ASM for occupancy but the other locations are not because they are never empty.
 
-<blockquote>root@pihole:/home/shelterMon# python3 /home/shelterMon/shelterMon.py -C /home/shelterMon/
+<blockquote>root@server:/home/shelterMon# python3 /home/shelterMon/shelterMon.py -C /home/shelterMon/
 {"lastSeen":"1678240977","OKstatus":"1","duration":"0","lastTemp":"71.8","minsSinceLastLog":"0.1","locationName":"Cats Area","notifyMin":"0","diffChange":"0" }
 {"lastSeen":"1678240980","OKstatus":"1","duration":"0","lastTemp":"70.2","minsSinceLastLog":"0.0","locationName":"Clinic room","notifyMin":"0","diffChange":"0" }
 {"lastSeen":"1678240976","OKstatus":"1","duration":"0","lastTemp":"74.1","minsSinceLastLog":"0.1","locationName":"Clean Room","notifyMin":"0","diffChange":"0" }
