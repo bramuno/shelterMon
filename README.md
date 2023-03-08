@@ -229,3 +229,23 @@ locationID - this is the numeric report ID of the report you created earlier. <b
 locationUnit - this is the label/name of that unit found within the location in ASM.  This is custom to what your org has labeled it in ASM, so be sure it matches exactly including whitespace characters. We use numbers for our units, but some are words.  <br></li>
 <li>Now you can do a test run of the script and check for errors.  As long as the location's config file has the checkASM value enabled and the asm.json file has all the required info, it should run the check against ASM to look for occupancy. </li>
 </ul>
+
+
+<h1>Exmaple output</h1>
+Below is the example output of what the script does at our location.  Quarantine shed #2 is occupied, but the others are not.  All the sheds are checking against ASM for occupancy but the other locations are not because they are never empty.
+
+<blockquote>root@pihole:/home/shelterMon# python3 /home/shelterMon/shelterMon.py -C /home/shelterMon/
+{"lastSeen":"1678240977","OKstatus":"1","duration":"0","lastTemp":"71.8","minsSinceLastLog":"0.1","locationName":"Cats Area","notifyMin":"0","diffChange":"0" }
+{"lastSeen":"1678240980","OKstatus":"1","duration":"0","lastTemp":"70.2","minsSinceLastLog":"0.0","locationName":"Clinic room","notifyMin":"0","diffChange":"0" }
+{"lastSeen":"1678240976","OKstatus":"1","duration":"0","lastTemp":"74.1","minsSinceLastLog":"0.1","locationName":"Clean Room","notifyMin":"0","diffChange":"0" }
+{"lastSeen":"1678240979","OKstatus":"1","duration":"0","lastTemp":"77.2","minsSinceLastLog":"0.0","locationName":"Foster Room","notifyMin":"0","diffChange":"0" }
+{"lastSeen":"1678240976","OKstatus":"1","duration":"0","lastTemp":"74.0","minsSinceLastLog":"0.1","locationName":"Dog Kennels","notifyMin":"0","diffChange":"0" }
+Quarantine Room 1 is NOT occupied.  Disabling.
+config: /home/shelterMon/quaran1.json is disabled, skipping.
+Quarantine Room 2 is occupied.  Enabling.
+{"lastSeen":"1678240979","OKstatus":"1","duration":"0","lastTemp":"73.2","minsSinceLastLog":"0.0","locationName":"Quarantine Room 2","notifyMin":"0","diffChange":"0" }
+Quarantine Room 3 is NOT occupied.  Disabling.
+config: /home/shelterMon/quaran3.json is disabled, skipping.
+Quarantine Room 4 is NOT occupied.  Disabling.
+config: /home/shelterMon/quaran4.json is disabled, skipping.
+</blockquote>
