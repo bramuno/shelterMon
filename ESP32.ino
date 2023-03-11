@@ -1,10 +1,13 @@
-
+#include <esp_task_wdt.h>
 #include <OneWire.h> 
 #include <DallasTemperature.h>
 #include <WiFiClientSecure.h>
 #define tempPin0 14
+#define WDT_TIMEOUT 30
 OneWire oneWire0(tempPin0); 
 DallasTemperature sensor0(&oneWire0);
+int iteration=0;int i=0;
+int last = millis();
 
 ////////////
 const char* ssid     = "SSIDnameHere";     // your network SSID (name of wifi network)
@@ -33,13 +36,17 @@ void setup() {
   Serial.println(ssid);
   Serial.print("My IP is: "); 
   Serial.println(WiFi.localIP());
+  
+  Serial.println("Configuring WDT...");
+  esp_task_wdt_init(WDT_TIMEOUT, true); //enable panic so ESP32 restarts
+  esp_task_wdt_add(NULL); //add current thread to WDT watch
 }
-
-void(* resetFunc) (void) = 0; // function to reset the ESP
+void(* resetFunc) (void) = 0; //declare reset function at address 0 - MUST BE ABOVE LOOP
 
 void loop() {
-if ( millis()  >= 604800000 ) resetFunc(); // call reset ESP device every 7 days
-
+  iteration++;  Serial.print("iteration = ");  Serial.println(iteration);
+  //if (iteration > 1000)resetFunc(); //or just reset after 1000 loops
+  
 sensor0.requestTemperatures();  // send command 
 float temp0C = sensor0.getTempCByIndex(0);
 float temp0F = (temp0C*9/5) + 32;
@@ -57,8 +64,12 @@ if(connected){
     udp.print(temp0F);
     udp.endPacket();
   }
+else{
+ resetFunc();  // RESET IT DISCONNECTED
+}
 
  delay(5000); 
+ esp_task_wdt_reset();
 }
 
 void connectToWiFi(const char * ssid, const char * pwd){
