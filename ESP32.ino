@@ -1,4 +1,8 @@
-#include <esp_task_wdt.h>
+////////////  edit these values for each sensor 
+const char* ssid       = "SSIDnameHere";     // your network SSID (name of wifi network)
+const char* password   = "123123123"; // your network password
+const char* udpAddress = "192.168.1.100";  // your syslog server destination IP
+/////////// no edits below this line unless you know what you are doing
 #include <OneWire.h> 
 #include <DallasTemperature.h>
 #include <WiFiClientSecure.h>
@@ -6,14 +10,7 @@
 #define WDT_TIMEOUT 30
 OneWire oneWire0(tempPin0); 
 DallasTemperature sensor0(&oneWire0);
-int iteration=0;int i=0;
-int last = millis();
-
-////////////  edit these values for each sensor 
-const char* ssid     = "SSIDnameHere";     // your network SSID (name of wifi network)
-const char* password = "123123123"; // your network password
-const char * udpAddress = "192.168.1.100";  // your syslog server destination IP
-/////////// no edits below this line unless you know what you are doing
+int i=0;int last = millis();
 const int udpPort = 3333;  
 boolean connected = false; 
 WiFiUDP udp; 
@@ -45,9 +42,9 @@ void setup() {
 void(* resetFunc) (void) = 0; //declare reset function at address 0 - MUST BE ABOVE LOOP
 
 void loop() {
-  iteration++;  Serial.print("iteration = ");  Serial.println(iteration);
-  if (iteration > 100 )resetFunc(); //or just reset after 1000 loops
-  
+Serial.print("millis() = ");Serial.println(String( millis() ) );
+if(millis() > 3600000 )resetFunc();
+
 sensor0.requestTemperatures();  // send command 
 float temp0C = sensor0.getTempCByIndex(0);
 float temp0F = (temp0C*9/5) + 32;
@@ -56,7 +53,7 @@ float temp0F = (temp0C*9/5) + 32;
  Serial.print(" C / "); 
  Serial.print(temp0F);
  Serial.println(" F"); 
- mydata = String(temp0F) + " " + location;
+ String mydata = String(temp0F) + " " + location;
  Serial.print("sending packet: '"); 
  Serial.print(mydata); 
  Serial.println("'"); 
