@@ -125,7 +125,7 @@ A pi is optional, you can run this on a desktop or server because everything is 
 <li>"destSMS":"+15551234567"</li>     <-- set this value to the destination phone number to receive SMS alerts.  Use a comma to separate multiple numbers.  If not using SMS alerts, leave the value blank. (empty quotes "" ).  </li>
 <li>"throttle":"20"                   <-- set the number of minutes to wait between sending alert notifications</li>
 <li>"checkASM":" no"                  <-- enable/disable the use of ASM (see further instructions below)</li>
-<li>"locationID":"1"                  <-- set the locatioID as found in ASM</li>
+<li>"locationID":"1"                  <-- set the locationID as found in ASM</li>
 <li>"locationUnit":"nameHere"         <-- set the locationUnit name as found in ASM </li>
 <li></li>
  </ul> 
