@@ -27,7 +27,7 @@ links provided here are only examples as you can swap out brands as needed to sa
 1 - 200ohm resistor (optional) (have to buy a pack, but you may be able to locate a someone that has a few to spare)<br>
 1 - basic LED (optional) <br>
 1 - tiny flat head screwdriver <br>
-1 - <a href="https://a.co/d/0wVyD20" target="_blank">micro SD card</a> (16gb or larger).  Don't go cheap here.  Recommend you buy SanDisk brand.  16gb is plenty of space, you don't need space for this project. The card should come with an micro to standard size adapter.  If it doesn't you will need to get one.  It does NOT come with a sd-card to USB adapter.  So if your machine does not have a slot for sd cards, you will need to get a <a href="https://a.co/d/9wNRMp1">USB adapter</a>. <br>
+1 - <a href="https://a.co/d/0wVyD20" target="_blank">micro SD card</a> (16gb or larger).  Don't go cheap here.  Recommend you buy SanDisk brand.  16gb is plenty of space, you don't need space for this project. The card should come with an micro to standard size adapter.  If it doesn't you will need to get one.  <br>
 1 - Soldering Iron kit (an iron with an iron stand and some solder, <a href="https://a.co/d/d0QlyU0" target="_blank">micro cutters</a>, maybe something <a href="https://a.co/d/caBHZSg" target="_blank">like this</a>)<br>
 1 - helping hands see <a href="https://www.amazon.com/s?k=helping+hands&i=tools&crid=38J2ATXAPQ9XL&sprefix=helping+hands%2Ctools%2C137&ref=nb_sb_noss_1" target="_blank">this search</a> for examples.  You will need something to hold your items while soldering.<br>
 <br> <br>
