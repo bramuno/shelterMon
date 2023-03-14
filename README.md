@@ -39,7 +39,7 @@ ELEGOO Electronic Fun Kit for Arduino, Respberry Pi https://a.co/d/bWZt9zZ <br>
 <br>
 Respberry Pi notes & alternatives:<br>
 A pi is optional, you can run this on a desktop or server because everything is handled over the Wi-Fi network.  Just edit <b>shelterMon.py</b> and edit <b>useSwitch = 1</b> to <b>useSwitch = 0</b>.  The pi is very useful to create a physical switch to disable alerts. <br>
-Right now, rPi's are more expensive than they used to be.  You DO NOT NEED to get the latest rPi.  We bought a rPi version 2 for cheap while the version 4 (latest) was ~$150.  You need version 2 or greater.  <br><br>there are some alternatives you can try to use instead of an actual Pi.  I recommend googling "Raspberry Pi Alternatives" but here are a few that look like they may wor.  Overall, you must find somethign that has the same set of GPIO pins that the rPi has.:<br>
+Right now, rPi's are more expensive than they used to be.  You DO NOT NEED to get the latest rPi.  We bought a rPi version 2 for cheap while the version 4 (latest) was ~$150.  You need version 2 or greater.  <br><br>there are some alternatives you can try to use instead of an actual Pi.  I recommend googling "Raspberry Pi Alternatives" but here are a few that look like they may wor.  Overall, you must find somethign that has the same set of GPIO pins that the rPi has.  Below are some options found on google but I HAVE NOT TESTED THEM AND CANNOT RECOMMEND THESE.<br>
 <li><a href="https://a.co/d/6iG05cZ" target="_blank">Libre Computer Board AML-S905X-CC </a></li>
 <li><a href="https://a.co/d/2Vu5FYG" target="_blank">Banana Pi</a> (I was not able to get the rPi libraries to work with this board)</li>
 <li><a href="https://a.co/d/5vRDpWE" target="_blank">Odroid</a></li>
