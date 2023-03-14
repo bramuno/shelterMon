@@ -1,8 +1,11 @@
 ////////////  edit these values for each sensor 
+const char* location   = "locationNameHere";     // sensor location name, avoid spaces
 const char* ssid       = "SSIDnameHere";     // your network SSID (name of wifi network)
-const char* password   = "123123123"; // your network password
+const char* password   = "passwordHere"; // your network password
 const char* udpAddress = "192.168.1.100";  // your syslog server destination IP
+const int udpPort      = 3333;   // syslog server destination port.  no need to change this unless you know what you are doing
 /////////// no edits below this line unless you know what you are doing
+#include <esp_task_wdt.h>
 #include <OneWire.h> 
 #include <DallasTemperature.h>
 #include <WiFiClientSecure.h>
@@ -11,7 +14,6 @@ const char* udpAddress = "192.168.1.100";  // your syslog server destination IP
 OneWire oneWire0(tempPin0); 
 DallasTemperature sensor0(&oneWire0);
 int i=0;int last = millis();
-const int udpPort = 3333;  
 boolean connected = false; 
 WiFiUDP udp; 
 
@@ -21,8 +23,7 @@ void setup() {
  delay(100);
  sensor0.begin(); 
 
-  Serial.print("Attempting to connect to SSID: ");
-  Serial.println(ssid);
+  Serial.print("Attempting to connect to SSID: "); Serial.println(ssid);
   connectToWiFi(ssid, password);
   // attempt to connect to Wifi network:
   while (WiFi.status() != WL_CONNECTED) {
@@ -78,6 +79,7 @@ void connectToWiFi(const char * ssid, const char * pwd){
   Serial.println("Connecting to WiFi network: " + String(ssid));
   WiFi.disconnect(true);
   WiFi.onEvent(WiFiEvent);
+  WiFi.setHostname(location);
   WiFi.begin(ssid, password);
   Serial.println("Waiting for WIFI connection...");
 }
