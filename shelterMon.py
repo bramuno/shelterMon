@@ -71,7 +71,7 @@ tmplist = sorted(tmplist)
 list = []
 
 configFolder = str(args.config)
-emailFile = configFolder+"/email.json"
+emailFile = configFolder+"/email.conf"
 emailFile = emailFile.replace("//","/")
 
 try:
@@ -82,13 +82,14 @@ try:
     SMTPpass =  get['SMTPpass']
     SMTPserver =  get['SMTPserver']
     SMTPport =  int(get['SMTPport'])
-except:
+except Exception as e:
+    print(e)
     sys.exit("failed to load "+str(emailFile)+" \n")
 
 
-smsFile = configFolder+"/sms.json"
+smsFile = configFolder+"/sms.conf"
 smsFile = smsFile.replace("//","/")
-asmFile = configFolder+"/asm.json"
+asmFile = configFolder+"/asm.conf"
 asmFile = asmFile.replace("//","/")
 if os.path.exists(smsFile):
     try:
@@ -99,7 +100,8 @@ if os.path.exists(smsFile):
         twilioToken =  str(getSMS['twilioToken'])
         twilioAcctID =  str(getSMS['twilioAcctID'])
         twilioFromNumber =  str(getSMS['twilioFromNumber'])
-    except:
+    except Exception as e:
+        print(e)
         sys.exit("failed to load values from '"+str(smsFile)+"'.  Check the json syntax is correct.\n")
 else:
     sid = ""
@@ -116,7 +118,8 @@ if os.path.exists(asmFile):
         ASMuser =  str(getASM['username'])
         ASMpass =  str(getASM['password'])
         ASMtitle =  str(getASM['title'])
-    except:
+    except Exception as e:
+        print(e)
         sys.exit("failed to load values from '"+str(asmFile)+"'.  Check the json syntax is correct.\n")
 else:
     ASMacct = ""
@@ -191,13 +194,18 @@ while g < len(tmplist):
                     occupied = 1
                     break
                 d=d+1
+            ## update config file to enable the sensor checks
             if occupied == 1:
-                ## update config file to enable the sensor checks
-                get['enabled']="yes"
-                print(str(location)+" is occupied.  Enabling.")
+                if enabled == "no":
+                    get['enabled']="yes"
+                    print(str(location)+" is occupied.  Enabling.")
+                    dur = 0
+                else:
+                    print(str(location)+" is occupied.  Already enabled.")
             else:
                 get['enabled']="no"
                 print(str(location)+" is NOT occupied.  Disabling.")
+                dur = 0
             try:
                 ff = open(tmplist[g], "w")
                 ff.write(json.dumps(get, indent=1))
@@ -234,7 +242,8 @@ while g < len(tmplist):
                     newfile = 0
                     notifyMin = int(get['notifyMin'])
                     diffChange = int(get['diffChange'])
-                except:
+                except Exception as e:
+                    print(e)
                     print("status file load fail")
             except:
                 get = ""
