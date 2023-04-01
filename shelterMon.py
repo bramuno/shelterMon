@@ -354,10 +354,10 @@ while g < len(tmplist):
                 alert = 1
                 dir = "EMPTY"
                 if float(finalTemp) > float(maxTemp):
-                    dir = "above the maximum"
+                    dir = "above the maximum temperature of "+str(maxTemp)
                 if float(finalTemp) < float(minTemp):
-                    dir = "below the minimum"
-                body = str(location)+" is reading '"+str(finalTemp)+str(tempUnit)+"' degree temperature.  This location has been "+str(dir)+" temperature of "+str(maxTemp)+" for at least "+str(oldDur)+" minutes!\n"
+                    dir = "below the minimum temperature of "+str(minTemp)
+                body = str(location)+" is reading '"+str(finalTemp)+str(tempUnit)+"' degree temperature.  This location has been "+str(dir)+" for at least "+str(oldDur)+" minutes!\n"
                 subject = str(location)+" sensor at '"+str(finalTemp)+str(tempUnit)+"'"
             ########## alert sensor online but reading incorrectly
             if ( float(finalTemp) < -40.0 ) :
