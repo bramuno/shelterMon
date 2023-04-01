@@ -8,7 +8,7 @@ Usage and build instructions are below.  I have written these instructions for p
 <br>
 I welcome others to assist me with this project to improve wherever possible, so if you would like to collboarte and contribute, please drop me a line.  <br>
 
-<h2>Obligatory Disclaimer</h2>
+<h2>Obligatory Disclaimers</h2>
 <ul>
 <li>All the advice and instruction given is for EDUCATIONAL PURPOSES ONLY.  While I shouldn't have to say this, I am not responsible for anything you do or destroy or anything else that happens as a result of your efforts.  Nothing is fool-proof so do not trust this or anything as a perfect solution for monitoring temperatures.   If you want a guaranteed solution, you should buy one. I am making this project because I have zero solutions that will do the same thing at an affordable price which is what this project accomplishes.</li>
 <li>this project involves some soldering which is recommended to install a physical switch.  I am not responsible for you hurting anyone or burning something to the ground or worse.  If you are not comfortable soldering, you can reach out to your local hackerspace/makerspace for help.  Ultimately it is YOUR RESPONSIBILITY to do all the proper research of all the subjects discussed here before attempting anything yourself. </li>
