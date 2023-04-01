@@ -11,8 +11,7 @@ useSwitch = 1
 # change the 'useASM' option to 1 if you intend to link your script to ASM
 useASM = 0
 #
-debug = 0
-test = 0
+debug = 0;enabling=0;test = 0
 import os, sys, json, subprocess, smtplib, datetime, time, os.path, pdb, argparse, glob, requests
 from email.message import EmailMessage
 from os.path import exists
@@ -199,7 +198,7 @@ while g < len(tmplist):
                 if enabled == "no":
                     get['enabled']="yes"
                     print(str(location)+" is occupied.  Enabling.")
-                    dur = 0
+                    enabling = 1
                 else:
                     print(str(location)+" is occupied.  Already enabled.")
             else:
@@ -294,7 +293,10 @@ while g < len(tmplist):
             min=int(splTime[1])
             sec=int(splTime[2])
             logEpoch = int(datetime.datetime(year, month,day, hour, min, sec).timestamp())
-            diffEpoch = nowEpoch - lastSeen
+            if enabling == 0:
+                diffEpoch = nowEpoch - lastSeen
+            else:
+                diffEpoch = 0
             secSinceLastLog = nowEpoch - logEpoch
             if(secSinceLastLog) < 0:
                 secSinceLastLog = 10000000000
@@ -326,6 +328,8 @@ while g < len(tmplist):
                 newDur = round(diffMins, 1)
             else:
                 newDur = round((oldDur + diffMins), 1)
+            if enabling == 1:
+                newDur = 0
 
             if debug == 1:
                 print("oldOKstatus = "+str(oldOKstatus))
@@ -341,14 +345,19 @@ while g < len(tmplist):
                 print("test = ",str(test))
 
             ########## offline sensor alert (every 5m on the 5th minute)
-            if round(minsSinceLastLog,0) > 5 or round(minsSinceLastLog,0) < 0:
+            if round(minsSinceLastLog,0) > float(maxDuration) or round(minsSinceLastLog,0) < 0:
                 body = "No contact from temperature '"+str(location)+"' sensor in "+str(minsSinceLastLog)+" minutes.\nPlease verify it is online and power cycle if needed.\n"
                 subject = "Temperature sensor offline"
                 alert = 1
             ########## critical temperature alert begin
             if ( int(OKstatus) == 0 and float(oldDur) > float(maxDuration) ) :
                 alert = 1
-                body = str(location)+" is reading '"+str(finalTemp)+str(tempUnit)+"' degree temperature.  This location has been below the max temperature of "+str(maxTemp)+" for at least "+str(oldDur)+" minutes!\n"
+                dir = "EMPTY"
+                if float(finalTemp) > float(maxTemp):
+                    dir = "above the maximum"
+                if float(finalTemp) < float(minTemp):
+                    dir = "below the minimum"
+                body = str(location)+" is reading '"+str(finalTemp)+str(tempUnit)+"' degree temperature.  This location has been "+str(dir)+" temperature of "+str(maxTemp)+" for at least "+str(oldDur)+" minutes!\n"
                 subject = str(location)+" sensor at '"+str(finalTemp)+str(tempUnit)+"'"
             ########## alert sensor online but reading incorrectly
             if ( float(finalTemp) < -40.0 ) :
@@ -359,7 +368,7 @@ while g < len(tmplist):
             if ( int(diffChange) > 1440 ) :
                 alert = 1
                 OKstatus = 0
-                body = "\nSensor "+str(location)+" has stopped reading.  Temeperature has not changed from "+str(float(finalTemp))+str(tempUnit)+" in over "+str(diffChange)+" minutes.\nPlease reboot the ESP device\n"
+                body = "\nSensor "+str(location)+" has stopped reading.  Temeperature has not changed from "+str(float(finalTemp))+str(tempUnit)+" in over "+str(diffChange)+" minutes.\nPlease power cycle the ESP device\n"
                 subject = str(location)+" sensor problem"
             ########## end alerts
             if int(notifyMin) % int(throttle) == 0 :
@@ -498,6 +507,7 @@ while g < len(tmplist):
             now = datetime.datetime.now()
             j.write(str(now)+",DestEmail='"+str(dests)+"',Message='"+str(thisMsg)+"'\n"+str(now)+",DestSMS='"+str(destSMS)+",SMSResponse='"+str(response)+"'\n")
             j.close()
+            sys.exit("test completed")
         if test == 1 and enabled == "yes" and ON == 0:
             print("The Switch is OFF.  You need to turn the witch to ON to enable notifications.")
     g = g + 1
