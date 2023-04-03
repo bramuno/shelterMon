@@ -100,6 +100,13 @@ A pi is optional, you can run this on a desktop or server because everything is 
   <li>Repeat the upload process as needed if you have more sensors.</li>
   <li>Once all the sensors are have the wifi code uploaded, you need to reserve the IP address for each device.  Go back to the router's DHCP reservation area and then restart the ESP32 devices.  When the devices restart, they should ask the router for an IP address and the router will respond.  Once you have the IP and MAC addresses, go back to the DHCP reservation area in the router to reserve each device.   Then be sure to label each ESP32 (use the bottom side of the breakout board).  </li>
 
+<br>DONT FORGET PLACEMENT IS IMPORTANT!   where you place the sensor and the ESP32 wifi module will matter.  To avoid false/unreliable readings:
+<ul><li>Dont place them in the path of the sun.  The sun will heat them up and either freeze them or make them read at higher temperatures than they are. </li>
+  <li>Dont place them underneath another object.  The sensor needs the smae air as the animals</li>
+  <li>Don't place them in a quiet corner with no air flow.  You want to ensure the A/C is moving air around so the sensor gets a new temperature every so often.  The temperatures are to the nearest hundredth degree so even if it remains the same temperature, the sensor should still see a tiny change in the hundretdth degree.</li>
+  <li>Assume the animanls will chew on them so try to keep them out of reach or somehwat protected. </li>
+  <li>Avoid placing directly in the path of the A/C vent.</li>
+</ul>
 
   
 <h2>Email user account</h2>
