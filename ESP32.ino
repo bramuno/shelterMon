@@ -26,9 +26,11 @@ void setup() {
   Serial.print("Attempting to connect to SSID: "); Serial.println(ssid);
   connectToWiFi(ssid, password);
   // attempt to connect to Wifi network:
-  while (WiFi.status() != WL_CONNECTED) {
-    Serial.print(".");
-    delay(1000);
+
+  while (WiFi.status() != 3) {
+    Serial.print("wifi status: ");    Serial.print(WiFi.status());    Serial.println("");  
+   Serial.print("Attempting to connect to SSID: "); Serial.println(ssid);  
+   connectToWiFi(ssid, password);delay(2000);
   }
 
   Serial.print("Connected to ");
@@ -43,9 +45,16 @@ void setup() {
 void(* resetFunc) (void) = 0; //declare reset function at address 0 - MUST BE ABOVE LOOP
 
 void loop() {
-Serial.print("millis() = ");Serial.println(String( millis() ) );
+Serial.print("millis() = ");Serial.print(String( millis() ) );
+Serial.print(", status: ");Serial.println(WiFi.status());
 if(millis() > 3600000 )resetFunc();
-
+  while (WiFi.status() != 3) {
+    Serial.print("wifi status: "); Serial.print(WiFi.status());
+    Serial.println("");  Serial.print("Attempting to connect to SSID: "); 
+    Serial.println(ssid);  
+    connectToWiFi(ssid, password);delay(2000);
+  }
+ 
 sensor0.requestTemperatures();  // send command 
 float temp0C = sensor0.getTempCByIndex(0);
 float temp0F = (temp0C*9/5) + 32;
