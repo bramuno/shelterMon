@@ -199,6 +199,7 @@ while g < len(tmplist):
                     get['enabled']="yes"
                     print(str(location)+" is occupied.  Enabling.")
                     enabling = 1
+                    dur = 0
                 else:
                     print(str(location)+" is occupied.  Already enabled.")
             else:
@@ -223,11 +224,11 @@ while g < len(tmplist):
             if not os.path.exists(logfile) or not os.path.exists(statusFile):
                 sample = '{"lastSeen":"1659588285","OKstatus":"1","duration":"0","lastTemp":"80.88","minsSinceLastLog":"0.0","notifyMin":"0" }'
                 cmd = "mkdir -p "+str(folderName)
-                subprocess.check_output(cmd, shell=True)
+                os.system(cmd)
                 cmd = "touch "+str(logfile)
-                subprocess.check_output(cmd, shell=True)
+                os.system(cmd)
                 cmd = "echo '"+str(sample)+"' > "+str(statusFile)
-                subprocess.check_output(cmd, shell=True)
+                os.system(cmd)
 
             try:
                 f = open(statusFile, "r")
@@ -346,7 +347,7 @@ while g < len(tmplist):
 
             ########## offline sensor alert (every 5m on the 5th minute)
             if round(minsSinceLastLog,0) > float(maxDuration) or round(minsSinceLastLog,0) < 0:
-                body = "No contact from temperature '"+str(location)+"' sensor in "+str(minsSinceLastLog)+" minutes.\nPlease verify it is online and power cycle if needed.\n"
+                body = "No contact from temperature '"+str(location)+"' sensor in "+str(minsSinceLastLog)+" minutes.\nPlease verify it is online and power cycle if needed.\n\nIf this is a quaratine shed, be sure ASM shows the correct inventory as the script will only check sheds that are occupied in ASM.\n\n"
                 subject = "Temperature sensor offline"
                 alert = 1
             ########## critical temperature alert begin
