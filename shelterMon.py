@@ -3,7 +3,7 @@
 ## this script will look for .json config files stored in the path passed by -C option
 ## to disable a shelter/location sensor, just rename the .json file to something without .json (eg.  file.save)
 ## usage: python3 shelterMon.py -C /path/to/folder
-## debug usage: python3 shelterMon.py -C /path/to/folder -d yes
+## verbose usage: python3 shelterMon.py -C /path/to/folder -d yes
 ## alert test usage: python3 shelterMon.py -C /path/to/folder -t yes
 #
 # change the 'useSwitch' option to 0 if you are not using a raspberry pi or other device with GPIO pins
@@ -11,26 +11,27 @@ useSwitch = 1
 # change the 'useASM' option to 1 if you intend to link your script to ASM
 useASM = 0
 #
-debug = 0;enabling=0;test = 0
+verbose = 0
+test = 0
 import os, sys, json, subprocess, smtplib, datetime, time, os.path, pdb, argparse, glob, requests
 from email.message import EmailMessage
 from os.path import exists
 parser = argparse.ArgumentParser()
 parser.add_argument("-C", "--config", help = "config")
-parser.add_argument("-d", "--debug", help = "debug")
+parser.add_argument("-v", "--verbose", help = "verbose")
 parser.add_argument("-t", "--test", help = "test")
 args = parser.parse_args()
-if args.debug:
-    if args.debug.lower() == "yes" or args.debug.lower() == "on" or str(args.debug.lower()) == "1":
-        debug = 1
-        print("Diplaying debug as: %s" % args.debug.lower())
+if args.verbose:
+    if args.verbose.lower() == "yes" or args.verbose.lower() == "on" or str(args.verbose.lower()) == "1":
+        verbose = 1
+        print("Diplaying verbose as: %s" % args.verbose.lower())
     else:
-        debug = 0
+        verbose = 0
 if args.config:
-    if debug == 1:
+    if verbose == 1:
         print("Diplaying config file as: % s" % args.config)
 if args.test:
-    if debug == 1:
+    if verbose == 1:
         print("Diplaying config file as: % s" % args.test)
 
 # detect physical switch position
@@ -81,11 +82,11 @@ try:
     SMTPpass =  get['SMTPpass']
     SMTPserver =  get['SMTPserver']
     SMTPport =  int(get['SMTPport'])
-except Exception as e:
-    print(e)
+except:
     sys.exit("failed to load "+str(emailFile)+" \n")
 
 
+alertFile = configFolder+"/alerts.txt"
 smsFile = configFolder+"/sms.conf"
 smsFile = smsFile.replace("//","/")
 asmFile = configFolder+"/asm.conf"
@@ -99,8 +100,7 @@ if os.path.exists(smsFile):
         twilioToken =  str(getSMS['twilioToken'])
         twilioAcctID =  str(getSMS['twilioAcctID'])
         twilioFromNumber =  str(getSMS['twilioFromNumber'])
-    except Exception as e:
-        print(e)
+    except:
         sys.exit("failed to load values from '"+str(smsFile)+"'.  Check the json syntax is correct.\n")
 else:
     sid = ""
@@ -117,8 +117,7 @@ if os.path.exists(asmFile):
         ASMuser =  str(getASM['username'])
         ASMpass =  str(getASM['password'])
         ASMtitle =  str(getASM['title'])
-    except Exception as e:
-        print(e)
+    except:
         sys.exit("failed to load values from '"+str(asmFile)+"'.  Check the json syntax is correct.\n")
 else:
     ASMacct = ""
@@ -132,7 +131,7 @@ if ASMacct != "" and ASMuser != "" and ASMpass != "" and ASMtitle != "":
     ASMok = 1
     URL = 'https://service.sheltermanager.com/asmservice'
     PARAMS = {'username':ASMuser, 'password': ASMpass, 'account':ASMacct, 'title':ASMtitle, 'method':'json_report'}
-    if debug == 1:
+    if verbose == 1:
         print("getting ASM data via API...")
     try:
         req = requests.get(url = URL, params = PARAMS)
@@ -150,7 +149,7 @@ while g < len(tmplist):
     alert = 0
     lastSeen = 0
     if tmplist[g] != str(emailFile) and tmplist[g] != str(smsFile) and tmplist[g] != str(asmFile):
-        if debug == 1:
+        if verbose == 1:
             print("\nstarting: "+str(tmplist[g]))
         try:
             f = open(tmplist[g], "r")
@@ -188,24 +187,18 @@ while g < len(tmplist):
                 locID = str(reportData[d]['SHELTERLOCATION'])
                 locUnit = str(reportData[d]['SHELTERLOCATIONUNIT'])
                 if locID == locationID and locUnit == locationUnit:
-                    if debug == 1:
+                    if verbose == 1:
                         print("matched "+str(tmplist[g])+" with locationID: '"+str(locationID)+"', Unit: '"+str(locationUnit)+"'")
                     occupied = 1
                     break
                 d=d+1
-            ## update config file to enable the sensor checks
             if occupied == 1:
-                if enabled == "no":
-                    get['enabled']="yes"
-                    print(str(location)+" is occupied.  Enabling.")
-                    enabling = 1
-                    dur = 0
-                else:
-                    print(str(location)+" is occupied.  Already enabled.")
+                ## update config file to enable the sensor checks
+                get['enabled']="yes"
+                print(str(location)+" is occupied.  Enabling.")
             else:
                 get['enabled']="no"
                 print(str(location)+" is NOT occupied.  Disabling.")
-                dur = 0
             try:
                 ff = open(tmplist[g], "w")
                 ff.write(json.dumps(get, indent=1))
@@ -214,7 +207,7 @@ while g < len(tmplist):
                 print(e)
                 print("\nFailed to update "+str(tmplist[g]))
         else:
-            if debug == 1:
+            if verbose == 1:
                 print("Check of ASM is disabled or asm.json file is missing/incomplete. skipping...")
         #
         enabled = get['enabled']
@@ -224,11 +217,11 @@ while g < len(tmplist):
             if not os.path.exists(logfile) or not os.path.exists(statusFile):
                 sample = '{"lastSeen":"1659588285","OKstatus":"1","duration":"0","lastTemp":"80.88","minsSinceLastLog":"0.0","notifyMin":"0" }'
                 cmd = "mkdir -p "+str(folderName)
-                os.system(cmd)
+                subprocess.check_output(cmd, shell=True)
                 cmd = "touch "+str(logfile)
-                os.system(cmd)
+                subprocess.check_output(cmd, shell=True)
                 cmd = "echo '"+str(sample)+"' > "+str(statusFile)
-                os.system(cmd)
+                subprocess.check_output(cmd, shell=True)
 
             try:
                 f = open(statusFile, "r")
@@ -242,8 +235,7 @@ while g < len(tmplist):
                     newfile = 0
                     notifyMin = int(get['notifyMin'])
                     diffChange = int(get['diffChange'])
-                except Exception as e:
-                    print(e)
+                except:
                     print("status file load fail")
             except:
                 get = ""
@@ -253,7 +245,7 @@ while g < len(tmplist):
                 lastTemp = 0
                 dur = 0
                 diffChange = 0
-                if debug == 1:
+                if verbose == 1:
                     print(str(statusFile)+" JSON load failed.\n")
                 f.close()
 
@@ -294,10 +286,7 @@ while g < len(tmplist):
             min=int(splTime[1])
             sec=int(splTime[2])
             logEpoch = int(datetime.datetime(year, month,day, hour, min, sec).timestamp())
-            if enabling == 0:
-                diffEpoch = nowEpoch - lastSeen
-            else:
-                diffEpoch = 0
+            diffEpoch = nowEpoch - lastSeen
             secSinceLastLog = nowEpoch - logEpoch
             if(secSinceLastLog) < 0:
                 secSinceLastLog = 10000000000
@@ -329,10 +318,8 @@ while g < len(tmplist):
                 newDur = round(diffMins, 1)
             else:
                 newDur = round((oldDur + diffMins), 1)
-            if enabling == 1:
-                newDur = 0
 
-            if debug == 1:
+            if verbose == 1:
                 print("oldOKstatus = "+str(oldOKstatus))
                 print("oldDur = "+str(oldDur))
                 print("maxTemp = "+str(maxTemp)+str(tempUnit))
@@ -346,19 +333,14 @@ while g < len(tmplist):
                 print("test = ",str(test))
 
             ########## offline sensor alert (every 5m on the 5th minute)
-            if round(minsSinceLastLog,0) > float(maxDuration) or round(minsSinceLastLog,0) < 0:
-                body = "No contact from temperature '"+str(location)+"' sensor in "+str(minsSinceLastLog)+" minutes.\nPlease verify it is online and power cycle if needed.\n\nIf this is a quaratine shed, be sure ASM shows the correct inventory as the script will only check sheds that are occupied in ASM.\n\n"
+            if round(minsSinceLastLog,0) > 5 or round(minsSinceLastLog,0) < 0:
+                body = "No contact from temperature '"+str(location)+"' sensor in "+str(minsSinceLastLog)+" minutes.\nPlease verify it  online and power cycle if needed.\n"
                 subject = "Temperature sensor offline"
                 alert = 1
             ########## critical temperature alert begin
             if ( int(OKstatus) == 0 and float(oldDur) > float(maxDuration) ) :
                 alert = 1
-                dir = "EMPTY"
-                if float(finalTemp) > float(maxTemp):
-                    dir = "above the maximum temperature of "+str(maxTemp)
-                if float(finalTemp) < float(minTemp):
-                    dir = "below the minimum temperature of "+str(minTemp)
-                body = str(location)+" is reading '"+str(finalTemp)+str(tempUnit)+"' degree temperature.  This location has been "+str(dir)+" for at least "+str(oldDur)+" minutes!\n"
+                body = str(location)+" is reading '"+str(finalTemp)+str(tempUnit)+"' degree temperature.  This location has been below the max temperature of "+str(maxTemp)+" for at least "+str(oldDur)+" minutes!\n"
                 subject = str(location)+" sensor at '"+str(finalTemp)+str(tempUnit)+"'"
             ########## alert sensor online but reading incorrectly
             if ( float(finalTemp) < -40.0 ) :
@@ -369,14 +351,14 @@ while g < len(tmplist):
             if ( int(diffChange) > 1440 ) :
                 alert = 1
                 OKstatus = 0
-                body = "\nSensor "+str(location)+" has stopped reading.  Temeperature has not changed from "+str(float(finalTemp))+str(tempUnit)+" in over "+str(diffChange)+" minutes.\nPlease power cycle the ESP device\n"
+                body = "\nSensor "+str(location)+" has stopped reading.  Temeperature has not changed from "+str(float(finalTemp))+str(tempUnit)+" in over "+str(diffChange)+" minutes.\nPlease reboot the ESP device\n"
                 subject = str(location)+" sensor problem"
             ########## end alerts
             if int(notifyMin) % int(throttle) == 0 :
                 go = " - should send alert "
             else:
                 go = " - should not send alert"
-            if debug == 1:
+            if verbose == 1:
                 print("OKstatus = ",str(OKstatus))
                 print("nowEpoch = ",str(nowEpoch))
                 print("oldLastSeen = ",str(lastSeen))
@@ -401,12 +383,12 @@ while g < len(tmplist):
                 print("sendSMS = ",str(sendSMS))
                 print("\n")
 
-            if alert == 1 and debug == 1:
+            if alert == 1 and verbose == 1:
                 print("body = ",str(body))
             if newfile == 1:
                 newDur = "0"
                 lastSeen = str(nowEpoch)
-                if debug == 1:
+                if verbose == 1:
                     print("\nnew status file created\n")
             else:
                 lastSeen = str(logEpoch)
@@ -454,13 +436,12 @@ while g < len(tmplist):
                         cmd='curl -X POST "'+str(url)+'" --data-urlencode "Body='+str(body)+'" --data-urlencode "From='+str(twilioFromNumber)+'" --data-urlencode "To='+str(sendSMS[aa])+'" -u '+str(twilioAcctID)+':'+str(twilioToken)
                         try:
                             response = str(os.system(cmd))
-                            if debug == 1:
+                            if verbose == 1:
                                 print("SMS response: \n",response)
                         except Exception as e: 
                             print(e)
                         aa = aa + 1
                 now = datetime.datetime.now()
-                alertFile = "/home/shelterMon/alerts.txt"
                 if os.path.exists(alertFile):
                     j = open(alertFile, "a")
                 else:
@@ -482,33 +463,33 @@ while g < len(tmplist):
             thisMsg['Subject'] = subject
             thisMsg['From'] = "alert@temperatureMon.org"
             thisMsg['To'] = dests
-            try:
-                msg(SMTPserver, SMTPport, SMTPuser, SMTPpass, thisMsg)
-            except Exception as e: 
-                print(e)
-            else:
-                print("Sent TEST email to: "+str(dests))
+            if dests != "":
+                try:
+                    msg(SMTPserver, SMTPport, SMTPuser, SMTPpass, thisMsg)
+                except Exception as e: 
+                    print(e)
+                else:
+                    print("Sent TEST email to: "+str(dests))
             # send sms if available
             if sid != "" and twilioToken != "":
-                x=0
-                smslist=destSMS.split(",")
-                while x < len(smslist):
-                    destSMS = str(smslist[x])
+                for x in sendSMS:
+                    response = ""
+                    destSMS = str(x)
                     url='https://api.twilio.com/2010-04-01/Accounts/'+str(twilioAcctID)+'/Messages.json'
                     cmd='curl -s -X POST "'+str(url)+'" --data-urlencode "Body='+str(body)+'" --data-urlencode "From='+str(twilioFromNumber)+'" --data-urlencode "To='+str(destSMS)+'" -u '+str(twilioAcctID)+':'+str(twilioToken)
                     try:
                         response = str(subprocess.check_output(cmd, shell=True))
-                        if debug == 1:
+                        if verbose == 1:
                             print("SMS response: \n",response)
                         print("Send SMS to "+destSMS+"")
                     except Exception as e: 
                         print(e)
-                    x=x+1
+                        response = ""
                     time.sleep(2)
             now = datetime.datetime.now()
-            j.write(str(now)+",DestEmail='"+str(dests)+"',Message='"+str(thisMsg)+"'\n"+str(now)+",DestSMS='"+str(destSMS)+",SMSResponse='"+str(response)+"'\n")
+            #j.write(str(now)+",DestEmail='"+str(dests)+"',Message='"+str(thisMsg)+"'\n"+str(now)+",DestSMS='"+str(destSMS)+",SMSResponse='"+str(response)+"'\n")
             j.close()
-            sys.exit("test completed")
+            sys.exit("test complete")
         if test == 1 and enabled == "yes" and ON == 0:
             print("The Switch is OFF.  You need to turn the witch to ON to enable notifications.")
     g = g + 1
