@@ -7,18 +7,21 @@
 ## alert test usage: python3 shelterMon.py -C /path/to/folder -t yes
 #
 # change the 'useSwitch' option to 0 if you are not using a raspberry pi or other device with GPIO pins
-useSwitch = 1
+useSwitch = 0
 # change the 'useASM' option to 1 if you intend to link your script to ASM
 useASM = 0
 #
 verbose = 0
 test = 0
+send = 0
+#
 import os, sys, json, subprocess, smtplib, datetime, time, os.path, pdb, argparse, glob, requests
 from email.message import EmailMessage
 from os.path import exists
 parser = argparse.ArgumentParser()
 parser.add_argument("-C", "--config", help = "config")
 parser.add_argument("-v", "--verbose", help = "verbose")
+parser.add_argument("-s", "--send", help = "send notifications")
 parser.add_argument("-t", "--test", help = "test")
 args = parser.parse_args()
 if args.verbose:
@@ -32,7 +35,13 @@ if args.config:
         print("Diplaying config file as: % s" % args.config)
 if args.test:
     if verbose == 1:
-        print("Diplaying config file as: % s" % args.test)
+        print("Diplaying test as: % s" % args.test)
+if args.send:
+    if verbose == 1:
+        print("Diplaying send as: % s" % args.send)
+    send=str(args.send)
+    if send.lower() == "yes":
+        send = 1
 
 # detect physical switch position
 # off switch disables all notifications
@@ -179,13 +188,17 @@ while g < len(tmplist):
         newfile = 0
         logfile = folderName+"/"+logfileName
         statusFile = folderName+"/"+statusFileName
-
+        
         ## check ASM for current occupancy and update json conifg file
+        locID="";locUnit=""
         if ASMok == 1 and checkASM == "yes":
             d = 0
             while d<len(reportData):
                 locID = str(reportData[d]['SHELTERLOCATION'])
                 locUnit = str(reportData[d]['SHELTERLOCATIONUNIT'])
+                if verbose == 1:
+                    print("locID: "+locID+"\nlocUnit: "+locUnit)
+                    print("tgtlocID: "+locationID+"\ntgtlocUnit: "+locationUnit)
                 if locID == locationID and locUnit == locationUnit:
                     if verbose == 1:
                         print("matched "+str(tmplist[g])+" with locationID: '"+str(locationID)+"', Unit: '"+str(locationUnit)+"'")
@@ -331,6 +344,7 @@ while g < len(tmplist):
                 print("newfile = ",str(newfile))
                 print("enabled = ",str(enabled))
                 print("test = ",str(test))
+                print("ASMtitle = ",str(ASMtitle))
 
             ########## offline sensor alert (every 5m on the 5th minute)
             if round(minsSinceLastLog,0) > 5 or round(minsSinceLastLog,0) < 0:
@@ -381,6 +395,7 @@ while g < len(tmplist):
                 print("twilioFromNumber = ",str(twilioFromNumber))
                 print("twilioToken = ",str(twilioToken))
                 print("sendSMS = ",str(sendSMS))
+                print("locID: "+locID+"\nlocUnit: "+locUnit)
                 print("\n")
 
             if alert == 1 and verbose == 1:
@@ -451,7 +466,7 @@ while g < len(tmplist):
             else:
                 print("throttling notifications to every "+str(throttle)+" minutes")
 
-        if test == 1 and enabled == "yes" and ON == 1 :
+        if test == 1 and enabled == "yes" and ON == 1 and send == 1:
             if os.path.exists(alertFile):
                 j = open(alertFile, "a")
             else:
