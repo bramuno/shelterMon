@@ -216,17 +216,10 @@ If you are using ASM, you can follow these steps to use it with the script. <br>
 <li>Next create a new USER ACCOUNT and grant that user the new role you just created. </li>
 <li>Now you need to create a new REPORT.  Go to SETTINGS > REPORTS and creata a new report. Name it whatever you want but place it in a container that you are sure no one will accidently delete or mess with.  I advise not using spaces in the title. <br>
 Grant the new role to the new report.  Paste the below text into the SQL box:
- <blockquote>SELECT a.animalName,a.SHELTERLOCATIONUNIT,a.ShelterLocation,
-CASE WHEN a.ActiveMovementType = 2 THEN 'Foster' WHEN a.ActiveMovementType = 8 THEN 'Retailer' WHEN a.ActiveMovementType = 1 THEN 'Trial Adoption' 
-ELSE i.LocationName END AS LocationName
-FROM animal a
-LEFT OUTER JOIN animaltype t ON t.ID = a.AnimalTypeID
-LEFT OUTER JOIN species s ON s.ID = a.SpeciesID
-LEFT OUTER JOIN lksex sx ON sx.ID = a.Sex
-LEFT OUTER JOIN internallocation i ON i.ID = a.ShelterLocation
-WHERE a.Archived = 0 and a.ShelterLocation = 1111
-ORDER BY a.ShelterLocation, SHELTERLOCATIONUNIT</blockquote>
+ <blockquote>select ID, ANIMALNAME, SHELTERLOCATIONUNIT, SHELTERLOCATION from animal a
+WHERE SHELTERLOCATION = '18' and a.Archived = 0 and ActiveMovementID = '0'</blockquote>
 </li>
+  <li>NOTE that the above SQL may not work.  You will need to ensure you have the correct column names as needed to locate your data.  the above code is just an example and not guaranteed to work. </li>
   <li>Here you need to figure out the numerical location ID of the location found in ASM.  If you click on SHELTER VIEW and then click on that specifc location, it will bring up the animals in that location.  in the URL address bar, you will see the numerical value of that location ID after "shelterlocation".  (eg.  https://us000.sheltermanager.com/animal_find_results?logicallocation=onshelter&shelterlocation=123456) </li>
   <li>Take that number of your location and replace with the number found in the above SQL query <b>a.ShelterLocation = 18</b>.  Replace the "1111" with your number.</li>
 <li>If you have more than one location that needs to be included in the report, then you are going to have to figure out how to get the report to include all the locationd and units you require.</li>
